@@ -128,7 +128,7 @@ function installWith(
       );
       return run(
         corepack,
-        ['yarn', 'add', `rselectron@file:${tarballPath}`, rsbuild],
+        ['yarn', 'add', `electron-rstack@file:${tarballPath}`, rsbuild],
         consumerRoot,
       );
     }
@@ -261,12 +261,12 @@ for (const manager of ['npm', 'pnpm', 'yarn', 'bun'] as const) {
       const install = installWith(manager, consumerRoot);
       expectSuccess(install, `${manager} install`);
 
-      expect(existsSync(join(consumerRoot, 'node_modules/rselectron'))).toBe(
+      expect(existsSync(join(consumerRoot, 'node_modules/electron-rstack'))).toBe(
         true,
       );
       expect(existsSync(installedBin(consumerRoot))).toBe(true);
       expect(
-        existsSync(join(consumerRoot, 'node_modules/rselectron/node.d.ts')),
+        existsSync(join(consumerRoot, 'node_modules/electron-rstack/node.d.ts')),
       ).toBe(true);
 
       const help = runInstalledCli(consumerRoot, ['--help']);
@@ -299,7 +299,7 @@ for (const manager of ['npm', 'pnpm', 'yarn', 'bun'] as const) {
         [
           '--input-type=module',
           '--eval',
-          "import('rselectron').then(({ version }) => console.log(version))",
+          "import('electron-rstack').then(({ version }) => console.log(version))",
         ],
         consumerRoot,
       );
@@ -314,7 +314,7 @@ for (const manager of ['npm', 'pnpm', 'yarn', 'bun'] as const) {
         [
           '--input-type=module',
           '--eval',
-          "import('rselectron').then(({ resolveProjectElectron }) => { const electron = resolveProjectElectron(process.cwd()); console.log(JSON.stringify({ major: electron.major, version: electron.version })); })",
+          "import('electron-rstack').then(({ resolveProjectElectron }) => { const electron = resolveProjectElectron(process.cwd()); console.log(JSON.stringify({ major: electron.major, version: electron.version })); })",
         ],
         consumerRoot,
       );
@@ -330,7 +330,7 @@ for (const manager of ['npm', 'pnpm', 'yarn', 'bun'] as const) {
       writeMinimalMainApp(missingRoot);
       writeFileSync(
         join(missingRoot, 'run-missing.mjs'),
-        `import { build } from 'rselectron';
+        `import { build } from 'electron-rstack';
 try {
   await build({
     cwd: process.cwd(),
@@ -367,7 +367,7 @@ try {
 
       writeFileSync(
         join(consumerRoot, 'run-build.mjs'),
-        `import { build } from 'rselectron';
+        `import { build } from 'electron-rstack';
 const result = await build({
   cwd: process.cwd(),
   config: {

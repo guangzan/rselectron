@@ -15,7 +15,7 @@ Electron is always resolved from a **project-local** install. Version ranges: [C
 ## Full example
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'rselectron';
+import { defineConfig } from 'electron-rstack';
 
 export default defineConfig({
   electron: {

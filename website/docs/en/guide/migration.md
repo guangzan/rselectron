@@ -11,7 +11,7 @@ Rselectron aims for capability alignment, not drop-in Vite config renaming. Migr
 
 | electron-vite | Rselectron |
 | --- | --- |
-| `electron-vite` package | `rselectron` (peer: `@rsbuild/core`) |
+| `electron-vite` package | `electron-rstack` (peer: `@rsbuild/core`) |
 | Vite plugins | **Exception** — rewrite as Rsbuild / Rspack plugins |
 | Bytecode plugin / V8 bytecode | **Exception** — not implemented; no silent fallback |
 | Exported SWC helpers | **Exception** — configure SWC via Rsbuild / Rspack |

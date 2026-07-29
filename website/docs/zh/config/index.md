@@ -10,7 +10,7 @@ description: 主进程、预加载、渲染进程与 Electron / 环境选项。
 最小示例：
 
 ```ts
-import { defineConfig } from 'rselectron';
+import { defineConfig } from 'electron-rstack';
 
 export default defineConfig({
   main: {

@@ -99,7 +99,7 @@ function extractMarkdownLinks(source: string): string[] {
 function extractRselectronImports(source: string): string[] {
   const names: string[] = [];
   const pattern =
-    /import\s*\{([^}]+)\}\s*from\s*['"]rselectron(?:\/node)?['"]/g;
+    /import\s*\{([^}]+)\}\s*from\s*['"]electron-rstack(?:\/node)?['"]/g;
   for (const match of source.matchAll(pattern)) {
     for (const part of match[1]!.split(',')) {
       const name = part

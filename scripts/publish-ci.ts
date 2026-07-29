@@ -34,7 +34,7 @@ const releaseTag = version.includes('beta')
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
 if (releaseTag) {
-  await $`pnpm --filter rselectron publish --access public --no-git-checks --tag ${releaseTag}`;
+  await $`pnpm --filter electron-rstack publish --access public --no-git-checks --tag ${releaseTag}`;
 } else {
-  await $`pnpm --filter rselectron publish --access public --no-git-checks`;
+  await $`pnpm --filter electron-rstack publish --access public --no-git-checks`;
 }

@@ -306,7 +306,7 @@ test('*.wasm?loader works for Preload production output', async () => {
   }
 });
 
-test('rselectron/node declares WASM loader and native .node module forms', async () => {
+test('electron-rstack/node declares WASM loader and native .node module forms', async () => {
   const types = readFileSync(
     join(repositoryRoot, 'packages/rselectron/node.d.ts'),
     'utf8',

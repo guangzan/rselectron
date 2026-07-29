@@ -8,7 +8,7 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "build": "corepack pnpm --filter rselectron build",
+    "build": "corepack pnpm --filter electron-rstack build",
     "bench": "node --experimental-strip-types scripts/benchmarks/run.mjs",
     "bench:check": "node --experimental-strip-types scripts/benchmarks/check.mjs",
     "docs:build": "corepack pnpm --filter @rselectron/website build",

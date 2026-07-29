@@ -12,7 +12,7 @@ description: Electron 版本、宿主、框架与有意排除的能力。
 也可从包中读取：
 
 ```ts
-import { ELECTRON_SUPPORT_SNAPSHOT } from 'rselectron';
+import { ELECTRON_SUPPORT_SNAPSHOT } from 'electron-rstack';
 ```
 
 ## 宿主与打包

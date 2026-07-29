@@ -30,7 +30,7 @@ Rselectron requires Node.js `>=20.19.0` and the `@rsbuild/core` peer (`^2.0.0`).
 
 :::
 
-<PackageManagerTabs command="add rselectron @rsbuild/core electron -D" />
+<PackageManagerTabs command="add electron-rstack @rsbuild/core electron -D" />
 
 ## Command line interface
 
@@ -59,7 +59,7 @@ See [Command Line Interface](/api/cli) for the full option list.
 When you run the CLI, Rselectron resolves a config file at the project root (for example `rselectron.config.ts`). A minimal config looks like this:
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'rselectron';
+import { defineConfig } from 'electron-rstack';
 
 export default defineConfig({
   main: {

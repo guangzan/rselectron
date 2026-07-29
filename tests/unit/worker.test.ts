@@ -131,9 +131,9 @@ test('?nodeWorker produces a Worker factory that runs Worker thread code', async
   }
 });
 
-test('rselectron/node declares Worker query module types', () => {
+test('electron-rstack/node declares Worker query module types', () => {
   const appRoot = createRoot('types');
-  mkdirSync(join(appRoot, 'node_modules/rselectron'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/electron-rstack'), { recursive: true });
   writeFileSync(
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'worker-types', private: true, type: 'module' }, null, 2)}\n`,
@@ -157,20 +157,20 @@ test('rselectron/node declares Worker query module types', () => {
     )}\n`,
   );
   writeFileSync(
-    join(appRoot, 'node_modules/rselectron/package.json'),
+    join(appRoot, 'node_modules/electron-rstack/package.json'),
     readFileSync(
       join(repositoryRoot, 'packages/rselectron/package.json'),
       'utf8',
     ),
   );
   writeFileSync(
-    join(appRoot, 'node_modules/rselectron/node.d.ts'),
+    join(appRoot, 'node_modules/electron-rstack/node.d.ts'),
     readFileSync(join(repositoryRoot, 'packages/rselectron/node.d.ts'), 'utf8'),
   );
   writeFileSync(
     join(appRoot, 'main.ts'),
     [
-      "import 'rselectron/node';",
+      "import 'electron-rstack/node';",
       "import createWorker from './worker.ts?nodeWorker';",
       "import workerPath from './worker.ts?modulePath';",
       'const path: string = workerPath;',

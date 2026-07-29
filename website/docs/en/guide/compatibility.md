@@ -12,7 +12,7 @@ Supported Electron majors are **41–43**. The optional peer range is `>=41 <44`
 You can also read it from the package:
 
 ```ts
-import { ELECTRON_SUPPORT_SNAPSHOT } from 'rselectron';
+import { ELECTRON_SUPPORT_SNAPSHOT } from 'electron-rstack';
 ```
 
 ## Hosts and packaging

@@ -1,5 +1,5 @@
 {
-  "name": "rselectron",
+  "name": "electron-rstack",
   "version": "1.0.0-beta.0",
   "description": "An Rsbuild-first Electron development and build tool.",
   "license": "MIT",

@@ -30,7 +30,7 @@ Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（
 
 :::
 
-<PackageManagerTabs command="add rselectron @rsbuild/core electron -D" />
+<PackageManagerTabs command="add electron-rstack @rsbuild/core electron -D" />
 
 ## 命令行界面
 
@@ -59,7 +59,7 @@ Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（
 运行 CLI 时，Rselectron 会解析项目根目录下的配置文件（如 `rselectron.config.ts`）。最基本的配置如下：
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'rselectron';
+import { defineConfig } from 'electron-rstack';
 
 export default defineConfig({
   main: {
