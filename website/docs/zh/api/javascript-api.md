@@ -19,7 +19,7 @@ import {
   resolveProjectElectron,
   RselectronError,
   version,
-} from 'electron-rstack';
+} from '@rselectron/core';
 ```
 
 CLI 命令说明见 [命令行界面](./cli)；配置字段见 [配置](/config/)。
@@ -29,7 +29,7 @@ CLI 命令说明见 [命令行界面](./cli)；配置字段见 [配置](/config/
 为配置提供类型提示。可以导出对象，也可以导出函数（按命令 / 模式切换）：
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {
@@ -48,7 +48,7 @@ export default defineConfig({
 ```
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig(({ command, mode }) => {
   const isDev = command === 'dev';
@@ -77,7 +77,7 @@ export default defineConfig(({ command, mode }) => {
 启动开发会话：构建主进程 / 预加载，启动渲染进程开发服务器，并拉起 Electron。
 
 ```ts
-import { createServer } from 'electron-rstack';
+import { createServer } from '@rselectron/core';
 
 const server = await createServer({
   // cwd: process.cwd(),
@@ -111,7 +111,7 @@ process.on('SIGINT', async () => {
 对已配置进程执行一次生产构建（有限次，不支持 watch）。
 
 ```ts
-import { build } from 'electron-rstack';
+import { build } from '@rselectron/core';
 
 const result = await build({
   mode: 'production',
@@ -130,7 +130,7 @@ await result.close();
 先构建（可用 `skipBuild` 跳过），再启动 Electron 预览生产产物。
 
 ```ts
-import { preview } from 'electron-rstack';
+import { preview } from '@rselectron/core';
 
 const session = await preview({
   skipBuild: false,
@@ -149,7 +149,7 @@ session.electronProcess.on('exit', async () => {
 打印规范化后的配置，不构建也不启动。适合在排障前核对各进程最终配置。
 
 ```ts
-import { inspect } from 'electron-rstack';
+import { inspect } from '@rselectron/core';
 
 const result = await inspect({ mode: 'development' });
 
@@ -166,7 +166,7 @@ for (const warning of result.warnings) {
 加载环境文件，默认前缀包括 `RSELECTRON_`、`MAIN_RSELECTRON_`、`PRELOAD_RSELECTRON_`、`RENDERER_RSELECTRON_`。行为对齐 CLI `--env-mode`。
 
 ```ts
-import { defineConfig, loadEnv } from 'electron-rstack';
+import { defineConfig, loadEnv } from '@rselectron/core';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv({ mode });
@@ -193,7 +193,7 @@ export default defineConfig(({ mode }) => {
 合并多份 Rselectron 配置（含各进程的 `electron` 字段）。`mergeRsbuildConfig` 来自 `@rsbuild/core`，按原样再导出。
 
 ```ts
-import { defineConfig, mergeRselectronConfig } from 'electron-rstack';
+import { defineConfig, mergeRselectronConfig } from '@rselectron/core';
 import { shared } from './rselectron.shared';
 
 export default defineConfig(
@@ -213,7 +213,7 @@ import {
   ELECTRON_SUPPORT_SNAPSHOT,
   resolveProjectElectron,
   version,
-} from 'electron-rstack';
+} from '@rselectron/core';
 
 console.log(version);
 console.log(ELECTRON_SUPPORT_SNAPSHOT);
@@ -230,7 +230,7 @@ console.log(electron.version, electron.execPath, electron.major);
 结构化失败，含稳定 `code`、可选 `hint`。
 
 ```ts
-import { build, RselectronError } from 'electron-rstack';
+import { build, RselectronError } from '@rselectron/core';
 
 try {
   await build();
@@ -247,7 +247,7 @@ try {
 在 TypeScript 中引入 ambient 声明：
 
 ```ts
-/// <reference types="electron-rstack/node" />
+/// <reference types="@rselectron/core/node" />
 ```
 
 ### 开发服务器 URL

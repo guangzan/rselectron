@@ -34,7 +34,7 @@ function acquireLock(timeoutMs = 180_000): number {
 }
 
 /**
- * Pack the public `electron-rstack` facade once at a time.
+ * Pack the public `@rselectron/core` facade once at a time.
  * Concurrent `prepack`/`rslib build` races on packages/rselectron/.rslib.
  */
 export function packPublicFacade(packDestination: string): string {
@@ -46,7 +46,7 @@ export function packPublicFacade(packDestination: string): string {
       [
         'pnpm',
         '--filter',
-        'electron-rstack',
+        '@rselectron/core',
         'pack',
         '--pack-destination',
         packDestination,

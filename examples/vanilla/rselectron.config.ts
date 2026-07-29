@@ -1,4 +1,4 @@
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {

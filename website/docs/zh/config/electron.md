@@ -15,7 +15,7 @@ Electron 始终从**项目本地**安装解析。版本范围见 [兼容性](/gu
 ## 完整示例
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   electron: {

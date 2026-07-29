@@ -2,7 +2,7 @@
 
 Rselectron 是面向 Electron 的 Rsbuild 优先开发与构建工具。
 
-当前 beta：**1.0.0-beta.0**（发布后可用 `npm install electron-rstack@1.0.0-beta.0`，或从打包 tarball 安装）。
+当前 beta：**1.0.0-beta.0**（发布后可用 `npm install @rselectron/core@1.0.0-beta.0`，或从打包 tarball 安装）。
 
 English README: [README.md](./README.md)。完整文档站点见 [`website/`](./website/)。
 
@@ -27,7 +27,7 @@ ESM API 导出 `build`、`createServer`、`defineConfig`、`inspect`、`preview`
 `createServer()` 返回 Renderer URL、Electron 子进程，以及幂等的 `close()`。
 当需要推导 Role 格式或编译器 target 时，会从 Application root 对照冻结支持快照解析 Electron。
 Role 构建通过 Rsbuild 环境管道加载 `RSELECTRON_` 与 Role 作用域前缀。
-`electron-rstack/node` 声明 `RSELECTRON_RENDERER_URL` 以及 `?asset` / `?asset&asarUnpack` / `?modulePath` / `?nodeWorker` / `*.wasm?loader` / `*.node` 等模块形态。
+`@rselectron/core/node` 声明 `RSELECTRON_RENDERER_URL` 以及 `?asset` / `?asset&asarUnpack` / `?modulePath` / `?nodeWorker` / `*.wasm?loader` / `*.node` 等模块形态。
 Core 与 CLI 仍是私有实现包。
 
 ## 文档与示例

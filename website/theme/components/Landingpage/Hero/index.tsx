@@ -3,7 +3,7 @@ import { Hero as BaseHero } from '@rstack-dev/doc-ui/hero';
 import { memo, useCallback } from 'react';
 import { useI18n, useI18nUrl } from '../../../i18n';
 
-const GITHUB_URL = 'https://github.com/guangzan/electron-rstack';
+const GITHUB_URL = 'https://github.com/guangzan/rselectron';
 
 const Hero = memo(() => {
   const tUrl = useI18nUrl();

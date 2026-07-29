@@ -10,7 +10,7 @@ Declare `main`, `preload`, and `renderer` with `defineConfig`. Each key is an Rs
 Minimal example:
 
 ```ts
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {

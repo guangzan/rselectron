@@ -19,7 +19,7 @@ import {
   resolveProjectElectron,
   RselectronError,
   version,
-} from 'electron-rstack';
+} from '@rselectron/core';
 ```
 
 CLI details: [Command Line Interface](./cli). Config fields: [Configuration](/config/).
@@ -29,7 +29,7 @@ CLI details: [Command Line Interface](./cli). Config fields: [Configuration](/co
 Adds type hints for your config. Export an object, or a function that switches on command / mode:
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {
@@ -48,7 +48,7 @@ export default defineConfig({
 ```
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig(({ command, mode }) => {
   const isDev = command === 'dev';
@@ -77,7 +77,7 @@ The function receives `command` (`dev` \| `build` \| `preview` \| `inspect`), `m
 Starts a development session: builds main / preload, starts the renderer dev server, and launches Electron.
 
 ```ts
-import { createServer } from 'electron-rstack';
+import { createServer } from '@rselectron/core';
 
 const server = await createServer({
   // cwd: process.cwd(),
@@ -111,7 +111,7 @@ Returns `urls`, `electronProcess`, and an idempotent `close()`.
 Runs a finite production build for configured processes (no watch).
 
 ```ts
-import { build } from 'electron-rstack';
+import { build } from '@rselectron/core';
 
 const result = await build({
   mode: 'production',
@@ -130,7 +130,7 @@ Passing `watch: true` throws; use `createServer` or `rselectron dev --watch` for
 Builds first (unless `skipBuild`), then launches Electron to preview production outputs.
 
 ```ts
-import { preview } from 'electron-rstack';
+import { preview } from '@rselectron/core';
 
 const session = await preview({
   skipBuild: false,
@@ -149,7 +149,7 @@ Returns an optional `buildResult`, `electronProcess`, and an idempotent `close()
 Prints normalized configuration without building or launching. Useful before debugging compile or launch failures.
 
 ```ts
-import { inspect } from 'electron-rstack';
+import { inspect } from '@rselectron/core';
 
 const result = await inspect({ mode: 'development' });
 
@@ -166,7 +166,7 @@ for (const warning of result.warnings) {
 Loads environment files. Default prefixes include `RSELECTRON_`, `MAIN_RSELECTRON_`, `PRELOAD_RSELECTRON_`, and `RENDERER_RSELECTRON_`. Behavior matches CLI `--env-mode`.
 
 ```ts
-import { defineConfig, loadEnv } from 'electron-rstack';
+import { defineConfig, loadEnv } from '@rselectron/core';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv({ mode });
@@ -193,7 +193,7 @@ More on prefixes: [Environment](/config/environment).
 Merge multiple Rselectron configs (including per-process `electron` fields). `mergeRsbuildConfig` is re-exported from `@rsbuild/core`.
 
 ```ts
-import { defineConfig, mergeRselectronConfig } from 'electron-rstack';
+import { defineConfig, mergeRselectronConfig } from '@rselectron/core';
 import { shared } from './rselectron.shared';
 
 export default defineConfig(
@@ -213,7 +213,7 @@ import {
   ELECTRON_SUPPORT_SNAPSHOT,
   resolveProjectElectron,
   version,
-} from 'electron-rstack';
+} from '@rselectron/core';
 
 console.log(version);
 console.log(ELECTRON_SUPPORT_SNAPSHOT);
@@ -230,7 +230,7 @@ Missing project-local Electron, or a version outside the supported range, throws
 Structured failures with a stable `code` and optional `hint`.
 
 ```ts
-import { build, RselectronError } from 'electron-rstack';
+import { build, RselectronError } from '@rselectron/core';
 
 try {
   await build();
@@ -247,7 +247,7 @@ try {
 In TypeScript, pull in ambient declarations with:
 
 ```ts
-/// <reference types="electron-rstack/node" />
+/// <reference types="@rselectron/core/node" />
 ```
 
 ### Dev-server URL

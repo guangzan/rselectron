@@ -175,9 +175,9 @@ test('Node-role entries stay stable while emitted non-resource assets use conten
   }
 });
 
-test('electron-rstack/node declares asset query module types', () => {
+test('@rselectron/core/node declares asset query module types', () => {
   const appRoot = createRoot('types');
-  mkdirSync(join(appRoot, 'node_modules/electron-rstack'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), { recursive: true });
   writeFileSync(
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'asset-types', private: true, type: 'module' }, null, 2)}\n`,
@@ -201,20 +201,20 @@ test('electron-rstack/node declares asset query module types', () => {
     )}\n`,
   );
   writeFileSync(
-    join(appRoot, 'node_modules/electron-rstack/package.json'),
+    join(appRoot, 'node_modules/@rselectron/core/package.json'),
     readFileSync(
       join(repositoryRoot, 'packages/rselectron/package.json'),
       'utf8',
     ),
   );
   writeFileSync(
-    join(appRoot, 'node_modules/electron-rstack/node.d.ts'),
+    join(appRoot, 'node_modules/@rselectron/core/node.d.ts'),
     readFileSync(join(repositoryRoot, 'packages/rselectron/node.d.ts'), 'utf8'),
   );
   writeFileSync(
     join(appRoot, 'main.ts'),
     [
-      "import 'electron-rstack/node';",
+      "import '@rselectron/core/node';",
       "import assetPath from './file.txt?asset';",
       "import unpacked from './file.txt?asset&asarUnpack';",
       'const paths: [string, string] = [assetPath, unpacked];',

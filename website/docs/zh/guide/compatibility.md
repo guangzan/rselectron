@@ -12,7 +12,7 @@ description: Electron 版本、宿主、框架与有意排除的能力。
 也可从包中读取：
 
 ```ts
-import { ELECTRON_SUPPORT_SNAPSHOT } from 'electron-rstack';
+import { ELECTRON_SUPPORT_SNAPSHOT } from '@rselectron/core';
 ```
 
 ## 宿主与打包
@@ -35,4 +35,4 @@ Vanilla 与 React 是官方示例。其他 UI 框架可通过常规 Rsbuild 插�
 | V8 字节码编译 | 不实现 — 无静默回退 |
 | electron-vite 导出的 SWC helper | 不导出 — 使用 Rsbuild / Rspack 原生 SWC 配置 |
 
-详见仓库 [兼容性矩阵](https://github.com/guangzan/electron-rstack/blob/main/docs/monorail/compatibility-matrix.md) 与 [迁移](./migration)。
+详见仓库 [兼容性矩阵](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md) 与 [迁移](./migration)。

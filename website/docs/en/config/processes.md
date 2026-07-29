@@ -8,7 +8,7 @@ description: How to configure main, preload, and renderer, and how they relate t
 Declare main, preload, and renderer under `defineConfig`. Each key is a full Rsbuild config, plus Rselectron-owned `electron` options.
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {

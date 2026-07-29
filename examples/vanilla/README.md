@@ -12,5 +12,5 @@ This directory is **not** a regression fixture. Automated tests use
 - `src/renderer` — Renderer Role entry
 - `rselectron.config.ts` — Role configuration
 
-Copy this tree into a real application, install `electron-rstack`, `@rsbuild/core`,
+Copy this tree into a real application, install `@rselectron/core`, `@rsbuild/core`,
 and a supported Electron major, then run `pnpm dev`.

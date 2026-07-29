@@ -99,7 +99,7 @@ function extractMarkdownLinks(source: string): string[] {
 function extractRselectronImports(source: string): string[] {
   const names: string[] = [];
   const pattern =
-    /import\s*\{([^}]+)\}\s*from\s*['"]electron-rstack(?:\/node)?['"]/g;
+    /import\s*\{([^}]+)\}\s*from\s*['"]@rselectron\/core(?:\/node)?['"]/g;
   for (const match of source.matchAll(pattern)) {
     for (const part of match[1]!.split(',')) {
       const name = part
@@ -338,13 +338,13 @@ test('documentation site publishes under the GitHub Pages project root', () => {
   );
   expect(configSource).toMatch(/\bllms:\s*true\b/);
   expect(configSource).toContain(
-    'https://github.com/guangzan/electron-rstack/tree/main/website/docs',
+    'https://github.com/guangzan/rselectron/tree/main/website/docs',
   );
   expect(configSource).toContain('https://guangzan.github.io/Rselectron');
   expect(configSource).toMatch(/pluginSitemap/);
   expect(configSource).toMatch(/pluginOpenGraph/);
   expect(configSource).toContain("icon: 'github'");
-  expect(configSource).toContain('https://github.com/guangzan/electron-rstack');
+  expect(configSource).toContain('https://github.com/guangzan/rselectron');
   expect(configSource).toContain("light: '/navbar-logo-light.png'");
   expect(configSource).toContain("dark: '/navbar-logo-dark.png'");
   expect(configSource).toContain("icon: '/favicon-128x128.png'");
@@ -433,7 +433,7 @@ test('Rspress documentation site builds', () => {
   expect(enHome).toContain(
     'Develop and source-build Electron apps with Rsbuild and Rspack.',
   );
-  expect(enHome).toContain('https://github.com/guangzan/electron-rstack');
+  expect(enHome).toContain('https://github.com/guangzan/rselectron');
   expect(enHome).toMatch(/Get Started/);
   expect(enHome).not.toMatch(/WhoIsUsing|ToolStack/);
   expect(enHome).not.toMatch(/Discord|BlueSky|Awesome Rspack|ByteDance/);
@@ -491,7 +491,7 @@ test('Rspress documentation site builds', () => {
   expect(zhHome).toContain(
     '用 Rsbuild / Rspack 做 Electron 的开发与源码构建。',
   );
-  expect(zhHome).toContain('https://github.com/guangzan/electron-rstack');
+  expect(zhHome).toContain('https://github.com/guangzan/rselectron');
   expect(zhHome).toMatch(/快速开始/);
   expect(zhHome).not.toMatch(/WhoIsUsing|ToolStack/);
   expect(zhHome).not.toMatch(/Discord|BlueSky|Awesome Rspack|ByteDance/);

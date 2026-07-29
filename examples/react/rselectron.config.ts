@@ -1,5 +1,5 @@
 import { pluginReact } from '@rsbuild/plugin-react';
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {

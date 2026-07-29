@@ -8,7 +8,7 @@ description: 如何配置 main、preload、renderer，以及与 Rsbuild 的关�
 用 `defineConfig` 分别声明主进程、预加载脚本和渲染进程。每一项都是一份完整的 Rsbuild 配置，再叠上 Rselectron 自己的 `electron` 选项。
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {

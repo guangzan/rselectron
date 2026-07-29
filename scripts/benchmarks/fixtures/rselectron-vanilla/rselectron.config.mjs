@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 const fixtureRoot = dirname(fileURLToPath(import.meta.url));
 
-/** @type {import('electron-rstack').RselectronConfig} */
+/** @type {import('@rselectron/core').RselectronConfig} */
 export default {
   main: {
     root: join(fixtureRoot, 'src/main'),

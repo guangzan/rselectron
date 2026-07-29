@@ -12,7 +12,7 @@ Supported Electron majors are **41–43**. The optional peer range is `>=41 <44`
 You can also read it from the package:
 
 ```ts
-import { ELECTRON_SUPPORT_SNAPSHOT } from 'electron-rstack';
+import { ELECTRON_SUPPORT_SNAPSHOT } from '@rselectron/core';
 ```
 
 ## Hosts and packaging
@@ -35,4 +35,4 @@ Compared with electron-vite, these capabilities are intentionally out of scope:
 | V8 bytecode compilation | Not implemented — no silent fallback |
 | electron-vite SWC helpers | Not exported — configure SWC via Rsbuild / Rspack |
 
-See the repository [compatibility matrix](https://github.com/guangzan/electron-rstack/blob/main/docs/monorail/compatibility-matrix.md) and [Migration](./migration).
+See the repository [compatibility matrix](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md) and [Migration](./migration).

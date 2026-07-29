@@ -342,7 +342,7 @@ test('Role builds receive only shared and Role-scoped environment variables', as
   await result.close();
 });
 
-test('electron-rstack/node declares RSELECTRON_RENDERER_URL without ambient app types', () => {
+test('@rselectron/core/node declares RSELECTRON_RENDERER_URL without ambient app types', () => {
   const appRoot = createRoot('node-types');
   writeFileSync(
     join(appRoot, 'package.json'),
@@ -369,7 +369,7 @@ test('electron-rstack/node declares RSELECTRON_RENDERER_URL without ambient app 
   writeFileSync(
     join(appRoot, 'main.ts'),
     [
-      "import 'electron-rstack/node';",
+      "import '@rselectron/core/node';",
       '',
       'const url: string | undefined = process.env.RSELECTRON_RENDERER_URL;',
       'void url;',
@@ -377,16 +377,16 @@ test('electron-rstack/node declares RSELECTRON_RENDERER_URL without ambient app 
     ].join('\n'),
   );
 
-  mkdirSync(join(appRoot, 'node_modules/electron-rstack'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), { recursive: true });
   writeFileSync(
-    join(appRoot, 'node_modules/electron-rstack/package.json'),
+    join(appRoot, 'node_modules/@rselectron/core/package.json'),
     readFileSync(
       join(repositoryRoot, 'packages/rselectron/package.json'),
       'utf8',
     ),
   );
   writeFileSync(
-    join(appRoot, 'node_modules/electron-rstack/node.d.ts'),
+    join(appRoot, 'node_modules/@rselectron/core/node.d.ts'),
     readFileSync(join(repositoryRoot, 'packages/rselectron/node.d.ts'), 'utf8'),
   );
 

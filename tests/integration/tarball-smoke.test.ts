@@ -97,7 +97,7 @@ test('a consumer can install and use the packed public facade', () => {
 
   const installedPackageJson = JSON.parse(
     readFileSync(
-      join(fixtureRoot, 'node_modules/electron-rstack/package.json'),
+      join(fixtureRoot, 'node_modules/@rselectron/core/package.json'),
       'utf8',
     ),
   ) as {
@@ -112,14 +112,14 @@ test('a consumer can install and use the packed public facade', () => {
   });
 
   const publicDeclaration = readFileSync(
-    join(fixtureRoot, 'node_modules/electron-rstack/dist/index.d.ts'),
+    join(fixtureRoot, 'node_modules/@rselectron/core/dist/index.d.ts'),
     'utf8',
   );
   expect(publicDeclaration).not.toContain('@rselectron-internal');
 
   writeFileSync(
     join(fixtureRoot, 'index.ts'),
-    "import { build, defineConfig, version } from 'electron-rstack';\nconst packageVersion: string = version;\nconst config = defineConfig({});\nvoid build;\nvoid config;\n",
+    "import { build, defineConfig, version } from '@rselectron/core';\nconst packageVersion: string = version;\nconst config = defineConfig({});\nvoid build;\nvoid config;\n",
   );
   const typecheck = run(
     process.execPath,
@@ -144,7 +144,7 @@ test('a consumer can install and use the packed public facade', () => {
     [
       '--input-type=module',
       '--eval',
-      "import('electron-rstack').then(({ version }) => console.log(version))",
+      "import('@rselectron/core').then(({ version }) => console.log(version))",
     ],
     fixtureRoot,
   );

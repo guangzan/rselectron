@@ -2,7 +2,7 @@
 
 Rselectron is an Rsbuild-first Electron development and build tool.
 
-Current beta: **1.0.0-beta.0** (`npm install electron-rstack@1.0.0-beta.0` after publish, or install from a packed tarball).
+Current beta: **1.0.0-beta.0** (`npm install @rselectron/core@1.0.0-beta.0` after publish, or install from a packed tarball).
 
 简体中文说明见 [README.zh.md](./README.zh.md)。完整文档站点见 [`website/`](./website/)。
 
@@ -40,7 +40,7 @@ method. `createServer()` returns Renderer URLs, the Electron child process, and
 an idempotent `close()`. When Role formats or compiler targets must be derived,
 Electron is resolved from the Application root against the frozen support
 snapshot. Role builds load `RSELECTRON_` plus the Role-scoped prefix through
-Rsbuild's environment pipeline. `electron-rstack/node` declares
+Rsbuild's environment pipeline. `@rselectron/core/node` declares
 `RSELECTRON_RENDERER_URL` plus `?asset` / `?asset&asarUnpack` /
 `?modulePath` / `?nodeWorker` / `*.wasm?loader` / `*.node` module forms.
 Core and CLI remain private implementation packages.

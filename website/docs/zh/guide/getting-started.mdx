@@ -30,7 +30,7 @@ Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（
 
 :::
 
-<PackageManagerTabs command="add electron-rstack @rsbuild/core electron -D" />
+<PackageManagerTabs command="add @rselectron/core @rsbuild/core electron -D" />
 
 ## 命令行界面
 
@@ -59,7 +59,7 @@ Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（
 运行 CLI 时，Rselectron 会解析项目根目录下的配置文件（如 `rselectron.config.ts`）。最基本的配置如下：
 
 ```ts title="rselectron.config.ts"
-import { defineConfig } from 'electron-rstack';
+import { defineConfig } from '@rselectron/core';
 
 export default defineConfig({
   main: {
@@ -97,11 +97,11 @@ export default defineConfig({
 
 仓库提供可学习的示例（vanilla 与 React）：
 
-- [`examples/vanilla`](https://github.com/guangzan/electron-rstack/tree/main/examples/vanilla)
-- [`examples/react`](https://github.com/guangzan/electron-rstack/tree/main/examples/react)
+- [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)
+- [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react)
 
 复制示例目录，安装依赖后运行 `rselectron dev` 即可。
 
 ## 寻求帮助
 
-如果开发中遇到问题，可以先看 [排障](./troubleshooting)，再到 [GitHub Issues](https://github.com/guangzan/electron-rstack/issues) 搜索是否已有相同问题。没有的话欢迎提交 issue。
+如果开发中遇到问题，可以先看 [排障](./troubleshooting)，再到 [GitHub Issues](https://github.com/guangzan/rselectron/issues) 搜索是否已有相同问题。没有的话欢迎提交 issue。

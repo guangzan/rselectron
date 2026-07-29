@@ -11,7 +11,7 @@ Rselectron 追求的是能力对齐，不是把 Vite 配置改个名就能跑。
 
 | electron-vite | Rselectron |
 | --- | --- |
-| `electron-vite` 包 | `electron-rstack`（peer：`@rsbuild/core`） |
+| `electron-vite` 包 | `@rselectron/core`（peer：`@rsbuild/core`） |
 | Vite 插件 | **例外** — 改写为 Rsbuild / Rspack 插件 |
 | Bytecode 插件 / V8 字节码 | **例外** — 不实现；无静默回退 |
 | 导出的 SWC helper | **例外** — 通过 Rsbuild / Rspack 配置 SWC |
