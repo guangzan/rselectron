@@ -1,53 +1,100 @@
-# Rselectron
+<p align="center">
+  <img src="./website/docs/public/rselectron-logo.png" width="150px" height="150px" alt="Rselectron">
+</p>
 
-Rselectron is an Rsbuild-first Electron development and build tool.
+<div align="center">
+  <h1>Rselectron</h1>
+</div>
 
-Current beta: **1.0.0-beta.1** (`npm install @rselectron/core@1.0.0-beta.1` after publish, or install from a packed tarball).
+<p align="center">Electron tooling on Rspack</p>
 
-简体中文说明见 [README.zh.md](./README.zh.md)。完整文档站点见 [`website/`](./website/)。
+<p align="center">
+  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?color=6988e6&label=version" alt="npm version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/guangzan/rselectron?color=blue" alt="license"></a>
+</p>
 
-## CLI contract
+<p align="center">
+  <a href="https://guangzan.github.io/Rselectron/">Documentation</a> |
+  <a href="https://guangzan.github.io/Rselectron/guide/getting-started">Getting Started</a>
+</p>
 
-- `rselectron --help` prints the available bootstrap options.
-- `rselectron --version` prints the package version.
-- `rselectron build` performs one finite production build for every configured
-  Main, Preload, and Renderer Role. It accepts `--config`, `--config-loader`,
-  `--mode`, and `--env-mode`; watch mode is rejected.
-- `rselectron inspect` prints normalized Role, final Rsbuild, and Rspack
-  configuration (`--format json|human`) without building or launching Electron.
-- `rselectron preview` builds production output (unless `--skip-build`) and
-  launches project-local Electron.
-- `rselectron dev --watch` opts Main and Preload into rebuilds; `--watch=main`
-  / `--watch=preload` select Roles explicitly and override `electron.watch`.
-- `rselectron dev --renderer-only` reuses validated Main/Preload outputs.
-- Changing a watched configuration dependency replaces the complete Development
-  generation (Roles, Renderer server, and Electron) after one config reload.
-- Running `rselectron` without an explicit option prints
-  `No command specified.` and help to stderr, then exits with status 1. It does
-  not launch Electron.
+<p align="center">
+  <a href="./README.zh.md">简体中文</a>
+</p>
 
-An omitted Role produces an `RSELECTRON_ROLE_MISSING` warning and does not
-prevent configured Roles from building.
+<br />
 
-## Programmatic API
+## Features
 
-The ESM API exports `build`, `createServer`, `defineConfig`, `inspect`, `preview`,
-`loadEnv`, `mergeRselectronConfig`, `mergeRsbuildConfig`,
-`ELECTRON_SUPPORT_SNAPSHOT`, `resolveProjectElectron`, `RselectronError`, and
-`version`.
-`build()` returns per-Role stats and output paths plus an idempotent `close()`
-method. `createServer()` returns Renderer URLs, the Electron child process, and
-an idempotent `close()`. When Role formats or compiler targets must be derived,
-Electron is resolved from the Application root against the frozen support
-snapshot. Role builds load `RSELECTRON_` plus the Role-scoped prefix through
-Rsbuild's environment pipeline. `@rselectron/core/node` declares
-`RSELECTRON_RENDERER_URL` plus `?asset` / `?asset&asarUnpack` /
-`?modulePath` / `?nodeWorker` / `*.wasm?loader` / `*.node` module forms.
-Core and CLI remain private implementation packages.
+- ⚡️ [Rsbuild](https://rsbuild.rs) / [Rspack](https://rspack.rs) powered, with Electron-oriented defaults
+- 🛠 Single config for main, preload, and renderer
+- 🚀 Fast builds with Rust-based parallel compilation
+- 🔥 Renderer HMR, plus hot reload for main and preload
+- 💡 Asset handling tuned for the Electron main process
+- ✨ Isolated builds for multi-entry Electron apps
+- 🔌 Framework agnostic — use any UI stack your Rsbuild setup supports
+- 📦 Out-of-the-box TypeScript support, plus `inspect` for debugging config
 
-## Documentation and examples
+## Usage
 
-- Bilingual docs site: `website/` (`pnpm docs:dev` / `pnpm docs:build`)
-- Domain vocabulary: [`docs/monorail/CONTEXT.md`](./docs/monorail/CONTEXT.md) / [`docs/monorail/CONTEXT.zh.md`](./docs/monorail/CONTEXT.zh.md)
-- Compatibility matrix: [`docs/monorail/compatibility-matrix.md`](./docs/monorail/compatibility-matrix.md)
-- Learning examples: [`examples/`](./examples/) (separate from `tests/fixtures/`)
+### Install
+
+```sh
+npm i @rselectron/core -D
+```
+
+### Development & Build
+
+Add npm scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "rselectron dev",
+    "build": "rselectron build",
+    "preview": "rselectron preview"
+  }
+}
+```
+
+### Configuration
+
+When you run the CLI, Rselectron resolves a config file at the project root (for example `rselectron.config.ts`). A minimal config looks like this:
+
+```ts
+import { defineConfig } from '@rselectron/core';
+
+export default defineConfig({
+  main: {
+    root: './src/main',
+    source: { entry: { index: './index.ts' } },
+  },
+  preload: {
+    root: './src/preload',
+    source: { entry: { index: './index.ts' } },
+  },
+  renderer: {
+    root: './src/renderer',
+    source: { entry: { index: './index.ts' } },
+  },
+});
+```
+
+Each of `main` / `preload` / `renderer` is a full Rsbuild config. See the [configuration guide](https://guangzan.github.io/Rselectron/config/) for details.
+
+## Getting Started
+
+Start from a learning example in this repository:
+
+|            Example            | Description                                 |
+| :---------------------------: | :------------------------------------------ |
+| [vanilla](./examples/vanilla) | Minimal Main / Preload / Renderer app       |
+|   [react](./examples/react)   | React renderer with `@rsbuild/plugin-react` |
+
+```bash
+cd examples/vanilla
+pnpm install
+pnpm dev
+```
+
+Full walkthrough: [Getting Started](https://guangzan.github.io/Rselectron/guide/getting-started).

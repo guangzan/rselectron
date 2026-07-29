@@ -115,16 +115,13 @@ test('packed beta tarball includes LICENSE and has no telemetry hooks', () => {
   }
 });
 
-test('English and Simplified Chinese docs stay version-consistent for the beta', () => {
-  const packageJson = JSON.parse(
-    readFileSync(facadePackageJsonPath, 'utf8'),
-  ) as {
-    version: string;
-  };
+test('English and Simplified Chinese docs stay consistent for the beta', () => {
   const readmeEn = readFileSync(join(repositoryRoot, 'README.md'), 'utf8');
   const readmeZh = readFileSync(join(repositoryRoot, 'README.zh.md'), 'utf8');
-  expect(readmeEn).toContain(packageJson.version);
-  expect(readmeZh).toContain(packageJson.version);
+  expect(readmeEn).toContain('./README.zh.md');
+  expect(readmeZh).toContain('./README.md');
+  expect(readmeEn).toContain('https://guangzan.github.io/Rselectron/');
+  expect(readmeZh).toContain('https://guangzan.github.io/Rselectron/zh/');
 
   const enCompatibility = readFileSync(
     join(repositoryRoot, 'website/docs/en/guide/compatibility.md'),

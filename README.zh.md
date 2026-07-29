@@ -1,38 +1,100 @@
-# Rselectron
+<p align="center">
+  <img src="./website/docs/public/rselectron-logo.png" width="150px" height="150px" alt="Rselectron">
+</p>
 
-Rselectron 是面向 Electron 的 Rsbuild 优先开发与构建工具。
+<div align="center">
+  <h1>Rselectron</h1>
+</div>
 
-当前 beta：**1.0.0-beta.1**（发布后可用 `npm install @rselectron/core@1.0.0-beta.1`，或从打包 tarball 安装）。
+<p align="center">基于 Rspack 的 Electron 工具</p>
 
-English README: [README.md](./README.md)。完整文档站点见 [`website/`](./website/)。
+<p align="center">
+  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?color=6988e6&label=version" alt="npm version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/guangzan/rselectron?color=blue" alt="license"></a>
+</p>
 
-## CLI 契约
+<p align="center">
+  <a href="https://guangzan.github.io/Rselectron/zh/">文档</a> |
+  <a href="https://guangzan.github.io/Rselectron/zh/guide/getting-started">快速开始</a>
+</p>
 
-- `rselectron --help` 打印可用选项。
-- `rselectron --version` 打印包版本。
-- `rselectron build` 对每个已配置的 Main、Preload、Renderer Role 执行一次有限生产构建。接受 `--config`、`--config-loader`、`--mode`、`--env-mode`；拒绝 watch 模式。
-- `rselectron inspect` 打印规范化的 Role、最终 Rsbuild 与 Rspack 配置（`--format json|human`），不构建也不启动 Electron。
-- `rselectron preview` 构建生产输出（除非 `--skip-build`）并启动项目本地 Electron。
-- `rselectron dev --watch` 让 Main 与 Preload 参与重建；`--watch=main` / `--watch=preload` 显式选择 Role 并覆盖 `electron.watch`。
-- `rselectron dev --renderer-only` 复用已校验的 Main/Preload 输出。
-- 被监听的配置依赖发生变化时，会在一次配置重载后替换完整 Development 世代（Roles、Renderer 服务器与 Electron）。
-- 不带显式命令运行 `rselectron` 时，向 stderr 打印 `No command specified.` 与帮助，并以状态码 1 退出，不启动 Electron。
+<p align="center">
+  <a href="./README.md">English</a>
+</p>
 
-省略某个 Role 会产生 `RSELECTRON_ROLE_MISSING` 警告，不会阻止已配置 Role 构建。
+<br />
 
-## 编程 API
+## 特性
 
-ESM API 导出 `build`、`createServer`、`defineConfig`、`inspect`、`preview`、`loadEnv`、`mergeRselectronConfig`、`mergeRsbuildConfig`、`ELECTRON_SUPPORT_SNAPSHOT`、`resolveProjectElectron`、`RselectronError` 与 `version`。
-`build()` 返回按 Role 的统计与输出路径，以及幂等的 `close()`。
-`createServer()` 返回 Renderer URL、Electron 子进程，以及幂等的 `close()`。
-当需要推导 Role 格式或编译器 target 时，会从 Application root 对照冻结支持快照解析 Electron。
-Role 构建通过 Rsbuild 环境管道加载 `RSELECTRON_` 与 Role 作用域前缀。
-`@rselectron/core/node` 声明 `RSELECTRON_RENDERER_URL` 以及 `?asset` / `?asset&asarUnpack` / `?modulePath` / `?nodeWorker` / `*.wasm?loader` / `*.node` 等模块形态。
-Core 与 CLI 仍是私有实现包。
+- ⚡️ 基于 [Rsbuild](https://rsbuild.rs) / [Rspack](https://rspack.rs)，并提供面向 Electron 的默认配置
+- 🛠 主进程、预加载脚本与渲染进程统一配置入口
+- 🚀 Rust 并行编译，构建更快
+- 🔥 渲染进程 HMR；主进程与预加载脚本支持热重载
+- 💡 针对 Electron 主进程优化的资源处理
+- ✨ 多入口应用可隔离构建
+- 🔌 框架无关 — Rsbuild 支持的前端框架都能用
+- 📦 开箱支持 TypeScript，并提供 `inspect` 便于排查配置
 
-## 文档与示例
+## 使用
 
-- 双语文档站：`website/`（`pnpm docs:dev` / `pnpm docs:build`）
-- 领域词汇：[`docs/monorail/CONTEXT.md`](./docs/monorail/CONTEXT.md) / [`docs/monorail/CONTEXT.zh.md`](./docs/monorail/CONTEXT.zh.md)
-- 兼容性矩阵：[`docs/monorail/compatibility-matrix.md`](./docs/monorail/compatibility-matrix.md)
-- 学习示例：[`examples/`](./examples/)（与 `tests/fixtures/` 分离）
+### 安装
+
+```sh
+npm i @rselectron/core -D
+```
+
+### 开发与构建
+
+在 `package.json` 中添加脚本：
+
+```json
+{
+  "scripts": {
+    "dev": "rselectron dev",
+    "build": "rselectron build",
+    "preview": "rselectron preview"
+  }
+}
+```
+
+### 配置
+
+运行 CLI 时，Rselectron 会在项目根目录解析配置文件（例如 `rselectron.config.ts`）。最小配置如下：
+
+```ts
+import { defineConfig } from '@rselectron/core';
+
+export default defineConfig({
+  main: {
+    root: './src/main',
+    source: { entry: { index: './index.ts' } },
+  },
+  preload: {
+    root: './src/preload',
+    source: { entry: { index: './index.ts' } },
+  },
+  renderer: {
+    root: './src/renderer',
+    source: { entry: { index: './index.ts' } },
+  },
+});
+```
+
+`main` / `preload` / `renderer` 各自都是完整的 Rsbuild 配置。详见[配置指南](https://guangzan.github.io/Rselectron/zh/config/)。
+
+## 快速开始
+
+从仓库中的示例起步：
+
+|             示例              | 说明                                           |
+| :---------------------------: | :--------------------------------------------- |
+| [vanilla](./examples/vanilla) | 最小 Main / Preload / Renderer 应用            |
+|   [react](./examples/react)   | 使用 `@rsbuild/plugin-react` 的 React 渲染进程 |
+
+```bash
+cd examples/vanilla
+pnpm install
+pnpm dev
+```
+
+完整步骤见文档站：[快速开始](https://guangzan.github.io/Rselectron/zh/guide/getting-started)。
