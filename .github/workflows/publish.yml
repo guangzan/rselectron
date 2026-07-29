@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish:
-    if: github.repository == 'guangzan/rselectron'
+    if: github.repository == 'guangzan/electron-rstack'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

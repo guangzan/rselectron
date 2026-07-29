@@ -69,7 +69,7 @@ test('tag publish workflow gates OIDC npm publication', () => {
   expect(workflow).toContain('tags:');
   expect(workflow).toContain("'v*'");
   expect(workflow).toContain('id-token: write');
-  expect(workflow).toContain("github.repository == 'guangzan/rselectron'");
+  expect(workflow).toContain("github.repository == 'guangzan/electron-rstack'");
   expect(workflow).toContain('publish-ci');
   expect(workflow).toContain('changelogithub');
   expect(workflow).not.toContain('NPM_TOKEN');

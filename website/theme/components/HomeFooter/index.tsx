@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { useI18n, useI18nUrl } from '../../i18n';
 import styles from './index.module.scss';
 
-const GITHUB_URL = 'https://github.com/guangzan/rselectron';
+const GITHUB_URL = 'https://github.com/guangzan/electron-rstack';
 
 function useFooterData() {
   const t = useI18n();
