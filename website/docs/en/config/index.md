@@ -30,10 +30,10 @@ export default defineConfig({
 
 ## Pages
 
-| Page | Contents |
-| ---- | -------- |
+| Page                                       | Contents                                                     |
+| ------------------------------------------ | ------------------------------------------------------------ |
 | [Main, preload, and renderer](./processes) | Process config shape, omitted keys, and Rsbuild relationship |
-| [Electron options](./electron) | Process-level and app-level `electron` fields |
-| [Environment](./environment) | `--mode`, `--env-mode`, and env prefixes |
+| [Electron options](./electron)             | Process-level and app-level `electron` fields                |
+| [Environment](./environment)               | `--mode`, `--env-mode`, and env prefixes                     |
 
 CLI flags for mode / env-mode: [CLI](/api/cli). Programmatic entry points: [JavaScript API](/api/javascript-api). Getting started: [Getting started](/guide/getting-started).

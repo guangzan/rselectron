@@ -23,7 +23,8 @@ export const ZH_CN: Record<keyof typeof EN_US, string> = {
 
   // fully featured
   fullyFeaturedTitle: '来自 Rspack 的能力',
-  fullyFeaturedDesc: 'Rselectron 建立在 Rsbuild / Rspack 上，这些打包能力一并带上。',
+  fullyFeaturedDesc:
+    'Rselectron 建立在 Rsbuild / Rspack 上，这些打包能力一并带上。',
 
   featureCodeSplitting: '把代码拆成更小的 bundle，按需加载。',
   featureTreeShaking: '去掉最终产物里用不到的代码。',

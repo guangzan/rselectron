@@ -27,23 +27,23 @@ Prints normalized configuration without building or launching. Defaults to JSON;
 
 ### Universal options
 
-| Option | Description |
-| --- | --- |
-| `--config <path>` | Use the specified config file |
-| `--config-loader <auto\|jiti\|native>` | Select the config loader |
-| `--mode <development\|production\|none>` | Set build mode |
-| `--env-mode <name>` | Select the environment-file namespace |
-| `-v, --version` | Show version |
-| `-h, --help` | Show help |
+| Option                                   | Description                           |
+| ---------------------------------------- | ------------------------------------- |
+| `--config <path>`                        | Use the specified config file         |
+| `--config-loader <auto\|jiti\|native>`   | Select the config loader              |
+| `--mode <development\|production\|none>` | Set build mode                        |
+| `--env-mode <name>`                      | Select the environment-file namespace |
+| `-v, --version`                          | Show version                          |
+| `-h, --help`                             | Show help                             |
 
 Long flags are kebab-case only.
 
 ### Dev options
 
-| Option | Description |
-| --- | --- |
-| `--watch` / `--watch=main` / `--watch=preload` | Opt main and/or preload into rebuilds; overrides `electron.watch` |
-| `--renderer-only` | Start the renderer dev server only, reusing existing main / preload outputs |
+| Option                                         | Description                                                                 |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
+| `--watch` / `--watch=main` / `--watch=preload` | Opt main and/or preload into rebuilds; overrides `electron.watch`           |
+| `--renderer-only`                              | Start the renderer dev server only, reusing existing main / preload outputs |
 
 :::tip Note
 
@@ -55,12 +55,12 @@ When a watched configuration dependency changes, Rselectron reloads the config a
 
 ### Preview options
 
-| Option | Description |
-| --- | --- |
+| Option         | Description                                |
+| -------------- | ------------------------------------------ |
 | `--skip-build` | Skip build and launch Electron for preview |
 
 ### Inspect options
 
-| Option | Description |
-| --- | --- |
+| Option                   | Description                    |
+| ------------------------ | ------------------------------ |
 | `--format <json\|human>` | Output format (default `json`) |

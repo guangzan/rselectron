@@ -8,7 +8,10 @@ import {
 } from '../../packages/rselectron/src/index.ts';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
-const fixtureRoot = resolve(import.meta.dirname, '../fixtures/vanilla-multipage');
+const fixtureRoot = resolve(
+  import.meta.dirname,
+  '../fixtures/vanilla-multipage',
+);
 const outputRoot = join(fixtureRoot, 'out');
 const markerPath = join(outputRoot, 'launch-marker.json');
 

@@ -27,23 +27,23 @@ description: rselectron 命令与选项。
 
 ### 通用选项
 
-| 选项 | 描述 |
-| --- | --- |
-| `--config <path>` | 指定配置文件路径 |
-| `--config-loader <auto\|jiti\|native>` | 选择配置加载器 |
-| `--mode <development\|production\|none>` | 设置构建模式 |
-| `--env-mode <name>` | 选择环境文件命名空间 |
-| `-v, --version` | 显示版本号 |
-| `-h, --help` | 显示帮助 |
+| 选项                                     | 描述                 |
+| ---------------------------------------- | -------------------- |
+| `--config <path>`                        | 指定配置文件路径     |
+| `--config-loader <auto\|jiti\|native>`   | 选择配置加载器       |
+| `--mode <development\|production\|none>` | 设置构建模式         |
+| `--env-mode <name>`                      | 选择环境文件命名空间 |
+| `-v, --version`                          | 显示版本号           |
+| `-h, --help`                             | 显示帮助             |
 
 长旗标仅使用 kebab-case。
 
 ### Dev 选项
 
-| 选项 | 描述 |
-| --- | --- |
-| `--watch` / `--watch=main` / `--watch=preload` | 让主进程和/或预加载参与重建；覆盖 `electron.watch` |
-| `--renderer-only` | 仅启动渲染进程开发服务，复用已有的主进程 / 预加载产物 |
+| 选项                                           | 描述                                                  |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| `--watch` / `--watch=main` / `--watch=preload` | 让主进程和/或预加载参与重建；覆盖 `electron.watch`    |
+| `--renderer-only`                              | 仅启动渲染进程开发服务，复用已有的主进程 / 预加载产物 |
 
 :::tip 提示
 
@@ -55,12 +55,12 @@ description: rselectron 命令与选项。
 
 ### Preview 选项
 
-| 选项 | 描述 |
-| --- | --- |
+| 选项           | 描述                             |
+| -------------- | -------------------------------- |
 | `--skip-build` | 跳过构建，直接启动 Electron 预览 |
 
 ### Inspect 选项
 
-| 选项 | 描述 |
-| --- | --- |
+| 选项                     | 描述                    |
+| ------------------------ | ----------------------- |
 | `--format <json\|human>` | 输出格式（默认 `json`） |

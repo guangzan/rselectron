@@ -12,7 +12,10 @@ import vanillaConfig, {
   closedRoles,
 } from '../fixtures/vanilla-three-role/rselectron.config.ts';
 
-const fixtureRoot = resolve(import.meta.dirname, '../fixtures/vanilla-three-role');
+const fixtureRoot = resolve(
+  import.meta.dirname,
+  '../fixtures/vanilla-three-role',
+);
 const outputRoot = join(fixtureRoot, 'out');
 
 afterAll(() => {

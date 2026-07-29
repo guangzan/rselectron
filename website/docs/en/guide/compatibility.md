@@ -29,10 +29,10 @@ Vanilla and React are the official examples. Other UI frameworks work through no
 
 Compared with electron-vite, these capabilities are intentionally out of scope:
 
-| Capability | Rselectron stance |
-| --- | --- |
-| Vite plugins | Not accepted or translated — use Rsbuild / Rspack plugins |
-| V8 bytecode compilation | Not implemented — no silent fallback |
-| electron-vite SWC helpers | Not exported — configure SWC via Rsbuild / Rspack |
+| Capability                | Rselectron stance                                         |
+| ------------------------- | --------------------------------------------------------- |
+| Vite plugins              | Not accepted or translated — use Rsbuild / Rspack plugins |
+| V8 bytecode compilation   | Not implemented — no silent fallback                      |
+| electron-vite SWC helpers | Not exported — configure SWC via Rsbuild / Rspack         |
 
 See the repository [compatibility matrix](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md) and [Migration](./migration).

@@ -177,7 +177,9 @@ test('Node-role entries stay stable while emitted non-resource assets use conten
 
 test('@rselectron/core/node declares asset query module types', () => {
   const appRoot = createRoot('types');
-  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), {
+    recursive: true,
+  });
   writeFileSync(
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'asset-types', private: true, type: 'module' }, null, 2)}\n`,

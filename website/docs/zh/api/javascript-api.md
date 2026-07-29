@@ -96,13 +96,13 @@ process.on('SIGINT', async () => {
 
 常用选项：
 
-| 选项 | 说明 |
-| --- | --- |
-| `cwd` | 项目根目录，默认 `process.cwd()` |
-| `config` / `configPath` / `configLoader` | 内联配置或配置文件 |
-| `mode` / `envMode` | 构建模式与环境文件命名空间 |
-| `watch` | 主进程 / 预加载是否参与重建 |
-| `rendererOnly` | 只起渲染进程开发服务，复用已有主进程 / 预加载产物 |
+| 选项                                     | 说明                                              |
+| ---------------------------------------- | ------------------------------------------------- |
+| `cwd`                                    | 项目根目录，默认 `process.cwd()`                  |
+| `config` / `configPath` / `configLoader` | 内联配置或配置文件                                |
+| `mode` / `envMode`                       | 构建模式与环境文件命名空间                        |
+| `watch`                                  | 主进程 / 预加载是否参与重建                       |
+| `rendererOnly`                           | 只起渲染进程开发服务，复用已有主进程 / 预加载产物 |
 
 返回值：`urls`、`electronProcess`、幂等的 `close()`。
 
@@ -275,11 +275,11 @@ createWorker({ workerData: 'hello' });
 await loadWasm();
 ```
 
-| 导入后缀 | 用途 |
-| --- | --- |
-| `?asset` | 解析为资源文件路径字符串 |
-| `?asset&asarUnpack` | 同上，并标记需从 asar 解包 |
-| `?modulePath` | 导出可交给 `Worker` / `utilityProcess.fork` 的模块路径 |
-| `?nodeWorker` | 导出创建 `worker_threads.Worker` 的工厂函数 |
-| `*.wasm?loader` | 导出加载 WASM 实例的函数 |
-| `*.node` | 原生 addon 模块 |
+| 导入后缀            | 用途                                                   |
+| ------------------- | ------------------------------------------------------ |
+| `?asset`            | 解析为资源文件路径字符串                               |
+| `?asset&asarUnpack` | 同上，并标记需从 asar 解包                             |
+| `?modulePath`       | 导出可交给 `Worker` / `utilityProcess.fork` 的模块路径 |
+| `?nodeWorker`       | 导出创建 `worker_threads.Worker` 的工厂函数            |
+| `*.wasm?loader`     | 导出加载 WASM 实例的函数                               |
+| `*.node`            | 原生 addon 模块                                        |

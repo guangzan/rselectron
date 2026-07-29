@@ -11,7 +11,8 @@ export const EN_US = {
   LightningHMR: 'Fast HMR',
   LightningHMRDesc: 'Incremental builds keep renderer hot updates quick.',
   FrameworkAgnostic: 'Framework agnostic',
-  FrameworkAgnosticDesc: 'Use whatever UI framework your Rsbuild setup supports.',
+  FrameworkAgnosticDesc:
+    'Use whatever UI framework your Rsbuild setup supports.',
   WebpackCompatible: 'Webpack compatible',
   WebpackCompatibleDesc:
     'Works with most webpack plugins and loaders from the community.',
@@ -29,30 +30,21 @@ export const EN_US = {
 
   featureCodeSplitting:
     'Split code into smaller bundles for on-demand loading.',
-  featureTreeShaking:
-    'Remove unused code from the final bundles.',
-  featurePlugins:
-    'Rich plugin hooks; compatible with most webpack plugins.',
-  featureMultipage:
-    'Render multiple pages through one Electron renderer role.',
+  featureTreeShaking: 'Remove unused code from the final bundles.',
+  featurePlugins: 'Rich plugin hooks; compatible with most webpack plugins.',
+  featureMultipage: 'Render multiple pages through one Electron renderer role.',
 
-  featureAssetManagement:
-    'Handle and optimize images, fonts, and stylesheets.',
+  featureAssetManagement: 'Handle and optimize images, fonts, and stylesheets.',
   featureLoaders:
     'Compatible with webpack loaders from the existing ecosystem.',
-  featureHmr:
-    'Update modules at runtime without a full page refresh.',
-  featureDevServer:
-    'Local development server for the renderer.',
+  featureHmr: 'Update modules at runtime without a full page refresh.',
+  featureDevServer: 'Local development server for the renderer.',
 
-  featureSwc:
-    'Rust-based SWC for JavaScript and TypeScript transpilation.',
-  featureLightningCss:
-    'Lightning CSS for CSS processing and optimization.',
+  featureSwc: 'Rust-based SWC for JavaScript and TypeScript transpilation.',
+  featureLightningCss: 'Lightning CSS for CSS processing and optimization.',
   featureParallelBuilds:
     'Run multiple builds in parallel for different targets or environments.',
-  featureJavaScriptApi:
-    'Programmatic build API for custom pipelines.',
+  featureJavaScriptApi: 'Programmatic build API for custom pipelines.',
 
   // HomeFooter
   guide: 'Guide',

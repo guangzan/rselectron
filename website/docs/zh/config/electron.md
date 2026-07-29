@@ -55,11 +55,11 @@ export default defineConfig({
 
 控制主进程 / 预加载的输出模块格式。
 
-| 值 | 含义 |
-| --- | --- |
-| `auto`（默认） | 根据项目本地 Electron 版本与环境推导 |
-| `cjs` | CommonJS |
-| `esm` | ES Module（需 Electron 版本支持 ESM） |
+| 值             | 含义                                  |
+| -------------- | ------------------------------------- |
+| `auto`（默认） | 根据项目本地 Electron 版本与环境推导  |
+| `cjs`          | CommonJS                              |
+| `esm`          | ES Module（需 Electron 版本支持 ESM） |
 
 ```ts
 main: {
@@ -91,12 +91,12 @@ CLI 的 `--watch` / `--watch=main` / `--watch=preload` 会覆盖配置里的 `el
 
 为主进程 / 预加载决定是否把 Node 依赖留在 `node_modules`（外置），而不是打进 bundle。
 
-| 值 | 含义 |
-| --- | --- |
-| 省略 | 主进程 / 预加载默认开启；`electron` 与 Node 内置模块始终外置 |
-| `true` | 显式开启 |
-| `false` | 关闭（依赖打进产物；沙盒预加载常用） |
-| `{ include, exclude }` | 精细控制：`include` 强制打包，`exclude` 强制外置 |
+| 值                     | 含义                                                         |
+| ---------------------- | ------------------------------------------------------------ |
+| 省略                   | 主进程 / 预加载默认开启；`electron` 与 Node 内置模块始终外置 |
+| `true`                 | 显式开启                                                     |
+| `false`                | 关闭（依赖打进产物；沙盒预加载常用）                         |
+| `{ include, exclude }` | 精细控制：`include` 强制打包，`exclude` 强制外置             |
 
 ```ts
 main: {
@@ -138,12 +138,12 @@ preload: {
 
 写在配置顶层的 `electron`：
 
-| 字段 | 说明 |
-| --- | --- |
-| `entry` | Electron 启动入口文件；不设则使用 `package.json` 的 `main` |
-| `packageJson` | 自定义应用清单路径（相对项目根） |
-| `execPath` | 自定义 Electron 可执行文件；需与运行时事实一致，否则会失败 |
-| `args` | 传给 Electron 进程的额外参数 |
+| 字段          | 说明                                                       |
+| ------------- | ---------------------------------------------------------- |
+| `entry`       | Electron 启动入口文件；不设则使用 `package.json` 的 `main` |
+| `packageJson` | 自定义应用清单路径（相对项目根）                           |
+| `execPath`    | 自定义 Electron 可执行文件；需与运行时事实一致，否则会失败 |
+| `args`        | 传给 Electron 进程的额外参数                               |
 
 ```ts
 export default defineConfig({
@@ -152,9 +152,7 @@ export default defineConfig({
     packageJson: './package.json',
     args: ['--no-sandbox'],
   },
-  main: {
-    /* ... */
-  },
+  main: {/* ... */},
 });
 ```
 

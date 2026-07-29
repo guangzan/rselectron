@@ -55,11 +55,11 @@ export default defineConfig({
 
 Controls the output module format for main / preload.
 
-| Value | Meaning |
-| --- | --- |
+| Value            | Meaning                                                         |
+| ---------------- | --------------------------------------------------------------- |
 | `auto` (default) | Derived from the project-local Electron version and environment |
-| `cjs` | CommonJS |
-| `esm` | ES Module (requires an Electron version that supports ESM) |
+| `cjs`            | CommonJS                                                        |
+| `esm`            | ES Module (requires an Electron version that supports ESM)      |
 
 ```ts
 main: {
@@ -91,12 +91,12 @@ CLI `--watch` / `--watch=main` / `--watch=preload` override `electron.watch` in 
 
 For main / preload, decide whether Node dependencies stay in `node_modules` (externalized) instead of being bundled.
 
-| Value | Meaning |
-| --- | --- |
-| omitted | On by default for main / preload; `electron` and Node builtins are always external |
-| `true` | Explicitly enable |
-| `false` | Disable (bundle deps into the output; common for sandboxed preload) |
-| `{ include, exclude }` | Fine-grained: `include` forces bundling, `exclude` forces externalization |
+| Value                  | Meaning                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| omitted                | On by default for main / preload; `electron` and Node builtins are always external |
+| `true`                 | Explicitly enable                                                                  |
+| `false`                | Disable (bundle deps into the output; common for sandboxed preload)                |
+| `{ include, exclude }` | Fine-grained: `include` forces bundling, `exclude` forces externalization          |
 
 ```ts
 main: {
@@ -138,12 +138,12 @@ With `isolatedEntries` on preload, dependency externalization defaults to off (s
 
 Top-level `electron` on the config:
 
-| Field | Description |
-| --- | --- |
-| `entry` | Electron launch entry file; falls back to `package.json#main` when omitted |
-| `packageJson` | Custom application manifest path (relative to the project root) |
-| `execPath` | Custom Electron executable; must be consistent with runtime facts or the run fails |
-| `args` | Extra arguments passed to the Electron process |
+| Field         | Description                                                                        |
+| ------------- | ---------------------------------------------------------------------------------- |
+| `entry`       | Electron launch entry file; falls back to `package.json#main` when omitted         |
+| `packageJson` | Custom application manifest path (relative to the project root)                    |
+| `execPath`    | Custom Electron executable; must be consistent with runtime facts or the run fails |
+| `args`        | Extra arguments passed to the Electron process                                     |
 
 ```ts
 export default defineConfig({
@@ -152,9 +152,7 @@ export default defineConfig({
     packageJson: './package.json',
     args: ['--no-sandbox'],
   },
-  main: {
-    /* ... */
-  },
+  main: {/* ... */},
 });
 ```
 

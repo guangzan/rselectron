@@ -377,7 +377,9 @@ test('@rselectron/core/node declares RSELECTRON_RENDERER_URL without ambient app
     ].join('\n'),
   );
 
-  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), {
+    recursive: true,
+  });
   writeFileSync(
     join(appRoot, 'node_modules/@rselectron/core/package.json'),
     readFileSync(

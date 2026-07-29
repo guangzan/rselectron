@@ -133,7 +133,9 @@ test('?nodeWorker produces a Worker factory that runs Worker thread code', async
 
 test('@rselectron/core/node declares Worker query module types', () => {
   const appRoot = createRoot('types');
-  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), { recursive: true });
+  mkdirSync(join(appRoot, 'node_modules/@rselectron/core'), {
+    recursive: true,
+  });
   writeFileSync(
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'worker-types', private: true, type: 'module' }, null, 2)}\n`,

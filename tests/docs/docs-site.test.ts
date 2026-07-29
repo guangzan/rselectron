@@ -333,9 +333,7 @@ test('documentation site publishes under the GitHub Pages project root', () => {
   );
 
   expect(configSource).toContain("base: '/Rselectron/'");
-  expect(configSource).toContain(
-    "siteOrigin: 'https://guangzan.github.io'",
-  );
+  expect(configSource).toContain("siteOrigin: 'https://guangzan.github.io'");
   expect(configSource).toMatch(/\bllms:\s*true\b/);
   expect(configSource).toContain(
     'https://github.com/guangzan/rselectron/tree/main/website/docs',
@@ -348,11 +346,13 @@ test('documentation site publishes under the GitHub Pages project root', () => {
   expect(configSource).toContain("light: '/navbar-logo-light.png'");
   expect(configSource).toContain("dark: '/navbar-logo-dark.png'");
   expect(configSource).toContain("icon: '/favicon-128x128.png'");
-  expect(configSource).not.toMatch(/pluginAlgolia|pluginRss|@rspress\/plugin-algolia|@rspress\/plugin-rss/);
+  expect(configSource).not.toMatch(
+    /pluginAlgolia|pluginRss|@rspress\/plugin-algolia|@rspress\/plugin-rss/,
+  );
 
-  expect(
-    existsSync(join(docsRoot, 'public', 'navbar-logo-light.png')),
-  ).toBe(true);
+  expect(existsSync(join(docsRoot, 'public', 'navbar-logo-light.png'))).toBe(
+    true,
+  );
   expect(existsSync(join(docsRoot, 'public', 'navbar-logo-dark.png'))).toBe(
     true,
   );
@@ -395,9 +395,9 @@ test('Rspress documentation site builds', () => {
   expect(
     existsSync(join(websiteRoot, 'doc_build', 'guide', 'getting-started.md')),
   ).toBe(true);
-  expect(
-    existsSync(join(websiteRoot, 'doc_build', 'zh', 'llms.txt')),
-  ).toBe(true);
+  expect(existsSync(join(websiteRoot, 'doc_build', 'zh', 'llms.txt'))).toBe(
+    true,
+  );
 
   const enGettingStarted = readFileSync(
     join(websiteRoot, 'doc_build', 'guide', 'getting-started.html'),

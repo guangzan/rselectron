@@ -33,10 +33,10 @@ export default defineConfig({
 });
 ```
 
-| Key | Purpose |
-| --- | --- |
-| `main` | Electron main process |
-| `preload` | Preload scripts |
+| Key        | Purpose                    |
+| ---------- | -------------------------- |
+| `main`     | Electron main process      |
+| `preload`  | Preload scripts            |
 | `renderer` | Renderer (browser context) |
 
 Omit a key only when that process is intentionally absent. A missing key emits `RSELECTRON_ROLE_MISSING` and does not block the other processes from building.

@@ -261,12 +261,14 @@ for (const manager of ['npm', 'pnpm', 'yarn', 'bun'] as const) {
       const install = installWith(manager, consumerRoot);
       expectSuccess(install, `${manager} install`);
 
-      expect(existsSync(join(consumerRoot, 'node_modules/@rselectron/core'))).toBe(
-        true,
-      );
+      expect(
+        existsSync(join(consumerRoot, 'node_modules/@rselectron/core')),
+      ).toBe(true);
       expect(existsSync(installedBin(consumerRoot))).toBe(true);
       expect(
-        existsSync(join(consumerRoot, 'node_modules/@rselectron/core/node.d.ts')),
+        existsSync(
+          join(consumerRoot, 'node_modules/@rselectron/core/node.d.ts'),
+        ),
       ).toBe(true);
 
       const help = runInstalledCli(consumerRoot, ['--help']);

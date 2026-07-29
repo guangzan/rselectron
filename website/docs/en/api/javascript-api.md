@@ -96,13 +96,13 @@ process.on('SIGINT', async () => {
 
 Common options:
 
-| Option | Description |
-| --- | --- |
-| `cwd` | Project root; defaults to `process.cwd()` |
-| `config` / `configPath` / `configLoader` | Inline config or config file |
-| `mode` / `envMode` | Build mode and environment-file namespace |
-| `watch` | Whether main / preload participate in rebuilds |
-| `rendererOnly` | Renderer dev server only; reuse existing main / preload outputs |
+| Option                                   | Description                                                     |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| `cwd`                                    | Project root; defaults to `process.cwd()`                       |
+| `config` / `configPath` / `configLoader` | Inline config or config file                                    |
+| `mode` / `envMode`                       | Build mode and environment-file namespace                       |
+| `watch`                                  | Whether main / preload participate in rebuilds                  |
+| `rendererOnly`                           | Renderer dev server only; reuse existing main / preload outputs |
 
 Returns `urls`, `electronProcess`, and an idempotent `close()`.
 
@@ -275,11 +275,11 @@ createWorker({ workerData: 'hello' });
 await loadWasm();
 ```
 
-| Import suffix | Purpose |
-| --- | --- |
-| `?asset` | Resolves to an asset file path string |
-| `?asset&asarUnpack` | Same, and marks the file for asar unpack |
-| `?modulePath` | Exports a module path for `Worker` / `utilityProcess.fork` |
-| `?nodeWorker` | Exports a factory that creates a `worker_threads.Worker` |
-| `*.wasm?loader` | Exports a function that loads a WASM instance |
-| `*.node` | Native addon module |
+| Import suffix       | Purpose                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| `?asset`            | Resolves to an asset file path string                      |
+| `?asset&asarUnpack` | Same, and marks the file for asar unpack                   |
+| `?modulePath`       | Exports a module path for `Worker` / `utilityProcess.fork` |
+| `?nodeWorker`       | Exports a factory that creates a `worker_threads.Worker`   |
+| `*.wasm?loader`     | Exports a function that loads a WASM instance              |
+| `*.node`            | Native addon module                                        |

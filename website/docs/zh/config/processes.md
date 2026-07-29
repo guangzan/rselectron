@@ -33,10 +33,10 @@ export default defineConfig({
 });
 ```
 
-| 键 | 用途 |
-| --- | --- |
-| `main` | Electron 主进程 |
-| `preload` | 预加载脚本 |
+| 键         | 用途                     |
+| ---------- | ------------------------ |
+| `main`     | Electron 主进程          |
+| `preload`  | 预加载脚本               |
 | `renderer` | 渲染进程（浏览器上下文） |
 
 仅在有意省略某一进程时才不要配置它。缺失项会发出 `RSELECTRON_ROLE_MISSING` 警告，不会阻止其余进程构建。

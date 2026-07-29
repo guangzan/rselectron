@@ -1,6 +1,1 @@
-[
-  "index",
-  "processes",
-  "electron",
-  "environment"
-]
+["index", "processes", "electron", "environment"]
