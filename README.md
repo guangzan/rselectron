@@ -1,28 +1,19 @@
-<p align="center">
-  <img src="./website/docs/public/rselectron-logo.png" width="150px" height="150px" alt="Rselectron">
+<picture>
+  <img alt="Rselectron Banner" src="./website/docs/public/rselectron-banner.png">
+</picture>
+
+# Rselectron
+
+<p>
+  <a href="https://guangzan.github.io/Rselectron/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
+  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" /></a>
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/@rselectron/core.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="node version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="license" /></a>
 </p>
 
-<div align="center">
-  <h1>Rselectron</h1>
-</div>
+English | [简体中文](./README.zh.md)
 
-<p align="center">Electron tooling on Rspack</p>
-
-<p align="center">
-  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?color=6988e6&label=version" alt="npm version"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/guangzan/rselectron?color=blue" alt="license"></a>
-</p>
-
-<p align="center">
-  <a href="https://guangzan.github.io/Rselectron/">Documentation</a> |
-  <a href="https://guangzan.github.io/Rselectron/guide/getting-started">Getting Started</a>
-</p>
-
-<p align="center">
-  <a href="./README.zh.md">简体中文</a>
-</p>
-
-<br />
+Rselectron is an Rsbuild-first Electron development and build tool. Develop and source-build Electron apps with Rsbuild and Rspack.
 
 ## Features
 

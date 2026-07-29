@@ -1,28 +1,19 @@
-<p align="center">
-  <img src="./website/docs/public/rselectron-logo.png" width="150px" height="150px" alt="Rselectron">
+<picture>
+  <img alt="Rselectron Banner" src="./website/docs/public/rselectron-banner.png">
+</picture>
+
+# Rselectron
+
+<p>
+  <a href="https://guangzan.github.io/Rselectron/zh/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
+  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" /></a>
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/@rselectron/core.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="node version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="license" /></a>
 </p>
 
-<div align="center">
-  <h1>Rselectron</h1>
-</div>
+[English](./README.md) | 简体中文
 
-<p align="center">基于 Rspack 的 Electron 工具</p>
-
-<p align="center">
-  <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?color=6988e6&label=version" alt="npm version"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/guangzan/rselectron?color=blue" alt="license"></a>
-</p>
-
-<p align="center">
-  <a href="https://guangzan.github.io/Rselectron/zh/">文档</a> |
-  <a href="https://guangzan.github.io/Rselectron/zh/guide/getting-started">快速开始</a>
-</p>
-
-<p align="center">
-  <a href="./README.md">English</a>
-</p>
-
-<br />
+Rselectron 是面向 Electron 的 Rsbuild 优先开发与构建工具。用 Rsbuild / Rspack 做 Electron 的开发与源码构建。
 
 ## 特性
 
