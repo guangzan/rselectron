@@ -24,12 +24,15 @@ test('CI workflow documents cross-platform release evidence gates', () => {
   expect(workflow).toContain('test');
   expect(workflow).toContain('test:e2e');
 
-  const releaseWorkflow = readFileSync(
-    join(repositoryRoot, '.github/workflows/release.yml'),
+  const publishWorkflow = readFileSync(
+    join(repositoryRoot, '.github/workflows/publish.yml'),
     'utf8',
   );
-  expect(releaseWorkflow).toContain('changesets/action');
-  expect(releaseWorkflow).toContain('NPM_CONFIG_PROVENANCE');
+  expect(publishWorkflow).toContain('id-token: write');
+  expect(publishWorkflow).toContain('publish-ci');
+  expect(publishWorkflow).toContain('changelogithub');
+  expect(workflow).toContain('node-version-file: .node-version');
+  expect(workflow).toContain('pnpm/action-setup');
 
   for (const runner of [
     'ubuntu-latest',

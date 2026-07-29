@@ -20,28 +20,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: actions/setup-node@v6
         with:
-          node-version: '22'
-      - name: Enable Corepack
-        run: corepack enable
+          node-version-file: .node-version
+          cache: pnpm
       - name: Install dependencies
-        run: corepack pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Format check (exact Prettier)
-        run: corepack pnpm run format:check
+        run: pnpm run format:check
       - name: Lint (exact Rslint)
-        run: corepack pnpm run lint
+        run: pnpm run lint
       - name: Typecheck
-        run: corepack pnpm run typecheck
+        run: pnpm run typecheck
       - name: Build public facade
-        run: corepack pnpm run build
+        run: pnpm run build
       - name: Build documentation site
-        run: corepack pnpm run docs:build
+        run: pnpm run docs:build
       - name: Benchmark contract (skip host mismatch)
         run: |
-          RSELECTRON_BENCH_SKIP_EVITE=1 corepack pnpm run bench
-          corepack pnpm run bench:check
+          RSELECTRON_BENCH_SKIP_EVITE=1 pnpm run bench
+          pnpm run bench:check
 
   test:
     name: Test (${{ matrix.os }} / Electron ${{ matrix.electron }})
@@ -85,18 +86,19 @@ jobs:
             electron: '43.2.0'
             arch: arm64
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: actions/setup-node@v6
         with:
-          node-version: '22'
-      - name: Enable Corepack
-        run: corepack enable
+          node-version-file: .node-version
+          cache: pnpm
       - name: Install dependencies
-        run: corepack pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Pin matrix Electron major
-        run: corepack pnpm add -wD electron@${{ matrix.electron }}
+        run: pnpm add -wD electron@${{ matrix.electron }}
       - name: Build public facade
-        run: corepack pnpm run build
+        run: pnpm run build
       - name: Install Linux display dependencies
         if: runner.os == 'Linux'
         run: |
@@ -104,16 +106,16 @@ jobs:
           sudo apt-get install -y xvfb
       - name: Run Rstest (unit, integration, packed-tarball)
         if: runner.os != 'Linux'
-        run: corepack pnpm test
+        run: pnpm test
       - name: Run Rstest under Xvfb
         if: runner.os == 'Linux'
-        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' corepack pnpm test
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' pnpm test
       - name: Run Playwright Electron smoke
         if: runner.os != 'Linux'
-        run: corepack pnpm run test:e2e
+        run: pnpm run test:e2e
       - name: Run Playwright Electron smoke under Xvfb
         if: runner.os == 'Linux'
-        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' corepack pnpm run test:e2e
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' pnpm run test:e2e
       - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

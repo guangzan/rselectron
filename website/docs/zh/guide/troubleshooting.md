@@ -7,7 +7,7 @@ description: 常见问题定位与恢复指引。
 
 也可参考 [Rsbuild 排障](https://rsbuild.rs/zh/guide/troubleshooting/index) 与 [Rspack 排障](https://rspack.rs/zh/misc/faq)。
 
-若这里的建议不够，请到 [GitHub Issues](https://github.com/guangzan/Rselectron/issues) 搜索或提交问题。
+若这里的建议不够，请到 [GitHub Issues](https://github.com/guangzan/rselectron/issues) 搜索或提交问题。
 
 ## 技巧
 

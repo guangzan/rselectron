@@ -10,19 +10,22 @@ const facadePackageJsonPath = join(
   repositoryRoot,
   'packages/rselectron/package.json',
 );
-const changelogPath = join(repositoryRoot, 'packages/rselectron/CHANGELOG.md');
-const releaseWorkflowPath = join(
+const publishWorkflowPath = join(
   repositoryRoot,
-  '.github/workflows/release.yml',
+  '.github/workflows/publish.yml',
 );
-const changesetConfigPath = join(repositoryRoot, '.changeset/config.json');
-const matrixPath = join(repositoryRoot, 'docs/monorail/compatibility-matrix.md');
+const releaseScriptPath = join(repositoryRoot, 'scripts/release.ts');
+const publishCiScriptPath = join(repositoryRoot, 'scripts/publish-ci.ts');
+const matrixPath = join(
+  repositoryRoot,
+  'docs/monorail/compatibility-matrix.md',
+);
 const deltaReviewPath = join(
   repositoryRoot,
   'docs/monorail/matrix-delta-review.md',
 );
 
-test('public facade is a 1.0 release candidate with MIT surface', () => {
+test('public facade is a 1.0 beta with MIT surface', () => {
   const packageJson = JSON.parse(
     readFileSync(facadePackageJsonPath, 'utf8'),
   ) as {
@@ -37,7 +40,7 @@ test('public facade is a 1.0 release candidate with MIT surface', () => {
     publishConfig?: { access?: string; provenance?: boolean };
   };
 
-  expect(packageJson.version).toMatch(/^1\.0\.0-rc\.\d+$/);
+  expect(packageJson.version).toMatch(/^1\.0\.0-beta\.\d+$/);
   expect(packageJson.license).toBe('MIT');
   expect(packageJson.type).toBe('module');
   expect(packageJson.engines.node).toBe('>=20.19.0');
@@ -51,30 +54,26 @@ test('public facade is a 1.0 release candidate with MIT surface', () => {
   expect(packageJson.bin.rselectron).toBe('./bin/rselectron.js');
   expect(packageJson.publishConfig?.access).toBe('public');
   expect(existsSync(join(repositoryRoot, 'LICENSE'))).toBe(true);
-  expect(existsSync(changelogPath)).toBe(true);
-  expect(readFileSync(changelogPath, 'utf8')).toContain(packageJson.version);
+  expect(
+    existsSync(join(repositoryRoot, 'packages/rselectron/CHANGELOG.md')),
+  ).toBe(false);
 });
 
-test('Changesets and release workflow gate npm provenance publication', () => {
-  expect(existsSync(changesetConfigPath)).toBe(true);
-  const config = JSON.parse(readFileSync(changesetConfigPath, 'utf8')) as {
-    access: string;
-    ignore: string[];
-  };
-  expect(config.access).toBe('public');
-  expect(config.ignore).toEqual(
-    expect.arrayContaining([
-      '@rselectron-internal/cli',
-      '@rselectron-internal/core',
-      '@rselectron/website',
-    ]),
-  );
+test('tag publish workflow gates OIDC npm publication', () => {
+  expect(existsSync(releaseScriptPath)).toBe(true);
+  expect(existsSync(publishCiScriptPath)).toBe(true);
+  expect(existsSync(join(repositoryRoot, '.node-version'))).toBe(true);
+  expect(existsSync(join(repositoryRoot, '.changeset'))).toBe(false);
 
-  const workflow = readFileSync(releaseWorkflowPath, 'utf8');
-  expect(workflow).toContain('changesets/action');
+  const workflow = readFileSync(publishWorkflowPath, 'utf8');
+  expect(workflow).toContain('tags:');
+  expect(workflow).toContain("'v*'");
   expect(workflow).toContain('id-token: write');
-  expect(workflow).toContain('NPM_CONFIG_PROVENANCE');
-  expect(workflow).toContain('release:publish');
+  expect(workflow).toContain("github.repository == 'guangzan/rselectron'");
+  expect(workflow).toContain('publish-ci');
+  expect(workflow).toContain('changelogithub');
+  expect(workflow).not.toContain('NPM_TOKEN');
+  expect(workflow).not.toContain('changesets/action');
 });
 
 test('compatibility-matrix evidence gates are not silently waived', () => {
@@ -84,8 +83,8 @@ test('compatibility-matrix evidence gates are not silently waived', () => {
   expect(readFileSync(deltaReviewPath, 'utf8')).toContain('6.0.0-beta.1');
 });
 
-test('packed RC tarball includes LICENSE and has no telemetry hooks', () => {
-  const packRoot = mkdtempSync(join(tmpdir(), 'rselectron-rc-pack-'));
+test('packed beta tarball includes LICENSE and has no telemetry hooks', () => {
+  const packRoot = mkdtempSync(join(tmpdir(), 'rselectron-beta-pack-'));
   try {
     const tarballPath = packPublicFacade(packRoot);
     const list = spawnSync('tar', ['-tzf', tarballPath], { encoding: 'utf8' });
@@ -101,7 +100,7 @@ test('packed RC tarball includes LICENSE and has no telemetry hooks', () => {
     const packageJson = JSON.parse(
       readFileSync(join(extracted, 'package.json'), 'utf8'),
     ) as { version: string };
-    expect(packageJson.version).toMatch(/^1\.0\.0-rc\.\d+$/);
+    expect(packageJson.version).toMatch(/^1\.0\.0-beta\.\d+$/);
 
     const distIndex = readFileSync(join(extracted, 'dist/index.js'), 'utf8');
     const distCli = readFileSync(join(extracted, 'dist/cli.js'), 'utf8');
@@ -116,7 +115,7 @@ test('packed RC tarball includes LICENSE and has no telemetry hooks', () => {
   }
 });
 
-test('English and Simplified Chinese docs stay version-consistent for the RC', () => {
+test('English and Simplified Chinese docs stay version-consistent for the beta', () => {
   const packageJson = JSON.parse(
     readFileSync(facadePackageJsonPath, 'utf8'),
   ) as {

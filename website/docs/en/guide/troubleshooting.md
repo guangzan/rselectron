@@ -7,7 +7,7 @@ description: How to diagnose common failures and recover.
 
 Also see [Rsbuild troubleshooting](https://rsbuild.rs/guide/troubleshooting/index) and the [Rspack FAQ](https://rspack.rs/misc/faq).
 
-If these tips are not enough, search or open an issue on [GitHub](https://github.com/guangzan/Rselectron/issues).
+If these tips are not enough, search or open an issue on [GitHub](https://github.com/guangzan/rselectron/issues).
 
 ## Tips
 

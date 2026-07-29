@@ -46,12 +46,12 @@ export default defineConfig({
       {
         icon: 'github',
         mode: 'link',
-        content: 'https://github.com/guangzan/Rselectron',
+        content: 'https://github.com/guangzan/rselectron',
       },
     ],
     editLink: {
       docRepoBaseUrl:
-        'https://github.com/guangzan/Rselectron/tree/main/website/docs',
+        'https://github.com/guangzan/rselectron/tree/main/website/docs',
     },
   },
   builderConfig: {
