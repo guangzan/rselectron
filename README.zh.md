@@ -2,7 +2,7 @@
 
 Rselectron 是面向 Electron 的 Rsbuild 优先开发与构建工具。
 
-当前 beta：**1.0.0-beta.0**（发布后可用 `npm install @rselectron/core@1.0.0-beta.0`，或从打包 tarball 安装）。
+当前 beta：**1.0.0-beta.1**（发布后可用 `npm install @rselectron/core@1.0.0-beta.1`，或从打包 tarball 安装）。
 
 English README: [README.md](./README.md)。完整文档站点见 [`website/`](./website/)。
 

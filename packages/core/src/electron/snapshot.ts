@@ -12,7 +12,7 @@ export interface ElectronSupportSnapshot {
 }
 
 /**
- * Frozen at Rselectron 1.0.0-beta.0 against Electron's three stable majors on
+ * Frozen at Rselectron 1.0.0-beta.1 against Electron's three stable majors on
  * 2026-07-24. Targets use each major's first stable release metadata.
  */
 export const ELECTRON_SUPPORT_SNAPSHOT: ElectronSupportSnapshot = {
