@@ -1,0 +1,341 @@
+import { afterAll, expect, test } from '@rstest/core';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, sep } from 'node:path';
+import {
+  build,
+  ELECTRON_SUPPORT_SNAPSHOT,
+  resolveProjectElectron,
+} from '../../packages/rselectron/src/index.ts';
+import { writeFakeElectron } from '../helpers/fake-electron.ts';
+
+const roots: string[] = [];
+
+function createAppRoot(name: string): string {
+  const root = mkdtempSync(join(tmpdir(), `rselectron-${name}-`));
+  roots.push(root);
+  return root;
+}
+
+function writePackageJson(
+  appRoot: string,
+  packageJson: Record<string, unknown>,
+): void {
+  writeFileSync(
+    join(appRoot, 'package.json'),
+    `${JSON.stringify(packageJson, null, 2)}\n`,
+  );
+}
+
+function writeRoleSources(appRoot: string): void {
+  for (const role of ['main', 'preload', 'renderer'] as const) {
+    const roleRoot = join(appRoot, role);
+    mkdirSync(roleRoot, { recursive: true });
+    writeFileSync(
+      join(roleRoot, 'index.ts'),
+      `console.log('${role}-ready');\n`,
+    );
+  }
+  writeFileSync(
+    join(appRoot, 'renderer/index.html'),
+    '<!doctype html><html><body><div id="app"></div></body></html>\n',
+  );
+}
+
+afterAll(() => {
+  for (const root of roots) {
+    rmSync(root, { force: true, recursive: true });
+  }
+});
+
+test('the frozen support snapshot matches the published optional peer window', () => {
+  expect(ELECTRON_SUPPORT_SNAPSHOT.majors).toEqual([41, 42, 43]);
+  expect(ELECTRON_SUPPORT_SNAPSHOT.peerRange).toBe('>=41 <44');
+  expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[41]).toMatchObject({
+    chrome: '146.0.7680.65',
+    firstStable: '41.0.0',
+    node: '24.14.0',
+  });
+  expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[43]).toMatchObject({
+    chrome: '150.0.7871.46',
+    firstStable: '43.0.0',
+    node: '24.17.0',
+  });
+});
+
+test('resolveProjectElectron reads Electron from the Application root', () => {
+  const appRoot = createAppRoot('resolve');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  const execPath = writeFakeElectron({
+    appRoot,
+    version: '43.2.0',
+  });
+
+  const resolved = resolveProjectElectron(appRoot);
+  expect(resolved.major).toBe(43);
+  expect(resolved.version).toBe('43.2.0');
+  expect(resolved.execPath).toBe(execPath);
+  expect(resolved.root).toContain(`${sep}node_modules${sep}electron`);
+});
+
+test('build derives Node and Chromium targets from a supported project-local Electron', async () => {
+  const appRoot = createAppRoot('derive');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '41.10.3' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].cjs' },
+          filenameHash: false,
+          target: 'node',
+        },
+        electron: { format: 'auto' },
+      },
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/renderer') },
+          filenameHash: false,
+          target: 'web',
+        },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.electron).toMatchObject({
+    major: 41,
+    version: '41.10.3',
+  });
+  expect(result.runtime?.targets.main).toEqual(['electron41-main']);
+  expect(result.runtime?.targets.renderer).toEqual(['electron41-renderer']);
+  expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[41]).toMatchObject({
+    chrome: '146.0.7680.65',
+    node: '24.14.0',
+  });
+  expect(result.runtime?.formats.main).toBe('cjs');
+  await result.close();
+});
+
+test('build selects ESM automatically for module packages on supported Electron', async () => {
+  const appRoot = createAppRoot('auto-esm');
+  writePackageJson(appRoot, { name: 'app', private: true, type: 'module' });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '42.7.1' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].mjs' },
+          filenameHash: false,
+          target: 'node',
+        },
+        electron: { format: 'auto' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.formats.main).toBe('esm');
+  expect(result.runtime?.targets.main).toEqual(['electron42-main']);
+  await result.close();
+});
+
+test('unsupported Electron majors fail with a structured error', async () => {
+  const appRoot = createAppRoot('unsupported');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '40.0.0' });
+
+  await expect(
+    build({
+      config: {
+        main: {
+          root: join(appRoot, 'main'),
+          source: { entry: { index: './index.ts' } },
+          output: {
+            target: 'node',
+          },
+          electron: { format: 'auto' },
+        },
+      },
+      cwd: appRoot,
+    }),
+  ).rejects.toMatchObject({
+    code: 'RSELECTRON_ELECTRON_UNSUPPORTED',
+    role: 'electron',
+  });
+});
+
+test('missing project-local Electron fails when runtime facts must be derived', async () => {
+  const appRoot = createAppRoot('missing');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+
+  await expect(
+    build({
+      config: {
+        main: {
+          root: join(appRoot, 'main'),
+          source: { entry: { index: './index.ts' } },
+          output: {
+            target: 'node',
+          },
+          electron: { format: 'auto' },
+        },
+      },
+      cwd: appRoot,
+    }),
+  ).rejects.toMatchObject({
+    code: 'RSELECTRON_ELECTRON_NOT_FOUND',
+    role: 'electron',
+  });
+});
+
+test('a custom executable requires explicit runtime facts', async () => {
+  const appRoot = createAppRoot('custom-exec');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+  const packageExecPath = writeFakeElectron({
+    appRoot,
+    version: '43.2.0',
+  });
+  const customExecPath = join(appRoot, 'bin/custom-electron');
+
+  await expect(
+    build({
+      config: {
+        electron: {
+          execPath: customExecPath,
+        },
+        main: {
+          root: join(appRoot, 'main'),
+          source: { entry: { index: './index.ts' } },
+          output: {
+            target: 'node',
+          },
+          electron: { format: 'auto' },
+        },
+      },
+      cwd: appRoot,
+    }),
+  ).rejects.toMatchObject({
+    code: 'RSELECTRON_ELECTRON_EXEC_INCONSISTENT',
+    role: 'electron',
+  });
+
+  const result = await build({
+    config: {
+      electron: {
+        execPath: customExecPath,
+      },
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].cjs' },
+          filenameHash: false,
+          module: false,
+          overrideBrowserslist: ['node >= 24.17.0'],
+          target: 'node',
+        },
+        electron: { format: 'cjs' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.electron?.execPath).toBe(packageExecPath);
+  expect(result.runtime?.launchExecPath).toBe(customExecPath);
+  await result.close();
+});
+
+test('fully explicit source builds do not require Electron', async () => {
+  const appRoot = createAppRoot('explicit');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].cjs' },
+          filenameHash: false,
+          module: false,
+          overrideBrowserslist: ['node >= 20'],
+          target: 'node',
+        },
+        electron: { format: 'cjs' },
+      },
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/renderer') },
+          filenameHash: false,
+          overrideBrowserslist: ['chrome >= 120'],
+          target: 'web',
+        },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.electron).toBeUndefined();
+  expect(Object.keys(result.roles).sort()).toEqual(['main', 'renderer']);
+  await result.close();
+});
+
+test('explicit format and browserslist do not require Electron or package.json', async () => {
+  const appRoot = createAppRoot('explicit-browserslist');
+  writeRoleSources(appRoot);
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].cjs' },
+          filenameHash: false,
+          module: false,
+          overrideBrowserslist: ['node >= 20'],
+        },
+        electron: { format: 'cjs' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.electron).toBeUndefined();
+  expect(result.runtime?.targets.main).toEqual(['node >= 20']);
+  expect(result.roles.main?.paths.some((path) => path.endsWith('.cjs'))).toBe(
+    true,
+  );
+  await result.close();
+});

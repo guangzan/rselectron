@@ -1,0 +1,10 @@
+.repos
+.rslib
+dist
+node_modules
+pnpm-lock.yaml
+# Rewritten by test beforeAll hooks; formatting is not a product contract.
+tests/fixtures/vanilla-preview/
+tests/fixtures/vanilla-renderer-only/
+tests/fixtures/vanilla-config-restart/shared-options.mjs
+tests/fixtures/vanilla-config-restart/unrelated.mjs

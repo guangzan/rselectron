@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dir-section-header",
+    "name": "guide",
+    "label": "指南"
+  },
+  {
+    "type": "dir-section-header",
+    "name": "config",
+    "label": "配置"
+  },
+  {
+    "type": "dir-section-header",
+    "name": "api",
+    "label": "API"
+  }
+]

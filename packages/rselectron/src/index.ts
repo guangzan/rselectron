@@ -1,0 +1,47 @@
+import { getVersion } from '../../core/src/index.ts';
+
+export const version: string = getVersion();
+
+export {
+  build,
+  createServer,
+  defineConfig,
+  ELECTRON_SUPPORT_SNAPSHOT,
+  envPrefixesForRole,
+  inspect,
+  loadEnv,
+  mergeRsbuildConfig,
+  mergeRselectronConfig,
+  preview,
+  resolveProjectElectron,
+  RSELECTRON_ENV_PREFIXES,
+  RselectronError,
+} from '../../core/src/index.ts';
+export type {
+  ApplicationElectronConfig,
+  BuildOptions,
+  BuildResult,
+  BuildRuntimeInfo,
+  ConfigContext,
+  CreateServerOptions,
+  CreateServerResult,
+  Diagnostic,
+  ElectronMajorSupport,
+  ElectronSupportSnapshot,
+  InspectOptions,
+  InspectResult,
+  LoadEnvOptions,
+  LoadEnvResult,
+  PreviewOptions,
+  PreviewResult,
+  ProjectElectron,
+  RoleModuleFormat,
+  RoleInspectResult,
+  RselectronConfig,
+  RselectronConfigExport,
+  Role,
+  RoleBuildResult,
+  RoleConfig,
+  RoleElectronConfig,
+  WatchSelection,
+} from '../../core/src/index.ts';

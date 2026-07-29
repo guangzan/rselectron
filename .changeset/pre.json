@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "@rselectron-internal/cli": "0.0.0",
+    "@rselectron-internal/core": "0.0.0",
+    "rselectron": "0.0.0",
+    "@rselectron/website": "0.0.0"
+  },
+  "changesets": ["one-zero-rc"]
+}

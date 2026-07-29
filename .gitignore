@@ -1,0 +1,26 @@
+node_modules
+packages/*/dist
+packages/*/.rslib
+website/doc_build
+test-results
+playwright-report
+tests/fixtures/**/out
+*.tgz
+
+# Fixture-local installs
+tests/fixtures/**/node_modules/
+tests/fixtures/**/out/
+
+# Benchmark local outputs
+scripts/benchmarks/reports/
+scripts/benchmarks/fixtures/**/node_modules/
+scripts/benchmarks/fixtures/**/out/
+scripts/benchmarks/fixtures/**/fake-electron.mjs
+scripts/benchmarks/fixtures/**/dist/
+
+.DS_Store
+
+# Agents
+.repos
+# Root agent scratch only — do not ignore website/docs
+/docs/

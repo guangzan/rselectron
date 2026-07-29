@@ -1,0 +1,43 @@
+{
+  "name": "rselectron",
+  "version": "1.0.0-rc.0",
+  "description": "An Rsbuild-first Electron development and build tool.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "rselectron": "./bin/rselectron.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./node.d.ts"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "node.d.ts"
+  ],
+  "scripts": {
+    "build": "rslib build",
+    "prepack": "rslib build"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "peerDependencies": {
+    "@rsbuild/core": "^2.0.0",
+    "electron": ">=41 <44"
+  },
+  "peerDependenciesMeta": {
+    "electron": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

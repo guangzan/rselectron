@@ -1,0 +1,16 @@
+{
+  "environment": {
+    "arch": "arm64",
+    "platform": "darwin",
+    "electron": "43.2.0"
+  },
+  "regressionThreshold": 2.5,
+  "samples": {
+    "rselectron": {
+      "coldBuildMs": 161,
+      "rebuildMs": 39,
+      "devReadyMs": 125,
+      "peakRssBytes": 152256512
+    }
+  }
+}

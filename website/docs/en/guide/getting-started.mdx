@@ -1,0 +1,107 @@
+---
+title: Getting started
+description: Install Rselectron and run your first development and build session.
+---
+
+import { PackageManagerTabs } from '@theme';
+
+# Getting started
+
+:::tip Note
+
+This guide assumes you are familiar with Electron and Rsbuild. Read the [Electron guide](https://www.electronjs.org/docs/latest/) and the [Rsbuild guide](https://rsbuild.rs/guide/start/) first if needed.
+
+:::
+
+## Overview
+
+Rselectron is an Electron build tool based on Rsbuild. It aims for a faster, simpler development experience. It provides:
+
+- A set of `dev` / `build` / `preview` commands that handle Electron’s dual environments (Node.js main process and browser renderer).
+- A single config entry for main, preload, and renderer, with Electron-oriented defaults.
+- HMR for the renderer, and hot reload for main and preload.
+- Rsbuild / Rspack under the hood. It does **not** produce installers and is **not** a project scaffolder.
+
+## Install
+
+:::tip Prerequisites
+
+Rselectron requires Node.js `>=20.19.0` and the `@rsbuild/core` peer (`^2.0.0`). Electron is an optional peer — install it at the project root when you need to launch the app. Supported Electron versions are listed under [Compatibility](./compatibility).
+
+:::
+
+<PackageManagerTabs command="add rselectron @rsbuild/core electron -D" />
+
+## Command line interface
+
+After install you can run `npx rselectron`, or invoke the installed CLI:
+
+### `rselectron dev`
+
+Builds main and preload, starts a development server for the renderer, and launches Electron.
+
+### `rselectron build`
+
+Builds configured main, preload, and renderer sources. Run this before packaging an installer.
+
+### `rselectron preview`
+
+Builds (unless `--skip-build`) and launches Electron to preview the production build.
+
+### `rselectron inspect`
+
+Prints normalized configuration without building or launching.
+
+See [Command Line Interface](/api/cli) for the full option list.
+
+## Configuring Rselectron
+
+When you run the CLI, Rselectron resolves a config file at the project root (for example `rselectron.config.ts`). A minimal config looks like this:
+
+```ts title="rselectron.config.ts"
+import { defineConfig } from 'rselectron';
+
+export default defineConfig({
+  main: {
+    root: './src/main',
+    source: { entry: { index: './index.ts' } },
+  },
+  preload: {
+    root: './src/preload',
+    source: { entry: { index: './index.ts' } },
+  },
+  renderer: {
+    root: './src/renderer',
+    source: { entry: { index: './index.ts' } },
+  },
+});
+```
+
+Each of `main` / `preload` / `renderer` is a full Rsbuild config. Omit a key only when that process is intentionally absent. Details live under [Configuration](/config/).
+
+## Electron entry
+
+Point Electron’s application entry at the **main-process build output**. With the minimal config above, the default output is `dist` under each process `root`, so `package.json` can look like:
+
+```json title="package.json"
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "main": "./src/main/dist/index.js"
+}
+```
+
+Keep `main` (or `electron.entry` in config) aligned with the actual main output path. You can also set `output.distPath` to gather outputs under a shared directory (for example `out/main`), as the fixtures and many apps do.
+
+## Start from an example
+
+Learning examples (vanilla and React) live in the repository:
+
+- [`examples/vanilla`](https://github.com/guangzan/Rselectron/tree/main/examples/vanilla)
+- [`examples/react`](https://github.com/guangzan/Rselectron/tree/main/examples/react)
+
+Copy an example, install dependencies, then run `rselectron dev`.
+
+## Getting help
+
+If you hit a problem, check [Troubleshooting](./troubleshooting) first, then search the [GitHub issue tracker](https://github.com/guangzan/Rselectron/issues). If nothing matches, open a new issue.

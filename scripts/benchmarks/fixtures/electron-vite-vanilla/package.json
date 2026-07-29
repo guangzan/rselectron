@@ -1,0 +1,10 @@
+{
+  "name": "electron-vite-bench-vanilla",
+  "private": true,
+  "type": "module",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "build": "electron-vite build",
+    "dev": "electron-vite dev"
+  }
+}

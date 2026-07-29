@@ -1,0 +1,5 @@
+{
+  "name": "vanilla-dev-fixture",
+  "private": true,
+  "main": "./out/main/index.cjs"
+}

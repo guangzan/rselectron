@@ -1,0 +1,7 @@
+[
+  {
+    "text": "Docs",
+    "link": "/guide/getting-started",
+    "activeMatch": "/(guide|config|api)/"
+  }
+]

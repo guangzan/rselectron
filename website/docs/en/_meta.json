@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dir-section-header",
+    "name": "guide",
+    "label": "Guide"
+  },
+  {
+    "type": "dir-section-header",
+    "name": "config",
+    "label": "Config"
+  },
+  {
+    "type": "dir-section-header",
+    "name": "api",
+    "label": "API"
+  }
+]

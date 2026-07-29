@@ -1,0 +1,5 @@
+{
+  "name": "vanilla-preview-fixture",
+  "private": true,
+  "main": "./out/main/index.cjs"
+}

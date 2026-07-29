@@ -1,0 +1,18 @@
+{
+  "name": "rselectron-example-react",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "rselectron dev",
+    "build": "rselectron build",
+    "preview": "rselectron preview"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^2.0.0",
+    "@rsbuild/plugin-react": "^2.0.0",
+    "electron": ">=41 <44",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rselectron": "^0.0.0"
+  }
+}

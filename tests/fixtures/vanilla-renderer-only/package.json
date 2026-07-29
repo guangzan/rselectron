@@ -1,0 +1,5 @@
+{
+  "name": "vanilla-renderer-only-fixture",
+  "private": true,
+  "main": "./out/main/index.cjs"
+}

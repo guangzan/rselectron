@@ -1,0 +1,9 @@
+autoInstallPeers: false
+
+packages:
+  - packages/*
+  - website
+
+overrides:
+  # hast-util-to-estree + style-to-js@1.0.0 breaks Rspress MDX (styleToJs is not a function).
+  style-to-js: 1.1.21

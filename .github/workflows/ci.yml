@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Exact lockfile-pinned Rslint/Prettier must stay exact; upgrades require this suite.
+  CI: true
+  NO_COLOR: '1'
+
+jobs:
+  quality:
+    name: Quality gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+      - name: Format check (exact Prettier)
+        run: corepack pnpm run format:check
+      - name: Lint (exact Rslint)
+        run: corepack pnpm run lint
+      - name: Typecheck
+        run: corepack pnpm run typecheck
+      - name: Build public facade
+        run: corepack pnpm run build
+      - name: Build documentation site
+        run: corepack pnpm run docs:build
+      - name: Benchmark contract (skip host mismatch)
+        run: |
+          RSELECTRON_BENCH_SKIP_EVITE=1 corepack pnpm run bench
+          corepack pnpm run bench:check
+
+  test:
+    name: Test (${{ matrix.os }} / Electron ${{ matrix.electron }})
+    needs: quality
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Oldest + newest Electron majors on every supported OS.
+          - os: ubuntu-latest
+            electron: '41.0.0'
+            arch: x64
+          - os: ubuntu-latest
+            electron: '43.2.0'
+            arch: x64
+          - os: windows-latest
+            electron: '41.0.0'
+            arch: x64
+          - os: windows-latest
+            electron: '43.2.0'
+            arch: x64
+          - os: macos-13
+            electron: '41.0.0'
+            arch: x64
+          - os: macos-13
+            electron: '43.2.0'
+            arch: x64
+          - os: macos-latest
+            electron: '41.0.0'
+            arch: arm64
+          - os: macos-latest
+            electron: '43.2.0'
+            arch: arm64
+          # Additional arm64 Linux when GitHub runner hardware is available.
+          - os: ubuntu-24.04-arm
+            electron: '41.0.0'
+            arch: arm64
+          - os: ubuntu-24.04-arm
+            electron: '43.2.0'
+            arch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+      - name: Pin matrix Electron major
+        run: corepack pnpm add -wD electron@${{ matrix.electron }}
+      - name: Build public facade
+        run: corepack pnpm run build
+      - name: Install Linux display dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+      - name: Run Rstest (unit, integration, packed-tarball)
+        if: runner.os != 'Linux'
+        run: corepack pnpm test
+      - name: Run Rstest under Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' corepack pnpm test
+      - name: Run Playwright Electron smoke
+        if: runner.os != 'Linux'
+        run: corepack pnpm run test:e2e
+      - name: Run Playwright Electron smoke under Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' corepack pnpm run test:e2e
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-${{ matrix.os }}-${{ matrix.arch }}-electron-${{ matrix.electron }}-${{ github.run_attempt }}
+          path: |
+            node_modules/.cache/.rstest-results/
+            test-results/
+            playwright-report/
+            tests/fixtures/**/out/
+          if-no-files-found: ignore
+          retention-days: 14

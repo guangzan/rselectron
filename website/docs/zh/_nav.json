@@ -1,0 +1,7 @@
+[
+  {
+    "text": "文档",
+    "link": "/guide/getting-started",
+    "activeMatch": "/(guide|config|api)/"
+  }
+]
