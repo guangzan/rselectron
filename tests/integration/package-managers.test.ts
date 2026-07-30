@@ -152,15 +152,8 @@ function runInstalledCli(
   consumerRoot: string,
   args: string[],
 ): SpawnSyncReturns<string> {
-  const executable = installedBin(consumerRoot);
-  if (isWindows) {
-    return run(
-      process.env.ComSpec ?? 'cmd.exe',
-      ['/d', '/s', '/c', `"${executable}" ${args.join(' ')}`],
-      consumerRoot,
-    );
-  }
-  return run(executable, args, consumerRoot);
+  // Spawn the .bin shim directly; Windows .cmd needs shell:true via run().
+  return run(installedBin(consumerRoot), args, consumerRoot);
 }
 
 function writeMinimalMainApp(consumerRoot: string): void {

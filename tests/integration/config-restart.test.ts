@@ -182,8 +182,13 @@ test('failed config replacement stays recoverable without leaking the old genera
       if (!existsSync(markerPath)) {
         return false;
       }
-      const marker = readMarker();
-      return marker.generation === 'gen-c' && marker.pid !== firstPid;
+      try {
+        const marker = readMarker();
+        return marker.generation === 'gen-c' && marker.pid !== firstPid;
+      } catch {
+        // Marker may be mid-write during Electron relaunch.
+        return false;
+      }
     });
 
     const recovered = readMarker();

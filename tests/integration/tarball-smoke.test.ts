@@ -62,14 +62,7 @@ function runInstalledCli(args: string[]): SpawnSyncReturns<string> {
     isWindows ? 'rselectron.cmd' : 'rselectron',
   );
 
-  if (isWindows) {
-    return run(
-      process.env.ComSpec ?? 'cmd.exe',
-      ['/d', '/s', '/c', `"${executable}" ${args.join(' ')}`],
-      fixtureRoot,
-    );
-  }
-
+  // Spawn the .bin shim directly; Windows .cmd needs shell:true via run().
   return run(executable, args, fixtureRoot);
 }
 
