@@ -17,6 +17,7 @@ import {
   plannedMainEntry,
   resolveLaunchEntry,
 } from './electron/entry.ts';
+import { stopElectronProcess } from './electron/process.ts';
 import { resolveProjectElectron } from './electron/resolve.ts';
 import { normalizeRuntime, toRsbuildConfig } from './electron/runtime.ts';
 import { envPrefixesForRole } from './env.ts';
@@ -203,15 +204,8 @@ async function startDevGeneration(
         restartTimer = undefined;
       }
       const electronProcess = electronRef.process;
-      if (electronProcess !== undefined && electronProcess.exitCode === null) {
-        if (!electronProcess.killed) {
-          electronProcess.kill();
-        }
-        await new Promise<void>((resolveExit) => {
-          electronProcess.once('exit', () => {
-            resolveExit();
-          });
-        });
+      if (electronProcess !== undefined) {
+        await stopElectronProcess(electronProcess);
       }
       await Promise.allSettled(closers.map((closeResource) => closeResource()));
     })();
@@ -270,20 +264,11 @@ async function startDevGeneration(
 
   const stopElectronForPromotion = async (): Promise<void> => {
     const previous = electronRef.process;
-    if (
-      previous === undefined ||
-      previous.exitCode !== null ||
-      previous.killed
-    ) {
+    if (previous === undefined) {
       return;
     }
     previous.removeAllListeners('exit');
-    previous.kill();
-    await new Promise<void>((resolveExit) => {
-      previous.once('exit', () => {
-        resolveExit();
-      });
-    });
+    await stopElectronProcess(previous);
     electronRef.process = undefined;
   };
 

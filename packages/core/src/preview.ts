@@ -8,6 +8,7 @@ import {
   plannedMainEntry,
   resolveLaunchEntry,
 } from './electron/entry.ts';
+import { stopElectronProcess } from './electron/process.ts';
 import { resolveProjectElectron } from './electron/resolve.ts';
 import { normalizeRuntime } from './electron/runtime.ts';
 import { RselectronError } from './errors.ts';
@@ -124,15 +125,8 @@ export async function preview(
       }
       closed = true;
       const electronProcess = electronRef.process;
-      if (electronProcess !== undefined && electronProcess.exitCode === null) {
-        if (!electronProcess.killed) {
-          electronProcess.kill();
-        }
-        await new Promise<void>((resolveExit) => {
-          electronProcess.once('exit', () => {
-            resolveExit();
-          });
-        });
+      if (electronProcess !== undefined) {
+        await stopElectronProcess(electronProcess);
       }
       await buildResult?.close();
     })();

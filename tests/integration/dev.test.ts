@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, expect, test } from '@rstest/core';
+import { spawnSync } from 'node:child_process';
 import {
   existsSync,
   mkdirSync,
@@ -219,6 +220,17 @@ test('Electron exit closes the Development session', async () => {
   const rendererUrl = server.urls[0]!;
 
   server.electronProcess.kill();
+  if (
+    process.platform === 'win32' &&
+    server.electronProcess.pid !== undefined &&
+    server.electronProcess.exitCode === null
+  ) {
+    spawnSync(
+      'taskkill',
+      ['/pid', String(server.electronProcess.pid), '/T', '/F'],
+      { encoding: 'utf8', stdio: 'ignore', windowsHide: true },
+    );
+  }
   await waitFor(() => server.electronProcess.exitCode !== null);
   await waitFor(async () => {
     try {
