@@ -37,8 +37,8 @@ const releaseTag = version.includes('beta')
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
-// does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted publishing.
-// Provenance requires a public GitHub source repo; this repository is private.
+// does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted
+// publishing; npm auto-attaches provenance for public repos.
 const publishArgs = [
   'publish',
   '--access',
@@ -48,10 +48,4 @@ const publishArgs = [
 ];
 
 $.verbose = true;
-await $({
-  cwd: pkgDir,
-  env: {
-    ...process.env,
-    NPM_CONFIG_PROVENANCE: 'false',
-  },
-})`npm ${publishArgs}`;
+await $({ cwd: pkgDir })`npm ${publishArgs}`;
