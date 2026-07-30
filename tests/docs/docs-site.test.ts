@@ -541,6 +541,7 @@ test('Rspress documentation site builds', () => {
     {
       cwd: repositoryRoot,
       encoding: 'utf8',
+      shell: isWindows,
       env: {
         ...process.env,
         NO_COLOR: '1',

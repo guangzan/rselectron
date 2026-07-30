@@ -50,6 +50,13 @@ test('CI workflow documents cross-platform release evidence gates', () => {
   expect(workflow).toContain('upload-artifact');
   expect(workflow).toContain('actions/upload-artifact');
   expect(workflow.toLowerCase()).toContain('xvfb');
+  expect(workflow).toContain('node_modules/electron/install.js');
+
+  const workspace = readFileSync(
+    join(repositoryRoot, 'pnpm-workspace.yaml'),
+    'utf8',
+  );
+  expect(workspace).toMatch(/allowBuilds:[\s\S]*electron:\s*true/);
 });
 
 test('Rslint and Prettier stay exact lockfile pins in package.json', () => {

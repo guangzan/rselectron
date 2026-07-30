@@ -97,6 +97,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Pin matrix Electron major
         run: pnpm add -wD electron@${{ matrix.electron }}
+      - name: Ensure Electron binary is installed
+        run: node ./node_modules/electron/install.js
       - name: Build public facade
         run: pnpm run build
       - name: Install Linux display dependencies

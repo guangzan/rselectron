@@ -8,6 +8,9 @@ overrides:
   # hast-util-to-estree + style-to-js@1.0.0 breaks Rspress MDX (styleToJs is not a function).
   style-to-js: 1.1.21
 
-# tsx (release scripts) depends on esbuild; pnpm 11 blocks builds unless approved.
+# tsx (release scripts) depends on esbuild; Electron matrix pins need their
+# install script so the binary is downloaded. pnpm 11 blocks builds unless
+# approved.
 allowBuilds:
+  electron: true
   esbuild: true

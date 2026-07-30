@@ -41,6 +41,7 @@ function run(
   return spawnSync(command, args, {
     cwd,
     encoding: 'utf8',
+    shell: isWindows,
     env: {
       ...process.env,
       NO_COLOR: '1',

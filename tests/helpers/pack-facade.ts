@@ -54,6 +54,8 @@ export function packPublicFacade(packDestination: string): string {
       {
         cwd: repositoryRoot,
         encoding: 'utf8',
+        // Windows cannot spawn .cmd shims without a shell.
+        shell: isWindows,
         env: {
           ...process.env,
           NO_COLOR: '1',
