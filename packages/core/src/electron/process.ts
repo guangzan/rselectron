@@ -42,15 +42,11 @@ export async function stopElectronProcess(
   }
 
   if (process.platform === 'win32' && electronProcess.pid !== undefined) {
-    spawnSync(
-      'taskkill',
-      ['/pid', String(electronProcess.pid), '/T', '/F'],
-      {
-        encoding: 'utf8',
-        stdio: 'ignore',
-        windowsHide: true,
-      },
-    );
+    spawnSync('taskkill', ['/pid', String(electronProcess.pid), '/T', '/F'], {
+      encoding: 'utf8',
+      stdio: 'ignore',
+      windowsHide: true,
+    });
   } else if (!electronProcess.killed) {
     electronProcess.kill('SIGKILL');
   }
