@@ -10,6 +10,7 @@ export default defineConfig([
     'node_modules/**',
     'playwright-report/**',
     'test-results/**',
+    'tests/fixtures/**',
     '**/node.d.ts',
   ]),
   ts.configs.recommended,
