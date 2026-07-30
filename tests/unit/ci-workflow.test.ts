@@ -80,3 +80,24 @@ test('CI Electron majors match the frozen support snapshot bounds', () => {
   expect(workflow).not.toMatch(/electron:\s*['"]40\./);
   expect(workflow).not.toMatch(/electron:\s*['"]44\./);
 });
+
+test('docs deploy workflow publishes website/doc_build to GitHub Pages', () => {
+  const deployWorkflowPath = join(
+    repositoryRoot,
+    '.github/workflows/deploy-docs.yml',
+  );
+  expect(existsSync(deployWorkflowPath)).toBe(true);
+
+  const workflow = readFileSync(deployWorkflowPath, 'utf8');
+  expect(workflow).toContain("github.repository == 'guangzan/rselectron'");
+  expect(workflow).toContain('pages: write');
+  expect(workflow).toContain('id-token: write');
+  expect(workflow).toContain('docs:build');
+  expect(workflow).toContain('website/doc_build');
+  expect(workflow).toContain('actions/upload-pages-artifact');
+  expect(workflow).toContain('actions/deploy-pages');
+  expect(workflow).toContain('node-version-file: .node-version');
+  expect(workflow).toContain('pnpm/action-setup');
+  expect(workflow).toMatch(/branches:\s*\n\s*-\s*main/);
+  expect(workflow).toContain('workflow_dispatch');
+});
