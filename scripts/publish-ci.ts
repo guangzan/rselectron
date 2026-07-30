@@ -33,8 +33,18 @@ const releaseTag = version.includes('beta')
 
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
-if (releaseTag) {
-  await $`pnpm --filter "@rselectron/core" publish --access public --no-git-checks --tag ${releaseTag}`;
-} else {
-  await $`pnpm --filter "@rselectron/core" publish --access public --no-git-checks`;
-}
+// Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
+// does not re-run `prepack` (rslib) under a different process environment.
+const publishArgs = [
+  '--filter',
+  '@rselectron/core',
+  'publish',
+  '--access',
+  'public',
+  '--no-git-checks',
+  '--ignore-scripts',
+  ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
+];
+
+$.verbose = true;
+await $`pnpm ${publishArgs}`;
