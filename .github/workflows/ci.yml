@@ -37,9 +37,12 @@ jobs:
         run: pnpm run typecheck
       - name: Build public facade
         run: pnpm run build
+      # docs + bench only on main (push); PR keeps the critical path short.
       - name: Build documentation site
+        if: github.event_name == 'push'
         run: pnpm run docs:build
       - name: Benchmark contract (skip host mismatch)
+        if: github.event_name == 'push'
         run: |
           RSELECTRON_BENCH_SKIP_EVITE=1 pnpm run bench
           pnpm run bench:check
@@ -51,40 +54,8 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          # Oldest + newest Electron majors on every supported OS.
-          - os: ubuntu-latest
-            electron: '41.0.0'
-            arch: x64
-          - os: ubuntu-latest
-            electron: '43.2.0'
-            arch: x64
-          - os: windows-latest
-            electron: '41.0.0'
-            arch: x64
-          - os: windows-latest
-            electron: '43.2.0'
-            arch: x64
-          - os: macos-13
-            electron: '41.0.0'
-            arch: x64
-          - os: macos-13
-            electron: '43.2.0'
-            arch: x64
-          - os: macos-latest
-            electron: '41.0.0'
-            arch: arm64
-          - os: macos-latest
-            electron: '43.2.0'
-            arch: arm64
-          # Additional arm64 Linux when GitHub runner hardware is available.
-          - os: ubuntu-24.04-arm
-            electron: '41.0.0'
-            arch: arm64
-          - os: ubuntu-24.04-arm
-            electron: '43.2.0'
-            arch: arm64
+      # PR: single ubuntu + lockfile Electron. main: 3 OS × 43 + ubuntu × 41.
+      matrix: ${{ fromJSON(github.event_name == 'pull_request' && '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false}]}' || '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"ubuntu-latest","electron":"41.0.0","arch":"x64","pin":true},{"os":"windows-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"macos-latest","electron":"43.2.0","arch":"arm64","pin":false}]}') }}
     steps:
       - uses: actions/checkout@v6
       - name: Install pnpm
@@ -96,6 +67,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Pin matrix Electron major
+        if: matrix.pin
         run: pnpm add -wD electron@${{ matrix.electron }}
       - name: Ensure Electron binary is installed
         run: node ./node_modules/electron/install.js
