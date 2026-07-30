@@ -36,11 +36,11 @@ export default defineConfig({
 
 `defineConfig` 也接受函数，参数为 `{ command, mode, envMode }`：
 
-| 字段      | 含义                                                                 |
-| --------- | -------------------------------------------------------------------- |
-| `command` | 当前操作：`dev`、`build`、`preview` 或 `inspect`                     |
+| 字段      | 含义                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------- |
+| `command` | 当前操作：`dev`、`build`、`preview` 或 `inspect`                                               |
 | `mode`    | Rsbuild [构建模式](https://rsbuild.rs/guide/basic/mode)：`development`、`production` 或 `none` |
-| `envMode` | 环境文件命名空间；与构建模式相互独立 — 见 [环境](./environment)      |
+| `envMode` | 环境文件命名空间；与构建模式相互独立 — 见 [环境](./environment)                                |
 
 ```ts title="rselectron.config.ts"
 import { defineConfig } from '@rselectron/core';
@@ -108,10 +108,10 @@ export default defineConfig(
 
 ## 阅读地图
 
-| 页面                                    | 内容                                           |
-| --------------------------------------- | ---------------------------------------------- |
-| [主进程、预加载与渲染进程](./processes) | 进程配置形态、省略项、独立 Rsbuild 实例        |
-| [Electron 选项](./electron)             | 进程级 / 应用级 `electron` 字段                |
-| [环境](./environment)                   | `--mode`、`--env-mode`、前缀与 `loadEnv`       |
+| 页面                                    | 内容                                     |
+| --------------------------------------- | ---------------------------------------- |
+| [主进程、预加载与渲染进程](./processes) | 进程配置形态、省略项、独立 Rsbuild 实例  |
+| [Electron 选项](./electron)             | 进程级 / 应用级 `electron` 字段          |
+| [环境](./environment)                   | `--mode`、`--env-mode`、前缀与 `loadEnv` |
 
 mode / env-mode 的 CLI 旗标见 [CLI](/api/cli)；程序化入口见 [JavaScript API](/api/javascript-api)。上手见 [快速开始](/guide/getting-started)。

@@ -145,10 +145,7 @@ test('type:module ESM Main/Preload real-load without require is not defined', as
     // Residual require('leftpad') resolved under ESM Main.
     expect(marker.leftpad).toBe('leftpad-ok');
 
-    const mainBundle = readFileSync(
-      join(outputRoot, 'main/index.mjs'),
-      'utf8',
-    );
+    const mainBundle = readFileSync(join(outputRoot, 'main/index.mjs'), 'utf8');
     const preloadBundle = readFileSync(
       join(outputRoot, 'preload/index.mjs'),
       'utf8',

@@ -59,11 +59,9 @@ test('ESM Main routes require-originated externals through createRequire', async
   mkdirSync(join(appRoot, 'main'), { recursive: true });
   writeFileSync(
     join(appRoot, 'main/index.ts'),
-    [
-      "const leftpad = require('leftpad');",
-      'console.log(leftpad());',
-      '',
-    ].join('\n'),
+    ["const leftpad = require('leftpad');", 'console.log(leftpad());', ''].join(
+      '\n',
+    ),
   );
 
   const result = await build({
@@ -136,9 +134,7 @@ test('ESM Main externalizes static imports without bare require', async () => {
   const bundle = readFileSync(join(appRoot, 'out/main/index.mjs'), 'utf8');
   expect(bundle).not.toContain('require("electron")');
   expect(bundle).not.toMatch(/require\(["']leftpad["']\)/);
-  expect(bundle).toMatch(
-    /import\s+.*["']electron["']|from\s+["']electron["']/,
-  );
+  expect(bundle).toMatch(/import\s+.*["']electron["']|from\s+["']electron["']/);
   expect(bundle).not.toContain('return "dep"');
   await result.close();
 });

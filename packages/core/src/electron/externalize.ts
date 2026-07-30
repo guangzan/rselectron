@@ -127,10 +127,7 @@ function mergeRspackExternals(
     : never
 > {
   const externalFn = (
-    {
-      request,
-      dependencyType,
-    }: { request?: string; dependencyType?: string },
+    { request, dependencyType }: { request?: string; dependencyType?: string },
     callback: (
       error?: Error | null,
       result?: string | boolean,

@@ -20,10 +20,7 @@ const pkgPath = fileURLToPath(
 const pkgDir = fileURLToPath(
   new URL('../packages/rselectron', import.meta.url),
 );
-const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as {
-  name: string;
-  version: string;
-};
+const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string };
 
 if (pkg.version !== version) {
   throw new Error(
@@ -37,22 +34,12 @@ const releaseTag = version.includes('beta')
     ? 'alpha'
     : undefined;
 
-console.log(
-  'Publishing version',
-  version,
-  'with tag',
-  releaseTag || 'latest',
-  releaseTag ? '(then promote latest)' : '',
-);
+console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
 // does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted
 // publishing; npm auto-attaches provenance for public repos.
-//
-// npm refuses to publish prerelease versions onto `latest` directly, so
-// prereleases use --tag beta/alpha first. The npm package page renders the
-// `latest` dist-tag, so promote latest afterwards so README is not stuck.
-$.verbose = true;
+// Prereleases must use --tag (npm rejects publishing them onto latest).
 const publishArgs = [
   'publish',
   '--access',
@@ -60,10 +47,6 @@ const publishArgs = [
   '--ignore-scripts',
   ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
 ];
-await $({ cwd: pkgDir })`npm ${publishArgs}`;
 
-if (releaseTag !== undefined) {
-  await $({
-    cwd: pkgDir,
-  })`npm dist-tag add ${pkg.name}@${version} latest`;
-}
+$.verbose = true;
+await $({ cwd: pkgDir })`npm ${publishArgs}`;

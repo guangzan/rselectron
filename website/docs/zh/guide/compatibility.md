@@ -31,10 +31,10 @@ Rselectron 只覆盖开发与源码构建。用 electron-builder、Electron Forg
 
 相对 electron-vite，以下能力有意不在范围内：
 
-| 能力                        | Rselectron 立场                                          |
-| --------------------------- | -------------------------------------------------------- |
-| Vite 插件                   | 不接受、不翻译 — 请用 Rsbuild / Rspack 插件              |
-| V8 字节码编译（bytecode）   | 未实现 — 无静默回退                                      |
-| electron-vite 的 SWC helper | 不导出 — 通过 Rsbuild / Rspack 自行配置 SWC              |
+| 能力                        | Rselectron 立场                             |
+| --------------------------- | ------------------------------------------- |
+| Vite 插件                   | 不接受、不翻译 — 请用 Rsbuild / Rspack 插件 |
+| V8 字节码编译（bytecode）   | 未实现 — 无静默回退                         |
+| electron-vite 的 SWC helper | 不导出 — 通过 Rsbuild / Rspack 自行配置 SWC |
 
 迁移语义对照见 [迁移](./migration)。

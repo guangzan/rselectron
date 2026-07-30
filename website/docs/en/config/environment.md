@@ -7,10 +7,10 @@ description: Build mode, env-mode, prefixes, and programmatic loadEnv.
 
 Build mode and environment-file selection are **independent**. Changing one does not change the other.
 
-| Concern            | Selected by                         | Meaning                                                                 |
-| ------------------ | ----------------------------------- | ----------------------------------------------------------------------- |
-| Build mode         | `--mode` / config context `mode`    | Rsbuild [compilation mode](https://rsbuild.rs/guide/basic/mode): `development`, `production`, or `none` |
-| Environment mode   | `--env-mode` / config context `envMode` | Environment-file namespace (which `.env*` files Rsbuild loads)          |
+| Concern          | Selected by                             | Meaning                                                                                                 |
+| ---------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Build mode       | `--mode` / config context `mode`        | Rsbuild [compilation mode](https://rsbuild.rs/guide/basic/mode): `development`, `production`, or `none` |
+| Environment mode | `--env-mode` / config context `envMode` | Environment-file namespace (which `.env*` files Rsbuild loads)                                          |
 
 CLI details: [CLI](/api/cli). In a config function, both appear as `{ command, mode, envMode }` — see [Configuration](./).
 
@@ -20,12 +20,12 @@ Rselectron loads environment variables through Rsbuild’s environment pipeline 
 
 Default public prefixes:
 
-| Prefix               | Scope                                      |
-| -------------------- | ------------------------------------------ |
-| `RSELECTRON_`        | Shared across processes                    |
-| `MAIN_RSELECTRON_`   | Main                                       |
-| `PRELOAD_RSELECTRON_` | Preload                                   |
-| `RENDERER_RSELECTRON_` | Renderer                                 |
+| Prefix                 | Scope                   |
+| ---------------------- | ----------------------- |
+| `RSELECTRON_`          | Shared across processes |
+| `MAIN_RSELECTRON_`     | Main                    |
+| `PRELOAD_RSELECTRON_`  | Preload                 |
+| `RENDERER_RSELECTRON_` | Renderer                |
 
 When Rselectron builds a process, it loads the shared prefix plus that process’s scoped prefix via `envPrefixesForRole`.
 

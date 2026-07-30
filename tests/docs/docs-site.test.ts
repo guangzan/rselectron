@@ -372,7 +372,10 @@ test('guide pages cover concepts, parity, and learning sources in both languages
 
 test('config pages cover contract topics in both languages', () => {
   for (const locale of ['en', 'zh'] as const) {
-    const index = readFileSync(join(docsRoot, locale, 'config/index.md'), 'utf8');
+    const index = readFileSync(
+      join(docsRoot, locale, 'config/index.md'),
+      'utf8',
+    );
     const processes = readFileSync(
       join(docsRoot, locale, 'config/processes.md'),
       'utf8',

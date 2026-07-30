@@ -77,8 +77,8 @@ Each of `main` / `preload` / `renderer` is a full Rsbuild config. See the [confi
 
 Start from a learning example in this repository:
 
-|            Example            | Description                                 |
-| :---------------------------: | :------------------------------------------ |
+|                                   Example                                    | Description                                 |
+| :--------------------------------------------------------------------------: | :------------------------------------------ |
 | [vanilla](https://github.com/guangzan/rselectron/tree/main/examples/vanilla) | Minimal Main / Preload / Renderer app       |
 |   [react](https://github.com/guangzan/rselectron/tree/main/examples/react)   | React renderer with `@rsbuild/plugin-react` |
 

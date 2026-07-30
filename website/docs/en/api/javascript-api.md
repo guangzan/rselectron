@@ -166,6 +166,7 @@ for (const warning of result.warnings) {
   console.warn(`[${warning.code}] ${warning.message}`);
 }
 ```
+
 ## `loadEnv`
 
 Loads environment files. Default prefixes include `RSELECTRON_`, `MAIN_RSELECTRON_`, `PRELOAD_RSELECTRON_`, and `RENDERER_RSELECTRON_`. Behavior matches CLI `--env-mode`.

@@ -52,10 +52,7 @@ function writeFakeDependency(
   writeFileSync(join(depRoot, 'index.js'), body);
 }
 
-function esmMainConfig(
-  appRoot: string,
-  tools?: Record<string, unknown>,
-) {
+function esmMainConfig(appRoot: string, tools?: Record<string, unknown>) {
   return {
     main: {
       root: join(appRoot, 'main'),
@@ -121,9 +118,11 @@ test('ESM Main with residual free require gains thin createRequire shim and load
   // Force a CommonJS external so the ESM graph retains bare require(...).
   writeFileSync(
     join(appRoot, 'main/index.ts'),
-    ["import leftpad from 'leftpad';", 'process.stdout.write(leftpad());', ''].join(
-      '\n',
-    ),
+    [
+      "import leftpad from 'leftpad';",
+      'process.stdout.write(leftpad());',
+      '',
+    ].join('\n'),
   );
 
   const result = await build({
@@ -144,10 +143,14 @@ test('ESM Main with residual free require gains thin createRequire shim and load
     expect(bundle).not.toContain('__cjs_url__');
     expect(bundle).not.toContain('__cjs_path__');
 
-    const run = spawnSync(process.execPath, [join(appRoot, 'out/main/index.mjs')], {
-      cwd: appRoot,
-      encoding: 'utf8',
-    });
+    const run = spawnSync(
+      process.execPath,
+      [join(appRoot, 'out/main/index.mjs')],
+      {
+        cwd: appRoot,
+        encoding: 'utf8',
+      },
+    );
     expect(run.status, `${run.stdout}\n${run.stderr}`).toBe(0);
     expect(run.stdout).toBe('dep');
     expect(run.stderr).not.toMatch(/require is not defined/i);
@@ -183,9 +186,13 @@ test('ESM Main __dirname uses Rspack node-module, not MagicString dirname shim',
     expect(bundle).not.toContain('__cjs_url__');
     expect(bundle).not.toContain('__cjs_path__');
 
-    const run = spawnSync(process.execPath, [join(appRoot, 'out/main/index.mjs')], {
-      encoding: 'utf8',
-    });
+    const run = spawnSync(
+      process.execPath,
+      [join(appRoot, 'out/main/index.mjs')],
+      {
+        encoding: 'utf8',
+      },
+    );
     expect(run.status, `${run.stdout}\n${run.stderr}`).toBe(0);
     expect(run.stdout).toContain('marker');
   } finally {

@@ -36,11 +36,11 @@ export default defineConfig({
 
 `defineConfig` also accepts a function. It receives `{ command, mode, envMode }`:
 
-| Field     | Meaning                                                                 |
-| --------- | ----------------------------------------------------------------------- |
-| `command` | Current operation: `dev`, `build`, `preview`, or `inspect`              |
+| Field     | Meaning                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------- |
+| `command` | Current operation: `dev`, `build`, `preview`, or `inspect`                                        |
 | `mode`    | Rsbuild [build mode](https://rsbuild.rs/guide/basic/mode): `development`, `production`, or `none` |
-| `envMode` | Environment-file namespace; independent of build mode — see [Environment](./environment) |
+| `envMode` | Environment-file namespace; independent of build mode — see [Environment](./environment)          |
 
 ```ts title="rselectron.config.ts"
 import { defineConfig } from '@rselectron/core';
@@ -66,6 +66,7 @@ export default defineConfig(({ command, mode, envMode }) => ({
 ```
 
 Use `envMode` when composing env-aware options; file loading still follows [Environment](./environment).
+
 ## Composing configs
 
 There is no implicit `shared` block. To reuse pieces across processes, compose explicitly:
@@ -105,12 +106,13 @@ export default defineConfig(
   ),
 );
 ```
+
 ## Reading map
 
-| Page                                       | Contents                                                              |
-| ------------------------------------------ | --------------------------------------------------------------------- |
-| [Main, preload, and renderer](./processes) | Process shape, omitted keys, independent Rsbuild instances            |
-| [Electron options](./electron)             | Process-level and app-level `electron` fields                         |
-| [Environment](./environment)               | `--mode`, `--env-mode`, prefixes, and `loadEnv`                       |
+| Page                                       | Contents                                                   |
+| ------------------------------------------ | ---------------------------------------------------------- |
+| [Main, preload, and renderer](./processes) | Process shape, omitted keys, independent Rsbuild instances |
+| [Electron options](./electron)             | Process-level and app-level `electron` fields              |
+| [Environment](./environment)               | `--mode`, `--env-mode`, prefixes, and `loadEnv`            |
 
 CLI flags for mode / env-mode: [CLI](/api/cli). Programmatic entry points: [JavaScript API](/api/javascript-api). First run: [Getting started](/guide/getting-started).

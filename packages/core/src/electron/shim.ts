@@ -70,7 +70,12 @@ function createEsmRequireShimPlugin(): RsbuildPlugin {
                       processAssets: {
                         tap: (
                           options: { name: string; stage: number },
-                          callback: (assets: Record<string, { source: () => string | Buffer }>) => void,
+                          callback: (
+                            assets: Record<
+                              string,
+                              { source: () => string | Buffer }
+                            >,
+                          ) => void,
                         ) => void;
                       };
                     };
@@ -85,9 +90,9 @@ function createEsmRequireShimPlugin(): RsbuildPlugin {
             webpack: {
               Compilation: { PROCESS_ASSETS_STAGE_OPTIMIZE: number };
               sources: {
-                RawSource: new (
-                  source: string | Buffer,
-                ) => { source: () => string | Buffer };
+                RawSource: new (source: string | Buffer) => {
+                  source: () => string | Buffer;
+                };
               };
             };
           }) {
@@ -102,7 +107,10 @@ function createEsmRequireShimPlugin(): RsbuildPlugin {
                   },
                   (assets) => {
                     for (const file of Object.keys(assets)) {
-                      if (!/\.m?js(?:\.map)?$/.test(file) || file.endsWith('.map')) {
+                      if (
+                        !/\.m?js(?:\.map)?$/.test(file) ||
+                        file.endsWith('.map')
+                      ) {
                         continue;
                       }
                       const asset = assets[file];

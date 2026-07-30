@@ -18,30 +18,30 @@ Rselectron aims for **capability parity**, not drop-in Vite config renaming. Mig
 
 ## Config and environment
 
-| Topic                                  | Mapping                                                                   |
-| -------------------------------------- | ------------------------------------------------------------------------- |
+| Topic                                  | Mapping                                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
 | Main / Preload / Renderer Vite configs | `main` / `preload` / `renderer` under `defineConfig` (Rsbuild) — [Configuration](/config/) |
-| Vite `root` / `build` / `plugins`      | Rsbuild `root` / `output` / `plugins`                                     |
-| Environment files                      | `--env-mode` plus `RSELECTRON_` prefixes — [Environment](/config/environment) |
-| Build mode                             | `--mode` (`development` \| `production` \| `none`)                        |
-| Electron launch options                | Top-level `electron` — [Electron options](/config/electron)               |
+| Vite `root` / `build` / `plugins`      | Rsbuild `root` / `output` / `plugins`                                                      |
+| Environment files                      | `--env-mode` plus `RSELECTRON_` prefixes — [Environment](/config/environment)              |
+| Build mode                             | `--mode` (`development` \| `production` \| `none`)                                         |
+| Electron launch options                | Top-level `electron` — [Electron options](/config/electron)                                |
 
 ## Watch and development
 
-| electron-vite        | Rselectron                                                        |
-| -------------------- | ----------------------------------------------------------------- |
+| electron-vite        | Rselectron                                                                     |
+| -------------------- | ------------------------------------------------------------------------------ |
 | Main / Preload watch | `electron.watch` or `rselectron dev --watch[=main\|preload]` — [CLI](/api/cli) |
-| Renderer HMR         | Renderer development server (Vanilla / React via Rsbuild plugins) |
-| Config change        | Reload config and replace the development session                 |
+| Renderer HMR         | Renderer development server (Vanilla / React via Rsbuild plugins)              |
+| Config change        | Reload config and replace the development session                              |
 
 ## API and CLI
 
-| Surface            | Notes                                                                              |
-| ------------------ | ---------------------------------------------------------------------------------- |
-| CLI                | Explicit `dev` / `build` / `preview` / `inspect`; long flags kebab-case only — [CLI](/api/cli) |
+| Surface            | Notes                                                                                                                      |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| CLI                | Explicit `dev` / `build` / `preview` / `inspect`; long flags kebab-case only — [CLI](/api/cli)                             |
 | Programmatic API   | `build`, `createServer`, `preview`, `inspect`, `defineConfig`, and related exports — [JavaScript API](/api/javascript-api) |
-| Electron versions  | `ELECTRON_SUPPORT_SNAPSHOT` and the optional Electron peer                         |
-| Packaging boundary | Source builds only; use electron-builder / Forge for installers                    |
+| Electron versions  | `ELECTRON_SUPPORT_SNAPSHOT` and the optional Electron peer                                                                 |
+| Packaging boundary | Source builds only; use electron-builder / Forge for installers                                                            |
 
 ## Checklist
 
