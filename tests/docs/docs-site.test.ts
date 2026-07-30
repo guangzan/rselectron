@@ -608,6 +608,11 @@ test('Rspress documentation site builds', () => {
     'Develop and source-build Electron apps with Rsbuild and Rspack.',
   );
   expect(enHome).toContain('https://github.com/guangzan/rselectron');
+  // withBase('/rselectron-logo.png') falsely treats the path as already
+  // under base `/rselectron` (prefix match), so the hero logo must be
+  // absolute under the Pages project root.
+  expect(enHome).toContain('src="/rselectron/rselectron-logo.png"');
+  expect(enHome).not.toContain('src="/rselectron-logo.png"');
   expect(enHome).toMatch(/Get Started/);
   expect(enHome).not.toMatch(/WhoIsUsing|ToolStack/);
   expect(enHome).not.toMatch(/Discord|BlueSky|Awesome Rspack|ByteDance/);
