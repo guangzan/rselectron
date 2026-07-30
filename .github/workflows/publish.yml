@@ -36,6 +36,8 @@ jobs:
         run: pnpm run build
 
       - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm run publish-ci ${{ github.ref_name }}
 
       - name: Generate Changelog
