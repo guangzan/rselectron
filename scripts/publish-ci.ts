@@ -20,7 +20,10 @@ const pkgPath = fileURLToPath(
 const pkgDir = fileURLToPath(
   new URL('../packages/rselectron', import.meta.url),
 );
-const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string };
+const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as {
+  name: string;
+  version: string;
+};
 
 if (pkg.version !== version) {
   throw new Error(
@@ -34,18 +37,24 @@ const releaseTag = version.includes('beta')
     ? 'alpha'
     : undefined;
 
-console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
+console.log(
+  'Publishing version',
+  version,
+  'to latest',
+  releaseTag ? `and ${releaseTag}` : '',
+);
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
 // does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted
 // publishing; npm auto-attaches provenance for public repos.
-const publishArgs = [
-  'publish',
-  '--access',
-  'public',
-  '--ignore-scripts',
-  ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
-];
-
+//
+// Always publish to `latest` so the npm package page (which renders latest)
+// picks up README and metadata. Prerelease dist-tags are applied afterwards.
 $.verbose = true;
-await $({ cwd: pkgDir })`npm ${publishArgs}`;
+await $({ cwd: pkgDir })`npm publish --access public --ignore-scripts`;
+
+if (releaseTag !== undefined) {
+  await $({
+    cwd: pkgDir,
+  })`npm dist-tag add ${pkg.name}@${version} ${releaseTag}`;
+}
