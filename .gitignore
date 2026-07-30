@@ -22,5 +22,7 @@ scripts/benchmarks/fixtures/**/dist/
 
 # Agents
 .repos
-# Root agent scratch only — do not ignore website/docs
-/docs/
+# Root agent scratch only — keep website/docs and committed monorail docs
+/docs/*
+!/docs/monorail/
+!/docs/monorail/**
