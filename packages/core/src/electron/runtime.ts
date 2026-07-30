@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, resolve } from 'node:path';
 import type { RsbuildConfig } from '@rsbuild/core';
 import { RselectronError } from '../errors.ts';
@@ -10,8 +10,15 @@ import type {
   RoleModuleFormat,
 } from '../types.ts';
 import { applyAssetHandling } from './asset.ts';
+import {
+  defaultEntryFilenamePattern,
+  entryFilenameRiskWarning,
+  explicitJsFilename,
+  isDangerousEntryFilename,
+} from './entry.ts';
 import { applyExternalization } from './externalize.ts';
 import { applyNativeAssetHandling } from './native.ts';
+import { applyEsmRequireShim } from './shim.ts';
 import { applyWorkerHandling } from './worker.ts';
 import { resolveProjectElectron, type ProjectElectron } from './resolve.ts';
 import { ELECTRON_SUPPORT_SNAPSHOT, electronRspackTarget } from './snapshot.ts';
@@ -38,6 +45,54 @@ function readManifest(
     packageJson === undefined ? 'package.json' : packageJson,
   );
   return JSON.parse(readFileSync(manifestPath, 'utf8')) as ApplicationManifest;
+}
+
+function readManifestIfPresent(
+  appRoot: string,
+  packageJson?: string,
+): ApplicationManifest {
+  const manifestPath = resolve(
+    appRoot,
+    packageJson === undefined ? 'package.json' : packageJson,
+  );
+  if (!existsSync(manifestPath)) {
+    return {};
+  }
+  return JSON.parse(readFileSync(manifestPath, 'utf8')) as ApplicationManifest;
+}
+
+function applyEntryFilenamePolicy(
+  role: Role,
+  config: RoleConfig,
+  format: RoleModuleFormat,
+  packageType: string | undefined,
+): { config: RoleConfig; warning?: Diagnostic } {
+  const explicit = explicitJsFilename(config);
+  if (explicit === undefined) {
+    const pattern = defaultEntryFilenamePattern(format, packageType);
+    const existingFilename = config.output?.filename;
+    return {
+      config: {
+        ...config,
+        output: {
+          ...config.output,
+          filename:
+            typeof existingFilename === 'object' && existingFilename !== null
+              ? { ...existingFilename, js: pattern }
+              : { js: pattern },
+        },
+      },
+    };
+  }
+
+  if (isDangerousEntryFilename(format, packageType, explicit)) {
+    return {
+      config,
+      warning: entryFilenameRiskWarning(role, explicit),
+    };
+  }
+
+  return { config };
 }
 
 function hasExplicitBrowserslist(config: RoleConfig): boolean {
@@ -345,7 +400,12 @@ export function normalizeRuntime(options: {
 
   const manifest = needsApplicationManifest(roles)
     ? readManifest(options.appRoot, options.config.electron?.packageJson)
-    : {};
+    : roles.some(([role]) => role === 'main' || role === 'preload')
+      ? readManifestIfPresent(
+          options.appRoot,
+          options.config.electron?.packageJson,
+        )
+      : {};
   const formats: RuntimeNormalization['formats'] = {};
   const targets: RuntimeNormalization['targets'] = {};
   const normalizedRoles: RuntimeNormalization['roles'] = {};
@@ -394,7 +454,19 @@ export function normalizeRuntime(options: {
     }
 
     // BUILD-007: Main/Preload keep stable entry names and skip minify by default.
+    // Entry filename policy (ADR 0009): default extension from format + package type.
     if (role === 'main' || role === 'preload') {
+      const format = formats[role]!;
+      const filenameApplied = applyEntryFilenamePolicy(
+        role,
+        next,
+        format,
+        manifest.type,
+      );
+      next = filenameApplied.config;
+      if (filenameApplied.warning !== undefined) {
+        warnings.push(filenameApplied.warning);
+      }
       next = {
         ...next,
         output: {
@@ -416,6 +488,7 @@ export function normalizeRuntime(options: {
     next = applyAssetHandling(role, externalized.config, options.appRoot);
     next = applyNativeAssetHandling(role, next, options.appRoot);
     next = applyWorkerHandling(role, next);
+    next = applyEsmRequireShim(role, next, formats[role]);
     warnings.push(...externalized.warnings);
 
     normalizedRoles[role] = next;

@@ -1,0 +1,9 @@
+{
+  "name": "vanilla-esm-type-module-fixture",
+  "private": true,
+  "type": "module",
+  "main": "./out/main/index.mjs",
+  "dependencies": {
+    "leftpad": "1.0.0"
+  }
+}

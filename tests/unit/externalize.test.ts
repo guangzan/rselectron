@@ -48,6 +48,101 @@ function writeFakeDependency(
   writeFileSync(join(depRoot, 'index.js'), body);
 }
 
+test('ESM Main routes require-originated externals through createRequire', async () => {
+  const appRoot = createRoot('esm-require');
+  writeAppManifest(appRoot);
+  writeFakeDependency(
+    appRoot,
+    'leftpad',
+    'module.exports = function leftpad() { return "dep"; };\n',
+  );
+  mkdirSync(join(appRoot, 'main'), { recursive: true });
+  writeFileSync(
+    join(appRoot, 'main/index.ts'),
+    [
+      "const leftpad = require('leftpad');",
+      'console.log(leftpad());',
+      '',
+    ].join('\n'),
+  );
+
+  const result = await build({
+    cwd: appRoot,
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].mjs' },
+          filenameHash: false,
+          module: true,
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+    },
+  });
+
+  const bundle = readFileSync(join(appRoot, 'out/main/index.mjs'), 'utf8');
+  expect(bundle).toMatch(/createRequire|node-commonjs/);
+  expect(bundle).not.toMatch(
+    /module\.exports\s*=\s*require\(["']leftpad["']\)/,
+  );
+  expect(bundle).not.toContain('return "dep"');
+  await result.close();
+});
+
+test('ESM Main externalizes static imports without bare require', async () => {
+  const appRoot = createRoot('esm-static');
+  writeAppManifest(appRoot);
+  writeFakeDependency(
+    appRoot,
+    'leftpad',
+    'module.exports = function leftpad() { return "dep"; };\n',
+  );
+  mkdirSync(join(appRoot, 'main'), { recursive: true });
+  writeFileSync(
+    join(appRoot, 'main/index.ts'),
+    [
+      "import electron from 'electron';",
+      "import fs from 'node:fs';",
+      "import leftpad from 'leftpad';",
+      'console.log(typeof electron, typeof fs.existsSync, leftpad());',
+      '',
+    ].join('\n'),
+  );
+
+  const result = await build({
+    cwd: appRoot,
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].mjs' },
+          filenameHash: false,
+          module: true,
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+    },
+  });
+
+  const bundle = readFileSync(join(appRoot, 'out/main/index.mjs'), 'utf8');
+  expect(bundle).not.toContain('require("electron")');
+  expect(bundle).not.toMatch(/require\(["']leftpad["']\)/);
+  expect(bundle).toMatch(
+    /import\s+.*["']electron["']|from\s+["']electron["']/,
+  );
+  expect(bundle).not.toContain('return "dep"');
+  await result.close();
+});
+
 test('Main and Preload always externalize Electron, Node builtins, and dependencies', async () => {
   const appRoot = createRoot('defaults');
   writeAppManifest(appRoot);

@@ -118,6 +118,7 @@ function mergeRspackExternals(
       : unknown
     : unknown,
   predicate: (request: string) => boolean,
+  format: 'cjs' | 'esm',
 ): NonNullable<
   NonNullable<NonNullable<RsbuildConfig['tools']>['rspack']> extends {
     externals?: infer E;
@@ -126,10 +127,27 @@ function mergeRspackExternals(
     : never
 > {
   const externalFn = (
-    { request }: { request?: string },
-    callback: (error?: Error, result?: string | boolean) => void,
+    {
+      request,
+      dependencyType,
+    }: { request?: string; dependencyType?: string },
+    callback: (
+      error?: Error | null,
+      result?: string | boolean,
+      type?: string,
+    ) => void,
   ): void => {
     if (request !== undefined && predicate(request)) {
+      if (format === 'esm') {
+        // require()-originated: node-commonjs → createRequire under ESM.
+        // import-originated: mark external and let module-import apply.
+        if (dependencyType === 'commonjs') {
+          callback(undefined, `node-commonjs ${request}`);
+        } else {
+          callback(undefined, true);
+        }
+        return;
+      }
       callback(undefined, `commonjs ${request}`);
       return;
     }
@@ -185,6 +203,7 @@ export function applyExternalization(
       : undefined;
 
   if (role === 'main' || role === 'preload') {
+    const format = next.output?.module === true ? 'esm' : 'cjs';
     next = {
       ...next,
       tools: {
@@ -195,6 +214,7 @@ export function applyExternalization(
             existingRspack?.externals,
             (request) =>
               shouldExternalizeRequest(request, dependencyNames, policy),
+            format,
           ),
         } as NonNullable<NonNullable<RsbuildConfig['tools']>['rspack']>,
       },

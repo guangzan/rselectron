@@ -339,3 +339,259 @@ test('explicit format and browserslist do not require Electron or package.json',
   );
   await result.close();
 });
+
+test('unset filename defaults to .mjs for ESM Main and Preload', async () => {
+  const appRoot = createAppRoot('filename-esm');
+  writePackageJson(appRoot, { name: 'app', private: true, type: 'module' });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '42.7.1' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+      preload: {
+        root: join(appRoot, 'preload'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/preload') },
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(result.runtime?.formats.main).toBe('esm');
+    expect(result.runtime?.formats.preload).toBe('esm');
+    expect(
+      result.roles.main?.paths.some((path) => path.endsWith('index.mjs')),
+    ).toBe(true);
+    expect(
+      result.roles.preload?.paths.some((path) => path.endsWith('index.mjs')),
+    ).toBe(true);
+  } finally {
+    await result.close();
+  }
+});
+
+test('unset filename defaults to .cjs for CJS Main under type:module', async () => {
+  const appRoot = createAppRoot('filename-cjs-module');
+  writePackageJson(appRoot, {
+    name: 'app',
+    private: true,
+    type: 'module',
+    main: 'out/main/index.cjs',
+  });
+  writeRoleSources(appRoot);
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          module: false,
+          overrideBrowserslist: ['node >= 20'],
+          target: 'node',
+        },
+        electron: { format: 'cjs' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(result.runtime?.formats.main).toBe('cjs');
+    expect(
+      result.roles.main?.paths.some((path) => path.endsWith('index.cjs')),
+    ).toBe(true);
+    expect(result.warnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'RSELECTRON_ELECTRON_ENTRY_MISMATCH' }),
+      ]),
+    );
+  } finally {
+    await result.close();
+  }
+});
+
+test('unset filename defaults to .js for CJS Main without type:module', async () => {
+  const appRoot = createAppRoot('filename-cjs-js');
+  writePackageJson(appRoot, {
+    name: 'app',
+    private: true,
+    main: 'out/main/index.js',
+  });
+  writeRoleSources(appRoot);
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          module: false,
+          overrideBrowserslist: ['node >= 20'],
+          target: 'node',
+        },
+        electron: { format: 'cjs' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(result.runtime?.formats.main).toBe('cjs');
+    expect(
+      result.roles.main?.paths.some((path) => path.endsWith('index.js')),
+    ).toBe(true);
+  } finally {
+    await result.close();
+  }
+});
+
+test('explicit output.filename overrides the entry filename policy', async () => {
+  const appRoot = createAppRoot('filename-explicit');
+  writePackageJson(appRoot, { name: 'app', private: true, type: 'module' });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '42.7.1' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].custom.mjs' },
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(
+      result.roles.main?.paths.some((path) =>
+        path.endsWith('index.custom.mjs'),
+      ),
+    ).toBe(true);
+    expect(result.warnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'RSELECTRON_ENTRY_FILENAME_RISK' }),
+      ]),
+    );
+  } finally {
+    await result.close();
+  }
+});
+
+test('dangerous explicit .js filename warns and still builds', async () => {
+  const appRoot = createAppRoot('filename-risk');
+  writePackageJson(appRoot, {
+    name: 'app',
+    private: true,
+    type: 'module',
+    main: 'out/main/index.js',
+  });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '42.7.1' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].js' },
+          target: 'node',
+        },
+        electron: { format: 'esm' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(
+      result.roles.main?.paths.some((path) => path.endsWith('index.js')),
+    ).toBe(true);
+    expect(result.warnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'RSELECTRON_ENTRY_FILENAME_RISK',
+          role: 'main',
+        }),
+      ]),
+    );
+  } finally {
+    await result.close();
+  }
+});
+
+test('dangerous .js under CJS type:module warns and still builds', async () => {
+  const appRoot = createAppRoot('filename-risk-cjs');
+  writePackageJson(appRoot, {
+    name: 'app',
+    private: true,
+    type: 'module',
+    main: 'out/main/index.js',
+  });
+  writeRoleSources(appRoot);
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].js' },
+          module: false,
+          overrideBrowserslist: ['node >= 20'],
+          target: 'node',
+        },
+        electron: { format: 'cjs' },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  try {
+    expect(
+      result.roles.main?.paths.some((path) => path.endsWith('index.js')),
+    ).toBe(true);
+    expect(result.warnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'RSELECTRON_ENTRY_FILENAME_RISK',
+          role: 'main',
+        }),
+      ]),
+    );
+  } finally {
+    await result.close();
+  }
+});

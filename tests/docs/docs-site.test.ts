@@ -11,6 +11,7 @@ const corepack = isWindows ? 'corepack.cmd' : 'corepack';
 
 const requiredRelativePages = [
   'index.md',
+  'guide/concepts.md',
   'guide/getting-started.mdx',
   'guide/troubleshooting.md',
   'guide/compatibility.md',
@@ -26,7 +27,6 @@ const requiredRelativePages = [
 
 const removedRelativePages = [
   'guide/cli.md',
-  'guide/concepts.md',
   'config/configuration.md',
   'config/roles.md',
   'api/api.md',
@@ -257,6 +257,7 @@ test('top nav exposes a single Docs entry with a unified sidebar in both locales
       },
     ]);
     expect(guideMeta).toEqual([
+      'concepts',
       'getting-started',
       'troubleshooting',
       'compatibility',
@@ -295,8 +296,9 @@ test('getting started and process config pages stay approachable and linked', ()
     );
     expect(gettingStarted).toMatch(/\/config\//);
     expect(gettingStarted).toMatch(/\/api\//);
+    expect(gettingStarted).toMatch(/\/guide\/concepts|concepts/);
     expect(gettingStarted).not.toMatch(
-      /\/config\/configuration|\/api\/api|\/guide\/cli|\/guide\/concepts/,
+      /\/config\/configuration|\/api\/api|\/guide\/cli/,
     );
 
     expect(processes).toContain('defineConfig');
@@ -305,6 +307,174 @@ test('getting started and process config pages stay approachable and linked', ()
     expect(processes).toContain('renderer');
     expect(processes).not.toMatch(/\bRole\b/);
     expect(processes).toMatch(/\/guide\/migration|migration/);
+  }
+});
+
+test('guide pages cover concepts, parity, and learning sources in both languages', () => {
+  for (const locale of ['en', 'zh'] as const) {
+    const concepts = readFileSync(
+      join(docsRoot, locale, 'guide/concepts.md'),
+      'utf8',
+    );
+    const gettingStarted = readFileSync(
+      join(docsRoot, locale, 'guide/getting-started.mdx'),
+      'utf8',
+    );
+    const troubleshooting = readFileSync(
+      join(docsRoot, locale, 'guide/troubleshooting.md'),
+      'utf8',
+    );
+    const compatibility = readFileSync(
+      join(docsRoot, locale, 'guide/compatibility.md'),
+      'utf8',
+    );
+    const migration = readFileSync(
+      join(docsRoot, locale, 'guide/migration.md'),
+      'utf8',
+    );
+
+    expect(concepts).toMatch(/\bRole\b|角色/);
+    expect(concepts).toMatch(/Development session|开发会话/);
+    expect(concepts).toMatch(/Application root|应用根/);
+    expect(concepts).toMatch(/Source build|源码构建/);
+    expect(concepts).toMatch(/Configuration generation|配置世代/);
+    expect(concepts).toContain('examples/');
+    expect(concepts).toMatch(/tests\/fixtures|fixtures/);
+    expect(concepts).toMatch(/\/config\//);
+    expect(concepts).toMatch(/\/guide\/getting-started|getting-started/);
+
+    expect(gettingStarted).toContain('examples/');
+    expect(gettingStarted).not.toMatch(/tests\/fixtures|fixtures\//);
+    expect(gettingStarted).toMatch(/\/guide\/concepts|concepts/);
+
+    expect(troubleshooting).toContain('RSELECTRON_ELECTRON_NOT_FOUND');
+    expect(troubleshooting).toContain('RSELECTRON_ROLE_MISSING');
+    expect(troubleshooting).toContain('--renderer-only');
+    expect(troubleshooting).toContain('inspect');
+    expect(troubleshooting).toMatch(/\/api\/cli|cli/);
+
+    expect(compatibility).toContain('ELECTRON_SUPPORT_SNAPSHOT');
+    expect(compatibility).toMatch(/41|42|43/);
+    expect(compatibility).toMatch(/drop-in|一比一替换|直接替换/);
+    expect(compatibility).toMatch(/vite/i);
+    expect(compatibility).toMatch(/bytecode/i);
+    expect(compatibility).toMatch(/swc/i);
+    expect(compatibility).toMatch(/compatibility-matrix|兼容性矩阵/);
+
+    expect(migration).toMatch(/drop-in|一比一|直接替换/);
+    expect(migration).toMatch(/vite/i);
+    expect(migration).toMatch(/bytecode/i);
+    expect(migration).toMatch(/swc/i);
+    expect(migration).toMatch(/\/config\//);
+    expect(migration).toMatch(/\/api\//);
+  }
+});
+
+test('config pages cover contract topics in both languages', () => {
+  for (const locale of ['en', 'zh'] as const) {
+    const index = readFileSync(join(docsRoot, locale, 'config/index.md'), 'utf8');
+    const processes = readFileSync(
+      join(docsRoot, locale, 'config/processes.md'),
+      'utf8',
+    );
+    const electron = readFileSync(
+      join(docsRoot, locale, 'config/electron.md'),
+      'utf8',
+    );
+    const environment = readFileSync(
+      join(docsRoot, locale, 'config/environment.md'),
+      'utf8',
+    );
+
+    expect(index).toContain('defineConfig');
+    expect(index).toContain('./processes');
+    expect(index).toContain('./electron');
+    expect(index).toContain('./environment');
+    expect(index).toContain('command');
+    expect(index).toContain('envMode');
+    expect(index).toContain('mergeRselectronConfig');
+    expect(index).toContain('mergeRsbuildConfig');
+    expect(index).toMatch(/rsbuild\.rs/);
+
+    expect(processes).toContain('RSELECTRON_ROLE_MISSING');
+    expect(processes).toMatch(/independent|独立/);
+    expect(processes).toMatch(/shared/i);
+    expect(processes).toMatch(/Rsbuild/);
+    expect(processes).toMatch(/rsbuild\.rs/);
+    expect(processes).not.toMatch(/\bRole\b/);
+
+    expect(electron).toContain('format');
+    expect(electron).toContain('watch');
+    expect(electron).toContain('externalizeDeps');
+    expect(electron).toContain('isolatedEntries');
+    expect(electron).toContain('packageJson');
+    expect(electron).toContain('execPath');
+    expect(electron).toMatch(/project-local|项目本地/);
+
+    expect(environment).toContain('--mode');
+    expect(environment).toContain('--env-mode');
+    expect(environment).toContain('RSELECTRON_');
+    expect(environment).toContain('MAIN_RSELECTRON_');
+    expect(environment).toContain('PRELOAD_RSELECTRON_');
+    expect(environment).toContain('RENDERER_RSELECTRON_');
+    expect(environment).toContain('RSELECTRON_RENDERER_URL');
+    expect(environment).toContain('loadEnv');
+    expect(environment).toContain('envPrefixesForRole');
+    expect(environment).toMatch(/independent|独立/);
+    expect(environment).toMatch(/rsbuild\.rs/);
+  }
+});
+
+test('api pages cover CLI and JavaScript API contracts in both languages', () => {
+  for (const locale of ['en', 'zh'] as const) {
+    const index = readFileSync(join(docsRoot, locale, 'api/index.md'), 'utf8');
+    const cli = readFileSync(join(docsRoot, locale, 'api/cli.md'), 'utf8');
+    const javascriptApi = readFileSync(
+      join(docsRoot, locale, 'api/javascript-api.md'),
+      'utf8',
+    );
+
+    expect(index).toContain('./cli');
+    expect(index).toContain('./javascript-api');
+    expect(index).toMatch(/rselectron dev/);
+    expect(index).toMatch(/rselectron build/);
+    expect(index).toMatch(/rselectron preview/);
+    expect(index).toMatch(/rselectron inspect/);
+    expect(index).toMatch(/adapter|适配/);
+    expect(index).toMatch(/\/config\//);
+
+    expect(cli).toContain('rselectron dev');
+    expect(cli).toContain('rselectron build');
+    expect(cli).toContain('rselectron preview');
+    expect(cli).toContain('rselectron inspect');
+    expect(cli).toContain('--config');
+    expect(cli).toContain('--config-loader');
+    expect(cli).toContain('--mode');
+    expect(cli).toContain('--env-mode');
+    expect(cli).toContain('--watch');
+    expect(cli).toContain('--renderer-only');
+    expect(cli).toContain('--skip-build');
+    expect(cli).toMatch(/kebab-case/);
+    expect(cli).toMatch(/RSELECTRON_BUILD_WATCH_UNSUPPORTED|watch/);
+    expect(cli).toContain('RselectronError');
+    expect(cli).toMatch(/stderr/);
+
+    expect(javascriptApi).toContain('defineConfig');
+    expect(javascriptApi).toContain('createServer');
+    expect(javascriptApi).toContain('build');
+    expect(javascriptApi).toContain('preview');
+    expect(javascriptApi).toContain('inspect');
+    expect(javascriptApi).toContain('loadEnv');
+    expect(javascriptApi).toContain('mergeRselectronConfig');
+    expect(javascriptApi).toContain('mergeRsbuildConfig');
+    expect(javascriptApi).toContain('resolveProjectElectron');
+    expect(javascriptApi).toContain('ELECTRON_SUPPORT_SNAPSHOT');
+    expect(javascriptApi).toContain('RselectronError');
+    expect(javascriptApi).toContain('close');
+    expect(javascriptApi).toMatch(/envMode/);
+    expect(javascriptApi).toContain('normalized');
+    expect(javascriptApi).toContain('rsbuild');
+    expect(javascriptApi).toContain('rspack');
   }
 });
 

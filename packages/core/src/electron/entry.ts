@@ -1,10 +1,66 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import { RselectronError } from '../errors.ts';
-import type { Diagnostic, RoleConfig } from '../types.ts';
+import type {
+  Diagnostic,
+  Role,
+  RoleConfig,
+  RoleModuleFormat,
+} from '../types.ts';
 
 interface ApplicationManifest {
   main?: string;
+}
+
+/** Entry filename policy default when `output.filename` is unset. */
+export function defaultEntryFilenamePattern(
+  format: RoleModuleFormat,
+  packageType: string | undefined,
+): string {
+  if (format === 'esm') {
+    return '[name].mjs';
+  }
+  if (packageType === 'module') {
+    return '[name].cjs';
+  }
+  return '[name].js';
+}
+
+export function explicitJsFilename(config: RoleConfig): string | undefined {
+  const filenameConfig = config.output?.filename;
+  if (typeof filenameConfig === 'string') {
+    return filenameConfig;
+  }
+  if (
+    typeof filenameConfig === 'object' &&
+    filenameConfig !== null &&
+    typeof filenameConfig.js === 'string'
+  ) {
+    return filenameConfig.js;
+  }
+  return undefined;
+}
+
+export function isDangerousEntryFilename(
+  format: RoleModuleFormat,
+  packageType: string | undefined,
+  filename: string,
+): boolean {
+  if (!/\.js$/i.test(filename)) {
+    return false;
+  }
+  return format === 'esm' || packageType === 'module';
+}
+
+export function entryFilenameRiskWarning(
+  role: Role,
+  filename: string,
+): Diagnostic {
+  return {
+    code: 'RSELECTRON_ENTRY_FILENAME_RISK',
+    message: `Explicit ${role} output.filename "${filename}" uses a .js extension that conflicts with the role module format / application "type". Electron may treat the file as ESM and fail on CommonJS globals, or vice versa.`,
+    role,
+  };
 }
 
 export function readApplicationManifest(
@@ -72,13 +128,7 @@ export function plannedMainEntry(
     typeof mainConfig.output?.distPath === 'string'
       ? mainConfig.output.distPath
       : (mainConfig.output?.distPath?.root ?? 'dist');
-  const filenameConfig = mainConfig.output?.filename;
-  const filename =
-    typeof filenameConfig === 'string'
-      ? filenameConfig
-      : typeof filenameConfig?.js === 'string'
-        ? filenameConfig.js
-        : '[name].js';
+  const filename = explicitJsFilename(mainConfig) ?? '[name].js';
   const resolvedName = filename.replace('[name]', first);
   const absoluteDist = isAbsolute(distRoot)
     ? distRoot
