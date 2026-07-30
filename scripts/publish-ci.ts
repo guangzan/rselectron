@@ -38,14 +38,20 @@ console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
 // does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted publishing.
+// Provenance requires a public GitHub source repo; this repository is private.
 const publishArgs = [
   'publish',
   '--access',
   'public',
-  '--provenance',
   '--ignore-scripts',
   ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
 ];
 
 $.verbose = true;
-await $({ cwd: pkgDir })`npm ${publishArgs}`;
+await $({
+  cwd: pkgDir,
+  env: {
+    ...process.env,
+    NPM_CONFIG_PROVENANCE: 'false',
+  },
+})`npm ${publishArgs}`;
