@@ -120,8 +120,8 @@ test('English and Simplified Chinese docs stay consistent for the beta', () => {
   const readmeZh = readFileSync(join(repositoryRoot, 'README.zh.md'), 'utf8');
   expect(readmeEn).toContain('./README.zh.md');
   expect(readmeZh).toContain('./README.md');
-  expect(readmeEn).toContain('https://guangzan.github.io/Rselectron/');
-  expect(readmeZh).toContain('https://guangzan.github.io/Rselectron/zh/');
+  expect(readmeEn).toContain('https://guangzan.github.io/rselectron/');
+  expect(readmeZh).toContain('https://guangzan.github.io/rselectron/zh/');
 
   const enCompatibility = readFileSync(
     join(repositoryRoot, 'website/docs/en/guide/compatibility.md'),

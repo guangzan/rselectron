@@ -5,7 +5,7 @@
 # Rselectron
 
 <p>
-  <a href="https://guangzan.github.io/Rselectron/zh/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
+  <a href="https://guangzan.github.io/rselectron/zh/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
   <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" /></a>
   <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/@rselectron/core.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="node version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="license" /></a>
@@ -71,7 +71,7 @@ export default defineConfig({
 });
 ```
 
-`main` / `preload` / `renderer` 各自都是完整的 Rsbuild 配置。详见[配置指南](https://guangzan.github.io/Rselectron/zh/config/)。
+`main` / `preload` / `renderer` 各自都是完整的 Rsbuild 配置。详见[配置指南](https://guangzan.github.io/rselectron/zh/config/)。
 
 ## 快速开始
 
@@ -88,4 +88,4 @@ pnpm install
 pnpm dev
 ```
 
-完整步骤见文档站：[快速开始](https://guangzan.github.io/Rselectron/zh/guide/getting-started)。
+完整步骤见文档站：[快速开始](https://guangzan.github.io/rselectron/zh/guide/getting-started)。

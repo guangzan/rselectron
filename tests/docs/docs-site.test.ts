@@ -502,13 +502,13 @@ test('documentation site publishes under the GitHub Pages project root', () => {
     'utf8',
   );
 
-  expect(configSource).toContain("base: '/Rselectron/'");
+  expect(configSource).toContain("base: '/rselectron/'");
   expect(configSource).toContain("siteOrigin: 'https://guangzan.github.io'");
   expect(configSource).toMatch(/\bllms:\s*true\b/);
   expect(configSource).toContain(
     'https://github.com/guangzan/rselectron/tree/main/website/docs',
   );
-  expect(configSource).toContain('https://guangzan.github.io/Rselectron');
+  expect(configSource).toContain('https://guangzan.github.io/rselectron');
   expect(configSource).toMatch(/pluginSitemap/);
   expect(configSource).toMatch(/pluginOpenGraph/);
   expect(configSource).toContain("icon: 'github'");
@@ -587,7 +587,7 @@ test('Rspress documentation site builds', () => {
   const sitemapPath = join(websiteRoot, 'doc_build', 'sitemap.xml');
   expect(existsSync(sitemapPath)).toBe(true);
   const sitemap = readFileSync(sitemapPath, 'utf8');
-  expect(sitemap).toContain('https://guangzan.github.io/Rselectron');
+  expect(sitemap).toContain('https://guangzan.github.io/rselectron');
 
   const enHome = readFileSync(
     join(websiteRoot, 'doc_build', 'index.html'),

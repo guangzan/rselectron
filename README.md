@@ -5,7 +5,7 @@
 # Rselectron
 
 <p>
-  <a href="https://guangzan.github.io/Rselectron/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
+  <a href="https://guangzan.github.io/rselectron/"><img src="https://img.shields.io/badge/docs-website-blue?style=flat-square&colorA=564341&colorB=EDED91" alt="documentation" /></a>
   <a href="https://www.npmjs.com/package/@rselectron/core"><img src="https://img.shields.io/npm/v/@rselectron/core?style=flat-square&colorA=564341&colorB=EDED91" alt="npm version" /></a>
   <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/@rselectron/core.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="node version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&colorA=564341&colorB=EDED91" alt="license" /></a>
@@ -71,7 +71,7 @@ export default defineConfig({
 });
 ```
 
-Each of `main` / `preload` / `renderer` is a full Rsbuild config. See the [configuration guide](https://guangzan.github.io/Rselectron/config/) for details.
+Each of `main` / `preload` / `renderer` is a full Rsbuild config. See the [configuration guide](https://guangzan.github.io/rselectron/config/) for details.
 
 ## Getting Started
 
@@ -88,4 +88,4 @@ pnpm install
 pnpm dev
 ```
 
-Full walkthrough: [Getting Started](https://guangzan.github.io/Rselectron/guide/getting-started).
+Full walkthrough: [Getting Started](https://guangzan.github.io/rselectron/guide/getting-started).

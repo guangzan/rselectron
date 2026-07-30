@@ -5,7 +5,7 @@ import { defineConfig } from '@rspress/core';
 import { pluginSitemap } from '@rspress/plugin-sitemap';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 
-const PUBLISH_URL = 'https://guangzan.github.io/Rselectron';
+const PUBLISH_URL = 'https://guangzan.github.io/rselectron';
 const description =
   'Rsbuild-first Electron development and source-build tooling.';
 
@@ -15,7 +15,7 @@ export default defineConfig({
   description,
   lang: 'en',
   siteOrigin: 'https://guangzan.github.io',
-  base: '/Rselectron/',
+  base: '/rselectron/',
   llms: true,
   logo: {
     light: '/navbar-logo-light.png',
