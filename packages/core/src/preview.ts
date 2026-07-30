@@ -124,12 +124,10 @@ export async function preview(
       }
       closed = true;
       const electronProcess = electronRef.process;
-      if (
-        electronProcess !== undefined &&
-        electronProcess.exitCode === null &&
-        !electronProcess.killed
-      ) {
-        electronProcess.kill();
+      if (electronProcess !== undefined && electronProcess.exitCode === null) {
+        if (!electronProcess.killed) {
+          electronProcess.kill();
+        }
         await new Promise<void>((resolveExit) => {
           electronProcess.once('exit', () => {
             resolveExit();
