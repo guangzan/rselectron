@@ -40,21 +40,30 @@ const releaseTag = version.includes('beta')
 console.log(
   'Publishing version',
   version,
-  'to latest',
-  releaseTag ? `and ${releaseTag}` : '',
+  'with tag',
+  releaseTag || 'latest',
+  releaseTag ? '(then promote latest)' : '',
 );
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
 // does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted
 // publishing; npm auto-attaches provenance for public repos.
 //
-// Always publish to `latest` so the npm package page (which renders latest)
-// picks up README and metadata. Prerelease dist-tags are applied afterwards.
+// npm refuses to publish prerelease versions onto `latest` directly, so
+// prereleases use --tag beta/alpha first. The npm package page renders the
+// `latest` dist-tag, so promote latest afterwards so README is not stuck.
 $.verbose = true;
-await $({ cwd: pkgDir })`npm publish --access public --ignore-scripts`;
+const publishArgs = [
+  'publish',
+  '--access',
+  'public',
+  '--ignore-scripts',
+  ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
+];
+await $({ cwd: pkgDir })`npm ${publishArgs}`;
 
 if (releaseTag !== undefined) {
   await $({
     cwd: pkgDir,
-  })`npm dist-tag add ${pkg.name}@${version} ${releaseTag}`;
+  })`npm dist-tag add ${pkg.name}@${version} latest`;
 }

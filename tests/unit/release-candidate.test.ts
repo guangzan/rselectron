@@ -78,12 +78,12 @@ test('tag publish workflow gates OIDC npm publication', () => {
   expect(workflow).not.toContain('NPM_TOKEN');
   expect(workflow).not.toContain('changesets/action');
 
-  // npm renders the `latest` dist-tag on the package page; prereleases must
-  // still publish to latest (then add beta/alpha) so README is not stuck.
+  // npm refuses prereleases on latest directly; publish to beta/alpha then
+  // promote latest so the package page (which renders latest) gets README.
   const publishCi = readFileSync(publishCiScriptPath, 'utf8');
-  expect(publishCi).toContain('npm publish --access public --ignore-scripts');
+  expect(publishCi).toContain("'--tag', releaseTag");
   expect(publishCi).toContain('npm dist-tag add');
-  expect(publishCi).not.toContain("'--tag', releaseTag");
+  expect(publishCi).toContain('@${version} latest');
 });
 
 test('compatibility-matrix evidence gates are not silently waived', () => {
