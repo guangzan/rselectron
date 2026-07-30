@@ -41,7 +41,8 @@ function run(
   return spawnSync(command, args, {
     cwd,
     encoding: 'utf8',
-    shell: isWindows,
+    // Only .cmd/.bat need a shell; cmd.exe /c invocations must not be re-wrapped.
+    shell: isWindows && /\.(cmd|bat)$/i.test(command),
     env: {
       ...process.env,
       NO_COLOR: '1',
@@ -184,7 +185,10 @@ afterAll(() => {
 test('packed public facade ships documented package surface without private refs', () => {
   const listing = run('tar', ['-tzf', tarballPath], packRoot);
   expectSuccess(listing, 'tar list');
-  const files = listing.stdout.split('\n').filter(Boolean);
+  const files = listing.stdout
+    .split(/\r?\n/)
+    .map((file) => file.trim())
+    .filter(Boolean);
 
   expect(files).toEqual(
     expect.arrayContaining([

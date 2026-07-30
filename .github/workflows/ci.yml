@@ -105,18 +105,34 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb
+          sudo apt-get install -y \
+            xvfb \
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libdrm2 \
+            libxkbcommon0 \
+            libgbm1 \
+            libasound2t64 \
+            libcups2 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxfixes3 \
+            libxrandr2
       - name: Run Rstest (unit, integration, packed-tarball)
         if: runner.os != 'Linux'
         run: pnpm test
       - name: Run Rstest under Xvfb
         if: runner.os == 'Linux'
+        env:
+          ELECTRON_DISABLE_SANDBOX: '1'
         run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' pnpm test
       - name: Run Playwright Electron smoke
         if: runner.os != 'Linux'
         run: pnpm run test:e2e
       - name: Run Playwright Electron smoke under Xvfb
         if: runner.os == 'Linux'
+        env:
+          ELECTRON_DISABLE_SANDBOX: '1'
         run: xvfb-run --auto-servernum --server-args='-screen 0 1280x800x24' pnpm run test:e2e
       - name: Upload failure evidence
         if: failure()

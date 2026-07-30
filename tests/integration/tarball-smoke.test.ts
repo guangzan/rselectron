@@ -30,7 +30,8 @@ function run(
   return spawnSync(command, args, {
     cwd,
     encoding: 'utf8',
-    shell: isWindows,
+    // Only .cmd/.bat need a shell; cmd.exe /c invocations must not be re-wrapped.
+    shell: isWindows && /\.(cmd|bat)$/i.test(command),
     env: {
       ...process.env,
       NO_COLOR: '1',
