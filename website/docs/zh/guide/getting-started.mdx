@@ -7,26 +7,26 @@ import { PackageManagerTabs } from '@theme';
 
 # 快速开始
 
-:::tip 提示
+:::tip Note
 
-本指南假设你熟悉 Electron 和 Rsbuild。开始前建议先阅读 [Electron 指南](https://www.electronjs.org/zh/docs/latest/) 和 [Rsbuild 指南](https://rsbuild.rs/zh/guide/start/)。
+本指南假定你已熟悉 Electron 与 Rsbuild。如需补课，先阅读 [Electron 指南](https://www.electronjs.org/docs/latest/) 与 [Rsbuild 指南](https://rsbuild.rs/guide/start/)。领域词汇（角色、会话、模式）见 [概念](./concepts)。
 
 :::
 
-## 总览
+## 概览
 
-Rselectron 是面向 Electron 的构建工具，基于 Rsbuild，目标是更快、更简单的开发体验。它提供：
+Rselectron 是基于 Rsbuild 的 Electron 构建工具，目标是更快、更简单的开发体验。它提供：
 
-- 一套 `dev` / `build` / `preview` 命令，同时处理 Electron 的主进程（Node.js）与渲染进程（浏览器）环境。
-- 为主进程、预加载脚本和渲染进程提供单一配置入口，并给出面向 Electron 的合理默认。
-- 渲染进程支持模块热替换（HMR）；主进程与预加载脚本支持热重载。
-- 基于 Rsbuild / Rspack；**不**生成安装包，也**不是**项目脚手架。
+- 显式的 `dev` / `build` / `preview` / `inspect` 命令，覆盖 Electron 的双环境（Node.js 主进程与浏览器渲染进程）。
+- 单一配置入口声明 main、preload、renderer，并带有面向 Electron 的默认值。
+- 渲染进程 HMR；在启用时支持主进程与预加载热重载。
+- 底层是 Rsbuild / Rspack。它**不**产出安装包，也**不是**项目脚手架。
 
 ## 安装
 
-:::tip 前提条件
+:::tip Prerequisites
 
-Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（`^2.0.0`）。Electron 是可选 peer，需要启动应用时请装在项目根目录。支持的 Electron 版本见 [兼容性](./compatibility)。
+Rselectron 需要 Node.js `>=20.19.0`，以及 `@rsbuild/core` peer（`^2.0.0`）。Electron 是可选 peer — 需要启动应用时在项目根安装。受支持的 Electron 版本见 [兼容性](./compatibility)。
 
 :::
 
@@ -34,29 +34,29 @@ Rselectron 需要 Node.js `>=20.19.0`，并安装 peer 依赖 `@rsbuild/core`（
 
 ## 命令行界面
 
-安装后可直接使用 `npx rselectron`，或在项目中调用已安装的 CLI：
+安装后可运行 `npx rselectron`，或调用已安装的 CLI：
 
 ### `rselectron dev`
 
-构建主进程与预加载脚本，为渲染进程启动开发服务器，并启动 Electron。
+构建主进程与预加载，为渲染进程启动开发服务器，并启动 Electron。
 
 ### `rselectron build`
 
-构建已配置的主进程、预加载脚本与渲染进程源码。通常在打包安装包之前执行。
+构建已配置的主进程、预加载与渲染进程源码。打包安装器之前先跑这一步。
 
 ### `rselectron preview`
 
-构建（可用 `--skip-build` 跳过）并启动 Electron，用于预览生产构建。
+构建（可用 `--skip-build` 跳过）后启动 Electron，预览生产构建。
 
 ### `rselectron inspect`
 
-打印规范化后的配置，不构建也不启动。
+打印规范化配置，不构建也不启动。
 
-更多选项见 [命令行界面](/api/cli)。
+完整选项见 [命令行界面](/api/cli)。程序化用法见 [JavaScript API](/api/javascript-api)。
 
 ## 配置 Rselectron
 
-运行 CLI 时，Rselectron 会解析项目根目录下的配置文件（如 `rselectron.config.ts`）。最基本的配置如下：
+运行 CLI 时，Rselectron 会在项目根解析配置文件（例如 `rselectron.config.ts`）。最小配置如下：
 
 ```ts title="rselectron.config.ts"
 import { defineConfig } from '@rselectron/core';
@@ -77,11 +77,11 @@ export default defineConfig({
 });
 ```
 
-`main` / `preload` / `renderer` 各自是一份 Rsbuild 配置。仅在有意省略某一进程时才不要配置它。详情见 [配置](/config/)。
+`main` / `preload` / `renderer` 每一项都是完整的 Rsbuild 配置。仅在有意省略某一进程时才不要配置它。细节见 [配置](/config/)。
 
 ## Electron 入口
 
-打包后，Electron 应用入口应指向**主进程构建产物**。在上面的最小配置下，默认输出在各进程 `root` 下的 `dist`，因此 `package.json` 可以是：
+把 Electron 的应用入口指到**主进程构建产物**。在上面的最小配置下，默认输出在各进程 `root` 下的 `dist`，因此 `package.json` 可以是：
 
 ```json title="package.json"
 {
@@ -91,17 +91,17 @@ export default defineConfig({
 }
 ```
 
-请保证 `main`（或配置里的 `electron.entry`）与主进程实际输出路径一致。你也可以像示例工程那样，通过 `output.distPath` 把产物集中到统一目录（例如 `out/main`）。
+保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。也可以设置 `output.distPath`，把产物收到共享目录（例如 `out/main`），许多应用与学习示例都这么做。
 
-## 从示例开始
+## 从示例起步
 
-仓库提供可学习的示例（vanilla 与 React）：
+仓库里的学习示例（vanilla 与 React）：
 
 - [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)
 - [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react)
 
-复制示例目录，安装依赖后运行 `rselectron dev` 即可。
+复制示例、安装依赖，然后运行 `rselectron dev`。学习示例与自动化测试树的区别见 [概念](./concepts)。
 
-## 寻求帮助
+## 获取帮助
 
-如果开发中遇到问题，可以先看 [排障](./troubleshooting)，再到 [GitHub Issues](https://github.com/guangzan/rselectron/issues) 搜索是否已有相同问题。没有的话欢迎提交 issue。
+遇到问题先查 [故障排除](./troubleshooting)，再搜索 [GitHub issue 追踪器](https://github.com/guangzan/rselectron/issues)。没有合适条目就开新 issue。

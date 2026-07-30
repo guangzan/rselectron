@@ -146,7 +146,13 @@ session.electronProcess.on('exit', async () => {
 
 ## `inspect`
 
-打印规范化后的配置，不构建也不启动。适合在排障前核对各进程最终配置。
+解析配置但不构建、不启动。对每个已配置的进程，inspect 暴露三层：
+
+1. **normalized** — 经默认值与 Electron 规范化后的 Rselectron 配置
+2. **rsbuild** — 经预设与合并后的最终 Rsbuild 配置
+3. **rspack** — 最终 Rspack / bundler 配置
+
+源自敏感环境变量的值会在各层脱敏。人类可读与机器可读输出共用同一脱敏数据模型。
 
 ```ts
 import { inspect } from '@rselectron/core';

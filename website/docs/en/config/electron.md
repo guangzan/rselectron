@@ -5,9 +5,9 @@ description: Process-level and app-level electron fields with examples.
 
 # Electron options
 
-There are two layers of `electron` config:
+There are two layers of `electron` config — same property name, different scope:
 
-- **Process-level** — on `main` / `preload` / `renderer`: module format, dependency externalization, hot reload, and related behavior.
+- **Process-level** — on `main` / `preload` / `renderer`: module format, dependency externalization, hot reload, and related source-build behavior.
 - **App-level** — on the top level of `defineConfig`: launch entry, Electron executable, and process args.
 
 Electron is always resolved from a **project-local** install. Version ranges: [Compatibility](/guide/compatibility).
@@ -61,6 +61,8 @@ Controls the output module format for main / preload.
 | `cjs`            | CommonJS                                                        |
 | `esm`            | ES Module (requires an Electron version that supports ESM)      |
 
+When unset, Rselectron also considers the application manifest `"type"` and applies the result through Rsbuild `output.module`. Explicit filenames still win over the default entry filename policy (`[name].mjs` / `[name].cjs` / `[name].js`).
+
 ```ts
 main: {
   electron: { format: 'cjs' },
@@ -85,11 +87,11 @@ preload: {
 },
 ```
 
-CLI `--watch` / `--watch=main` / `--watch=preload` override `electron.watch` in config. See [CLI](/api/cli).
+CLI `--watch` / `--watch=main` / `--watch=preload` override `electron.watch` in config for the session. See [CLI](/api/cli).
 
 ### `externalizeDeps`
 
-For main / preload, decide whether Node dependencies stay in `node_modules` (externalized) instead of being bundled.
+For main / preload, decide whether Node dependencies stay in `node_modules` (externalized) instead of being bundled. Externalization is **format-aware**: ESM outputs use `module-import` (and `node-commonjs` where `require` originated the external); CJS outputs use CommonJS externals.
 
 | Value                  | Meaning                                                                            |
 | ---------------------- | ---------------------------------------------------------------------------------- |
@@ -155,7 +157,6 @@ export default defineConfig({
   main: {/* ... */},
 });
 ```
-
 More often you point `package.json#main` at the main-process output instead of setting `electron.entry` every time. See [Getting started · Electron entry](/guide/getting-started#electron-entry).
 
 ## Related pages

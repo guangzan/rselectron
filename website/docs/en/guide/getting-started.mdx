@@ -9,7 +9,7 @@ import { PackageManagerTabs } from '@theme';
 
 :::tip Note
 
-This guide assumes you are familiar with Electron and Rsbuild. Read the [Electron guide](https://www.electronjs.org/docs/latest/) and the [Rsbuild guide](https://rsbuild.rs/guide/start/) first if needed.
+This guide assumes you are familiar with Electron and Rsbuild. Read the [Electron guide](https://www.electronjs.org/docs/latest/) and the [Rsbuild guide](https://rsbuild.rs/guide/start/) first if needed. Domain vocabulary (Roles, sessions, modes) is summarized in [Concepts](./concepts).
 
 :::
 
@@ -17,9 +17,9 @@ This guide assumes you are familiar with Electron and Rsbuild. Read the [Electro
 
 Rselectron is an Electron build tool based on Rsbuild. It aims for a faster, simpler development experience. It provides:
 
-- A set of `dev` / `build` / `preview` commands that handle Electron’s dual environments (Node.js main process and browser renderer).
+- Explicit `dev` / `build` / `preview` / `inspect` commands for Electron’s dual environments (Node.js main process and browser renderer).
 - A single config entry for main, preload, and renderer, with Electron-oriented defaults.
-- HMR for the renderer, and hot reload for main and preload.
+- HMR for the renderer, and hot reload for main and preload when enabled.
 - Rsbuild / Rspack under the hood. It does **not** produce installers and is **not** a project scaffolder.
 
 ## Install
@@ -52,7 +52,7 @@ Builds (unless `--skip-build`) and launches Electron to preview the production b
 
 Prints normalized configuration without building or launching.
 
-See [Command Line Interface](/api/cli) for the full option list.
+See [Command Line Interface](/api/cli) for the full option list. Programmatic usage: [JavaScript API](/api/javascript-api).
 
 ## Configuring Rselectron
 
@@ -91,7 +91,7 @@ Point Electron’s application entry at the **main-process build output**. With 
 }
 ```
 
-Keep `main` (or `electron.entry` in config) aligned with the actual main output path. You can also set `output.distPath` to gather outputs under a shared directory (for example `out/main`), as the fixtures and many apps do.
+Keep `main` (or `electron.entry` in config) aligned with the actual main output path. You can also set `output.distPath` to gather outputs under a shared directory (for example `out/main`), as many apps and the learning examples do.
 
 ## Start from an example
 
@@ -100,7 +100,7 @@ Learning examples (vanilla and React) live in the repository:
 - [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)
 - [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react)
 
-Copy an example, install dependencies, then run `rselectron dev`.
+Copy an example, install dependencies, then run `rselectron dev`. For how learning examples differ from automated test trees, see [Concepts](./concepts).
 
 ## Getting help
 

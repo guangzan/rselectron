@@ -146,7 +146,13 @@ Returns an optional `buildResult`, `electronProcess`, and an idempotent `close()
 
 ## `inspect`
 
-Prints normalized configuration without building or launching. Useful before debugging compile or launch failures.
+Resolves configuration without building or launching. For every configured process, inspect exposes three layers:
+
+1. **normalized** — Rselectron configuration after defaults and Electron normalization
+2. **rsbuild** — final Rsbuild configuration after presets and merges
+3. **rspack** — final Rspack / bundler configurations
+
+Values that originate from sensitive environment variables are redacted in all layers. Human-readable and machine-readable output use the same redacted data model.
 
 ```ts
 import { inspect } from '@rselectron/core';
@@ -160,7 +166,6 @@ for (const warning of result.warnings) {
   console.warn(`[${warning.code}] ${warning.message}`);
 }
 ```
-
 ## `loadEnv`
 
 Loads environment files. Default prefixes include `RSELECTRON_`, `MAIN_RSELECTRON_`, `PRELOAD_RSELECTRON_`, and `RENDERER_RSELECTRON_`. Behavior matches CLI `--env-mode`.

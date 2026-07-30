@@ -5,6 +5,8 @@ description: Electron versions, hosts, frameworks, and intentional exclusions.
 
 # Compatibility
 
+Rselectron targets **capability parity** with a frozen electron-vite baseline, subject to documented **parity exceptions**. That is **not** drop-in replacement of Vite configs, plugins, or electron-vite APIs. The acceptance record is the repository [compatibility matrix](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md).
+
 ## Electron versions
 
 Supported Electron majors are **41–43**. The optional peer range is `>=41 <44`. Release metadata, docs, and CI use the same range.
@@ -23,9 +25,9 @@ Rselectron covers development and source builds only. Consuming outputs with ele
 
 ## Frameworks
 
-Vanilla and React are the official examples. Other UI frameworks work through normal Rsbuild plugins. Rselectron does not maintain a separate framework matrix.
+Vanilla and React are the official examples under [`examples/`](https://github.com/guangzan/rselectron/tree/main/examples). Other UI frameworks work through normal Rsbuild plugins. Rselectron does not maintain a separate framework matrix.
 
-## Intentional exclusions
+## Intentional exclusions (parity exceptions)
 
 Compared with electron-vite, these capabilities are intentionally out of scope:
 
@@ -35,4 +37,4 @@ Compared with electron-vite, these capabilities are intentionally out of scope:
 | V8 bytecode compilation   | Not implemented — no silent fallback                      |
 | electron-vite SWC helpers | Not exported — configure SWC via Rsbuild / Rspack         |
 
-See the repository [compatibility matrix](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md) and [Migration](./migration).
+See [Migration](./migration) for a semantic mapping checklist.

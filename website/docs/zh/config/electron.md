@@ -5,9 +5,9 @@ description: 进程级与应用级 electron 字段说明与示例。
 
 # Electron 选项
 
-`electron` 有两层：
+`electron` 有两层 — 同名属性、不同作用域：
 
-- **进程级**：写在 `main` / `preload` / `renderer` 上，控制该进程的模块格式、依赖外置、热重载等。
+- **进程级**：写在 `main` / `preload` / `renderer` 上，控制该进程的模块格式、依赖外置、热重载等源码构建行为。
 - **应用级**：写在 `defineConfig` 顶层，控制启动入口、Electron 可执行文件、启动参数等。
 
 Electron 始终从**项目本地**安装解析。版本范围见 [兼容性](/guide/compatibility)。
@@ -61,6 +61,8 @@ export default defineConfig({
 | `cjs`          | CommonJS                              |
 | `esm`          | ES Module（需 Electron 版本支持 ESM） |
 
+未显式设置时，Rselectron 还会参考应用清单的 `"type"`，并通过 Rsbuild `output.module` 生效。显式 `output.filename` 仍优先于默认入口文件名策略（`[name].mjs` / `[name].cjs` / `[name].js`）。
+
 ```ts
 main: {
   electron: { format: 'cjs' },
@@ -85,11 +87,11 @@ preload: {
 },
 ```
 
-CLI 的 `--watch` / `--watch=main` / `--watch=preload` 会覆盖配置里的 `electron.watch`。见 [CLI](/api/cli)。
+CLI 的 `--watch` / `--watch=main` / `--watch=preload` 会覆盖本会话配置里的 `electron.watch`。见 [CLI](/api/cli)。
 
 ### `externalizeDeps`
 
-为主进程 / 预加载决定是否把 Node 依赖留在 `node_modules`（外置），而不是打进 bundle。
+为主进程 / 预加载决定是否把 Node 依赖留在 `node_modules`（外置），而不是打进 bundle。外置是**格式感知**的：ESM 产物走 `module-import`（源自 `require` 的外置还会用 `node-commonjs`）；CJS 产物走 CommonJS 外置。
 
 | 值                     | 含义                                                         |
 | ---------------------- | ------------------------------------------------------------ |

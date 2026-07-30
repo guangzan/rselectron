@@ -13,7 +13,7 @@ If these tips are not enough, search or open an issue on [GitHub](https://github
 
 1. **During development** — use breakpoints or `debugger`.
 2. **Before packaging** — run `rselectron preview` to catch production-build issues early.
-3. **Check config** — run `rselectron inspect --format human` before chasing compiler or launch failures.
+3. **Check config** — run `rselectron inspect --format human` before chasing compiler or launch failures. Inspect shows normalized, Rsbuild, and Rspack layers — see [JavaScript API · inspect](/api/javascript-api#inspect) and [CLI](/api/cli).
 4. **Close handles** — always call `close()` on handles from `createServer` / `build` / `preview`; repeated calls are safe.
 
 ## Development
@@ -28,21 +28,25 @@ Install Electron at the project root (or ensure the selected manifest resolves t
 
 **Code / warning:** `RSELECTRON_ROLE_MISSING`
 
-Omitting a process on purpose is allowed. If you expected it to build, add the matching key under `defineConfig`.
+Omitting a process on purpose is allowed. If you expected it to build, add the matching key under `defineConfig`. See [Main, preload, and renderer](/config/processes).
 
 ### `--renderer-only` will not start
 
-`--renderer-only` skips main and preload builds and reuses prior outputs. Run a full `rselectron dev` (or `build`) at least once first, and keep those outputs valid. Do not keep using this flag after changing main or preload sources.
+`--renderer-only` skips main and preload builds and reuses prior outputs. Run a full `rselectron dev` (or `build`) at least once first, and keep those outputs valid. Do not keep using this flag after changing main or preload sources. Flag details: [CLI](/api/cli).
 
 ### Renderer looks like a Node target
 
 When the renderer output target looks like Node / Electron-main, Rselectron emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`. Unless you intentionally enable `nodeIntegration`, use a browser-oriented renderer target.
 
+### Config change restarts everything
+
+A watched configuration dependency change reloads the whole configuration generation and replaces the development session. Partial hot replacement of config is not supported — see [Concepts](./concepts).
+
 ## Build
 
 ### `build` rejects watch
 
-Production `build` is finite and does not support process-selective watch. For main / preload hot reload use:
+Production `build` is finite and does not support process-selective watch (`RSELECTRON_BUILD_WATCH_UNSUPPORTED`). For main / preload hot reload use:
 
 ```bash
 rselectron dev --watch
@@ -50,6 +54,8 @@ rselectron dev --watch
 rselectron dev --watch=main
 rselectron dev --watch=preload
 ```
+
+See [CLI](/api/cli).
 
 ## Preview
 
