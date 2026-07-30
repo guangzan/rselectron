@@ -17,6 +17,9 @@ if (version.startsWith('v')) {
 const pkgPath = fileURLToPath(
   new URL('../packages/rselectron/package.json', import.meta.url),
 );
+const pkgDir = fileURLToPath(
+  new URL('../packages/rselectron', import.meta.url),
+);
 const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string };
 
 if (pkg.version !== version) {
@@ -34,17 +37,15 @@ const releaseTag = version.includes('beta')
 console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
-// does not re-run `prepack` (rslib) under a different process environment.
+// does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted publishing.
 const publishArgs = [
-  '--filter',
-  '@rselectron/core',
   'publish',
   '--access',
   'public',
-  '--no-git-checks',
+  '--provenance',
   '--ignore-scripts',
   ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
 ];
 
 $.verbose = true;
-await $`pnpm ${publishArgs}`;
+await $({ cwd: pkgDir })`npm ${publishArgs}`;

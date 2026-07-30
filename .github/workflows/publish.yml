@@ -35,9 +35,11 @@ jobs:
       - name: Build public facade
         run: pnpm run build
 
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm i -g npm@^11.5.2
+
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Do not set NODE_AUTH_TOKEN — trusted publishing uses OIDC.
         run: pnpm run publish-ci ${{ github.ref_name }}
 
       - name: Generate Changelog

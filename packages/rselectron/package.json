@@ -4,6 +4,10 @@
   "description": "An Rsbuild-first Electron development and build tool.",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guangzan/rselectron.git"
+  },
   "bin": {
     "rselectron": "./bin/rselectron.js"
   },
