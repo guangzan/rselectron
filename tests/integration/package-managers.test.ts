@@ -193,6 +193,7 @@ test('packed public facade ships documented package surface without private refs
       'package/node.d.ts',
       'package/package.json',
       'package/LICENSE',
+      'package/README.md',
     ]),
   );
   expect(files.some((file) => file.includes('packages/core'))).toBe(false);

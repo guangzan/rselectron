@@ -55,6 +55,9 @@ test('public facade is a 1.0 beta with MIT surface', () => {
   expect(packageJson.publishConfig?.access).toBe('public');
   expect(existsSync(join(repositoryRoot, 'LICENSE'))).toBe(true);
   expect(
+    existsSync(join(repositoryRoot, 'packages/rselectron/README.md')),
+  ).toBe(true);
+  expect(
     existsSync(join(repositoryRoot, 'packages/rselectron/CHANGELOG.md')),
   ).toBe(false);
 });
@@ -90,6 +93,7 @@ test('packed beta tarball includes LICENSE and has no telemetry hooks', () => {
     const list = spawnSync('tar', ['-tzf', tarballPath], { encoding: 'utf8' });
     expect(list.status).toBe(0);
     expect(list.stdout).toContain('package/LICENSE');
+    expect(list.stdout).toContain('package/README.md');
     expect(list.stdout).toContain('package/package.json');
     expect(list.stdout).toContain('package/dist/index.js');
 
@@ -118,10 +122,19 @@ test('packed beta tarball includes LICENSE and has no telemetry hooks', () => {
 test('English and Simplified Chinese docs stay consistent for the beta', () => {
   const readmeEn = readFileSync(join(repositoryRoot, 'README.md'), 'utf8');
   const readmeZh = readFileSync(join(repositoryRoot, 'README.zh.md'), 'utf8');
+  const packageReadme = readFileSync(
+    join(repositoryRoot, 'packages/rselectron/README.md'),
+    'utf8',
+  );
   expect(readmeEn).toContain('./README.zh.md');
   expect(readmeZh).toContain('./README.md');
   expect(readmeEn).toContain('https://guangzan.github.io/rselectron/');
   expect(readmeZh).toContain('https://guangzan.github.io/rselectron/zh/');
+  expect(packageReadme).toContain(
+    'https://guangzan.github.io/rselectron/rselectron-banner.png',
+  );
+  expect(packageReadme).toContain('npm i @rselectron/core -D');
+  expect(packageReadme).toContain('https://guangzan.github.io/rselectron/');
 
   const enCompatibility = readFileSync(
     join(repositoryRoot, 'website/docs/en/guide/compatibility.md'),
