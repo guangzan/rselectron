@@ -165,7 +165,10 @@ test('createServer launches Electron after Roles are ready with renderer URL', a
     await server.close();
   }
 
-  expect(server.electronProcess.exitCode).not.toBeNull();
+  expect(
+    server.electronProcess.exitCode !== null ||
+      server.electronProcess.signalCode !== null,
+  ).toBe(true);
 });
 
 test('Renderer HMR updates without restarting Electron', async () => {
@@ -223,7 +226,8 @@ test('Electron exit closes the Development session', async () => {
   if (
     process.platform === 'win32' &&
     server.electronProcess.pid !== undefined &&
-    server.electronProcess.exitCode === null
+    server.electronProcess.exitCode === null &&
+    server.electronProcess.signalCode === null
   ) {
     spawnSync(
       'taskkill',
@@ -231,7 +235,11 @@ test('Electron exit closes the Development session', async () => {
       { encoding: 'utf8', stdio: 'ignore', windowsHide: true },
     );
   }
-  await waitFor(() => server.electronProcess.exitCode !== null);
+  await waitFor(
+    () =>
+      server.electronProcess.exitCode !== null ||
+      server.electronProcess.signalCode !== null,
+  );
   await waitFor(async () => {
     try {
       await fetch(rendererUrl);
