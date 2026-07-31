@@ -55,6 +55,7 @@ Capability claims for `"type": "module"` Main/Preload require both compile-time 
 - Default entry extensions may change relative to earlier `.js` assumptions; `package.json#main` and preload paths must track planned outputs (diagnostics already exist).
 - Externalization unit tests that assert `require("electron")` under ESM must be rewritten for ESM import / `node-commonjs` shapes.
 - Documentation and inspect output should surface format, externals posture, and entry filename together.
+- CJS roles still emit CommonJS externals; a dynamic or static import of an import-only package (including subpaths) may be rewritten to `require` and fail only at runtime. That tension is covered by Import-only external risk diagnostics and docs—not by reversing this ADR's CJS externals choice.
 
 ## Alternatives considered
 

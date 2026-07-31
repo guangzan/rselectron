@@ -21,6 +21,13 @@ interface ApplicationDependencies {
   optionalDependencies?: Record<string, string>;
 }
 
+interface PackageManifest {
+  exports?: unknown;
+  main?: string;
+  module?: string;
+  type?: string;
+}
+
 const alwaysExternal = new Set<string>([
   'electron',
   ...builtinModules,
@@ -111,6 +118,163 @@ function shouldExternalizeRequest(
   return dependencyNames.some((name) => matchesPackage(request, name));
 }
 
+function isAlwaysExternalRequest(request: string): boolean {
+  return alwaysExternal.has(request) || request.startsWith('electron/');
+}
+
+function parsePackageRequest(
+  request: string,
+): { name: string; subpath: string } | undefined {
+  if (isAlwaysExternalRequest(request) || request.startsWith('node:')) {
+    return undefined;
+  }
+
+  if (request.startsWith('@')) {
+    const parts = request.split('/');
+    if (parts.length < 2 || parts[0] === undefined || parts[1] === undefined) {
+      return undefined;
+    }
+    const name = `${parts[0]}/${parts[1]}`;
+    const rest = parts.slice(2).join('/');
+    return { name, subpath: rest === '' ? '.' : `./${rest}` };
+  }
+
+  const slash = request.indexOf('/');
+  if (slash === -1) {
+    return { name: request, subpath: '.' };
+  }
+  return {
+    name: request.slice(0, slash),
+    subpath: `./${request.slice(slash + 1)}`,
+  };
+}
+
+function readPackageManifest(
+  appRoot: string,
+  name: string,
+): PackageManifest | undefined {
+  try {
+    return JSON.parse(
+      readFileSync(
+        resolve(appRoot, 'node_modules', name, 'package.json'),
+        'utf8',
+      ),
+    ) as PackageManifest;
+  } catch {
+    return undefined;
+  }
+}
+
+function resolveExportTarget(exportsField: unknown, subpath: string): unknown {
+  if (exportsField == null) {
+    return undefined;
+  }
+
+  if (typeof exportsField === 'string' || Array.isArray(exportsField)) {
+    return subpath === '.' ? exportsField : undefined;
+  }
+
+  if (typeof exportsField !== 'object') {
+    return undefined;
+  }
+
+  const map = exportsField as Record<string, unknown>;
+  if (subpath in map) {
+    return map[subpath];
+  }
+  if (
+    subpath === '.' &&
+    ('import' in map || 'require' in map || 'default' in map)
+  ) {
+    return map;
+  }
+  return undefined;
+}
+
+function conditionsAreImportOnly(target: unknown): boolean {
+  if (target == null || typeof target === 'string' || Array.isArray(target)) {
+    return false;
+  }
+  if (typeof target !== 'object') {
+    return false;
+  }
+
+  const conditions = target as Record<string, unknown>;
+  if ('require' in conditions || 'default' in conditions) {
+    return false;
+  }
+  if ('import' in conditions) {
+    return true;
+  }
+
+  for (const value of Object.values(conditions)) {
+    if (conditionsAreImportOnly(value)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Pragmatic heuristic: CJS CommonJS-externalizing this request is likely to
+ * fail at runtime because the package offers no usable require/default path.
+ */
+export function isImportOnlyExternal(
+  request: string,
+  appRoot: string,
+): boolean {
+  const parsed = parsePackageRequest(request);
+  if (parsed === undefined) {
+    return false;
+  }
+
+  const pkg = readPackageManifest(appRoot, parsed.name);
+  if (pkg === undefined) {
+    return false;
+  }
+
+  if (pkg.exports !== undefined) {
+    const target = resolveExportTarget(pkg.exports, parsed.subpath);
+    if (target === undefined) {
+      return false;
+    }
+    if (conditionsAreImportOnly(target)) {
+      return true;
+    }
+    if (
+      typeof target === 'object' &&
+      target !== null &&
+      !Array.isArray(target)
+    ) {
+      const conditions = target as Record<string, unknown>;
+      if ('require' in conditions || 'default' in conditions) {
+        return false;
+      }
+    }
+    return pkg.type === 'module';
+  }
+
+  if (pkg.type === 'module') {
+    return true;
+  }
+  return pkg.module !== undefined && pkg.main === undefined;
+}
+
+function importOnlyExternalWarning(role: Role, request: string): Diagnostic {
+  return {
+    code: 'RSELECTRON_IMPORT_ONLY_EXTERNAL',
+    role,
+    message: `CJS ${role} CommonJS-externalized "${request}", but that request looks import-only (no usable require/default export). Bundle it with electron.externalizeDeps.include, or switch the role to format: 'esm'.`,
+  };
+}
+
+interface CjsImportOnlyCollector {
+  appRoot: string;
+  pendingWarnings: Diagnostic[];
+  role: Role;
+  seen: Set<string>;
+}
+
 function mergeRspackExternals(
   existing: RsbuildConfig['tools'] extends { rspack?: infer R } | undefined
     ? R extends { externals?: infer E }
@@ -119,6 +283,7 @@ function mergeRspackExternals(
     : unknown,
   predicate: (request: string) => boolean,
   format: 'cjs' | 'esm',
+  collector?: CjsImportOnlyCollector,
 ): NonNullable<
   NonNullable<NonNullable<RsbuildConfig['tools']>['rspack']> extends {
     externals?: infer E;
@@ -145,6 +310,17 @@ function mergeRspackExternals(
         }
         return;
       }
+      if (
+        collector !== undefined &&
+        !isAlwaysExternalRequest(request) &&
+        isImportOnlyExternal(request, collector.appRoot) &&
+        !collector.seen.has(request)
+      ) {
+        collector.seen.add(request);
+        collector.pendingWarnings.push(
+          importOnlyExternalWarning(collector.role, request),
+        );
+      }
       callback(undefined, `commonjs ${request}`);
       return;
     }
@@ -166,6 +342,7 @@ export function applyExternalization(
   role: Role,
   config: RoleConfig,
   appRoot: string,
+  pendingWarnings: Diagnostic[] = [],
 ): { config: RoleConfig; warnings: Diagnostic[] } {
   if (role === 'renderer' && config.electron?.isolatedEntries !== true) {
     return { config, warnings: [] };
@@ -201,6 +378,15 @@ export function applyExternalization(
 
   if (role === 'main' || role === 'preload') {
     const format = next.output?.module === true ? 'esm' : 'cjs';
+    const collector: CjsImportOnlyCollector | undefined =
+      format === 'cjs'
+        ? {
+            appRoot,
+            pendingWarnings,
+            role,
+            seen: new Set<string>(),
+          }
+        : undefined;
     next = {
       ...next,
       tools: {
@@ -212,6 +398,7 @@ export function applyExternalization(
             (request) =>
               shouldExternalizeRequest(request, dependencyNames, policy),
             format,
+            collector,
           ),
         } as NonNullable<NonNullable<RsbuildConfig['tools']>['rspack']>,
       },

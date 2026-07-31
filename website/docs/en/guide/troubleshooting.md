@@ -57,6 +57,21 @@ rselectron dev --watch=preload
 
 See [CLI](/api/cli).
 
+### Import-only package fails under CJS main / preload
+
+**Code / warning:** `RSELECTRON_IMPORT_ONLY_EXTERNAL`
+
+**Symptoms:** the Main or Preload build succeeds, but Electron fails at launch or first use with `ERR_REQUIRE_ESM`, `is not a function`, or a similar `require` of an ESM-only module. This happens when the role format is CJS and format-aware externalization emits a CommonJS external for an import-only package (or subpath). Rspack may rewrite static or dynamic `import` to `require`; the break shows up only at runtime.
+
+**Primary fixes:**
+
+1. Bundle the package with `electron.externalizeDeps.include` (see [Electron options · externalizeDeps](/config/electron#externalizedeps)).
+2. Or switch that role to `electron.format: 'esm'`.
+
+Coming from electron-vite: the same class of failure is documented as `ERR_REQUIRE_ESM` / ESM-only dependencies. electron-vite’s bundle escape is named `exclude`; in Rselectron the same intent is `include`.
+
+Rselectron does not auto-include import-only packages. Advanced apps may keep a native dynamic `import()` with a bundler ignore comment (for example `/* webpackIgnore: true */`); that path does not silence `RSELECTRON_IMPORT_ONLY_EXTERNAL`.
+
 ## Preview
 
 ### Skip rebuilding

@@ -197,6 +197,8 @@ export async function build(options: BuildOptions = {}): Promise<BuildResult> {
     };
   }
 
+  warnings.push(...runtime.pendingWarnings);
+
   let closePromise: Promise<void> | undefined;
 
   return {

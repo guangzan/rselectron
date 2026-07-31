@@ -55,6 +55,7 @@ ADR 0007 中的「稳定入口文件名」指 **无 hash、可被引用** 的入
 - 默认入口扩展名可能相对早期 `.js` 假设变化；`package.json#main` 与 preload 路径须跟踪计划产物（诊断已存在）。
 - 在 ESM 下断言 `require("electron")` 的外置单测须改为 ESM import / `node-commonjs` 形态。
 - 文档与 inspect 输出应同时呈现 format、外置姿态与入口文件名。
+- CJS 角色仍发出 CommonJS 外置；对 import-only 包（含 subpath）的静态或动态 import 可能被改写成 `require` 并仅在运行时失败。该张力由 Import-only external risk 诊断与文档覆盖——不推翻本 ADR 的 CJS 外置选择。
 
 ## 备选方案
 

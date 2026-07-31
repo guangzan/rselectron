@@ -57,6 +57,21 @@ rselectron dev --watch=preload
 
 见 [CLI](/api/cli)。
 
+### CJS 主进程 / 预加载下 import-only 包失败
+
+**代码 / 警告：** `RSELECTRON_IMPORT_ONLY_EXTERNAL`
+
+**症状：** 主进程或预加载构建成功，但 Electron 在启动或首次使用时失败，出现 `ERR_REQUIRE_ESM`、`is not a function`，或类似对 ESM-only 模块的 `require`。常见于角色格式为 CJS，且格式感知外置对 import-only 包（或 subpath）发出了 CommonJS 外置。Rspack 可能把静态或动态 `import` 改写成 `require`；问题往往只在运行时暴露。
+
+**主要修复：**
+
+1. 用 `electron.externalizeDeps.include` 把该包装进产物（见 [Electron 选项 · externalizeDeps](/config/electron#externalizedeps)）。
+2. 或将该角色改为 `electron.format: 'esm'`。
+
+若你来自 electron-vite：同类失败在其文档里以 `ERR_REQUIRE_ESM` / ESM-only 依赖描述。electron-vite 的「打进包」逃逸键叫 `exclude`；在 Rselectron 中对应意图是 `include`。
+
+Rselectron 不会自动 `include` import-only 包。进阶场景可用 bundler ignore 注释（例如 `/* webpackIgnore: true */`）保留原生动态 `import()`；该路径不会消除 `RSELECTRON_IMPORT_ONLY_EXTERNAL` 警告。
+
 ## Preview
 
 ### 跳过重建

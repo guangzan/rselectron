@@ -57,6 +57,9 @@ Main 或 Preload 源码构建产物使用的模块系统：`cjs` 或 `esm`。由
 **Format-aware externalization（格式感知外置）**  
 Main/Preload 依赖外置必须与角色模块格式一致的规则——ESM 使用 `module-import`（源自 `require` 的外置使用 `node-commonjs`），CJS 使用 CommonJS——而非总是强制 CommonJS `require`。
 
+**Import-only external risk（Import-only 外置风险）**  
+在 CJS Main/Preload 角色下，被 CommonJS 外置的请求（含包 subpath）若其解析到的入口/`exports` 没有可用的 `require`/`default`/`main` CJS 路径，而只有 `import` / `module` / `"type": "module"` 一类信号，则构建可能成功但运行时对该请求的 `require` 会失败。缓解：`externalizeDeps.include`（打进包），或将角色改为 ESM；进阶应用也可通过 bundler ignore 注释保留原生动态 `import()`。
+
 **Entry filename policy（入口文件名策略）**  
 未设置 `output.filename` 时 Main/Preload 的默认无 hash 入口模式：ESM 为 `[name].mjs`，`"type": "module"` 下的 CJS 为 `[name].cjs`，否则为 `[name].js`。显式文件名优先；危险覆盖仅警告。
 

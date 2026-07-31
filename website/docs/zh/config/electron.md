@@ -115,6 +115,8 @@ main: {
 
 `electron` 与 Node 内置模块（含 `node:` 前缀）始终外置，不受 `include` 影响。
 
+在 CJS 主进程 / 预加载下，被 CommonJS 外置的 import-only 包（或 subpath）可能构建成功却在运行时失败（`ERR_REQUIRE_ESM`、`is not a function` 等）。此时 Rselectron 会发出 `RSELECTRON_IMPORT_ONLY_EXTERNAL`。把该包放进 `include`（同上例 `execa`），或将该角色改为 `format: 'esm'`。electron-vite 文档描述了同类失败；其「打进包」逃逸键叫 `exclude`——在 Rselectron 中对应意图是 `include`。框架不会自动 `include` import-only 包，bundler ignore 魔法注释也不会消除该警告。见 [故障排除 · CJS 主进程 / 预加载下 import-only 包失败](/guide/troubleshooting#cjs-主进程--预加载下-import-only-包失败)。
+
 ### `isolatedEntries`
 
 为多入口做隔离构建：禁用共享 chunk，每个入口尽量自包含。常用于多个预加载脚本，或需要避免跨入口共享代码的场景。

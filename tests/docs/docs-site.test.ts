@@ -352,6 +352,10 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(troubleshooting).toContain('--renderer-only');
     expect(troubleshooting).toContain('inspect');
     expect(troubleshooting).toMatch(/\/api\/cli|cli/);
+    expect(troubleshooting).toContain('RSELECTRON_IMPORT_ONLY_EXTERNAL');
+    expect(troubleshooting).toContain('ERR_REQUIRE_ESM');
+    expect(troubleshooting).toMatch(/externalizeDeps\.include|include/);
+    expect(troubleshooting).toMatch(/format:\s*'esm'|format.*esm/);
 
     expect(compatibility).toContain('ELECTRON_SUPPORT_SNAPSHOT');
     expect(compatibility).toMatch(/41|42|43/);
@@ -413,6 +417,10 @@ test('config pages cover contract topics in both languages', () => {
     expect(electron).toContain('packageJson');
     expect(electron).toContain('execPath');
     expect(electron).toMatch(/project-local|项目本地/);
+    expect(electron).toContain('execa');
+    expect(electron).toContain('RSELECTRON_IMPORT_ONLY_EXTERNAL');
+    expect(electron).toMatch(/include/);
+    expect(electron).toMatch(/electron-vite|exclude/);
 
     expect(environment).toContain('--mode');
     expect(environment).toContain('--env-mode');

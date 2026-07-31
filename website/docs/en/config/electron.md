@@ -115,6 +115,8 @@ main: {
 
 `electron` and Node builtins (including the `node:` prefix) are always external and ignore `include`.
 
+Under CJS Main/Preload, a CommonJS-externalized import-only package (or subpath) can build cleanly and still fail at runtime (`ERR_REQUIRE_ESM`, `is not a function`, and similar). Rselectron emits `RSELECTRON_IMPORT_ONLY_EXTERNAL` for that case. Put the package in `include` (as with `execa` above) or switch the role to `format: 'esm'`. electron-vite documents the same failure class; its bundle escape is named `exclude`—in Rselectron the same intent is `include`. The framework does not auto-include import-only packages, and bundler-ignore magic comments do not silence the warning. See [Troubleshooting · Import-only package fails under CJS main / preload](/guide/troubleshooting#import-only-package-fails-under-cjs-main--preload).
+
 ### `isolatedEntries`
 
 Build isolated entry graphs: disable shared chunks so each entry stays self-contained. Useful for multiple preload scripts or when shared code across entries is undesirable.

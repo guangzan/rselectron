@@ -31,6 +31,7 @@ export interface RuntimeNormalization {
   formats: Partial<Record<Role, RoleModuleFormat>>;
   launchExecPath?: string;
   electron?: ProjectElectron;
+  pendingWarnings: Diagnostic[];
   roles: Partial<Record<Role, RoleConfig>>;
   targets: Partial<Record<Role, string[]>>;
   warnings: Diagnostic[];
@@ -434,6 +435,7 @@ export function normalizeRuntime(options: {
   const targets: RuntimeNormalization['targets'] = {};
   const normalizedRoles: RuntimeNormalization['roles'] = {};
   const warnings: Diagnostic[] = [];
+  const pendingWarnings: Diagnostic[] = [];
 
   for (const [role, config] of roles) {
     let next = config;
@@ -508,7 +510,12 @@ export function normalizeRuntime(options: {
       }
     }
 
-    const externalized = applyExternalization(role, next, options.appRoot);
+    const externalized = applyExternalization(
+      role,
+      next,
+      options.appRoot,
+      pendingWarnings,
+    );
     next = applyAssetHandling(role, externalized.config, options.appRoot);
     next = applyNativeAssetHandling(role, next, options.appRoot);
     next = applyWorkerHandling(role, next);
@@ -527,6 +534,7 @@ export function normalizeRuntime(options: {
       electron,
       roles,
     ),
+    pendingWarnings,
     roles: normalizedRoles,
     targets,
     warnings,
