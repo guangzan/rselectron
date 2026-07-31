@@ -93,7 +93,10 @@ A development session that serves the Renderer role while reusing previously bui
 An Electron major included in the support snapshot of a particular Rselectron release.
 
 **Electron support snapshot**  
-The three Electron stable majors officially supported when a Rselectron version is released. The snapshot remains fixed for that Rselectron version.
+The three Electron stable majors officially supported when a Rselectron version is released. The snapshot remains fixed for that Rselectron version. Each major records Node and Chromium version strings used for derived compiler targets.
+
+**Derived compiler target**
+The compiler-target values filled when the role does not set an explicit compiler target (`output.overrideBrowserslist` or `tools.rspack.target`). Main and Preload receive `tools.rspack.target: electron${N}-main` / `electron${N}-preload`. Renderer receives `output.overrideBrowserslist: ['chrome >= ${min(M, K)}']` where `M` is the support-snapshot Chromium major and `K` is the hard-coded browserslist-rs ceiling (**138** today)—not `electron${N}-renderer`, and not a Vite-style `chrome${M}` string on `tools.rspack.target`. Rsbuild then composes the Rspack target (typically `['web', 'browserslist:…']`). Clamp is silent when `M > K`; remove the clamp after browserslist-rs covers snapshot Chromium. Rsbuild `output.target` (`web` / `node`) is an environment preset and does not suppress Chromium browserslist derivation.
 
 **Host support**  
 Running Rselectron on macOS, Linux, or Windows on an x64 or arm64 host. Host support does not imply cross-compilation of native addons.

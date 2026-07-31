@@ -50,6 +50,31 @@ export function getSupportedMajor(version: string): number | undefined {
     : major;
 }
 
+/**
+ * Temporary browserslist-rs Chromium major ceiling for `@rspack/binding`.
+ * `chrome >= 139` resolves empty and fails the build; snapshot Electron Chrome
+ * is 146+. Remove the clamp after browserslist-rs covers those majors
+ * (https://github.com/browserslist/browserslist-rs/issues/48).
+ */
+export const BROWSERSLIST_CHROME_MAJOR_CEILING = 138;
+
+export function electronChromeBrowserslist(major: number): string {
+  const chrome = ELECTRON_SUPPORT_SNAPSHOT.byMajor[major]?.chrome;
+  if (chrome === undefined) {
+    throw new Error(
+      `No Electron support snapshot entry for major ${String(major)}.`,
+    );
+  }
+  const chromeMajor = Number.parseInt(chrome.split('.', 1)[0] ?? '', 10);
+  if (!Number.isFinite(chromeMajor)) {
+    throw new Error(
+      `Invalid Chromium version in Electron support snapshot for major ${String(major)}: ${chrome}`,
+    );
+  }
+  const clamped = Math.min(chromeMajor, BROWSERSLIST_CHROME_MAJOR_CEILING);
+  return `chrome >= ${String(clamped)}`;
+}
+
 export function electronRspackTarget(
   major: number,
   role: 'main' | 'preload' | 'renderer',

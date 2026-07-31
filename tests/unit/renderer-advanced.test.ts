@@ -10,6 +10,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { build } from '../../packages/rselectron/src/index.ts';
+import { writeFakeElectron } from '../helpers/fake-electron.ts';
 
 const roots: string[] = [];
 
@@ -33,6 +34,7 @@ test('Renderer isolated entries execute without shared chunks', async () => {
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'isolated-renderer', private: true }, null, 2)}\n`,
   );
+  writeFakeElectron({ appRoot, version: '41.0.0' });
   writeFileSync(
     join(appRoot, 'renderer/shared.ts'),
     'export const marker = "isolated-shared-copy";\n',
@@ -121,6 +123,7 @@ test('default Renderer web target exposes no Node process globals', async () => 
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'no-node', private: true }, null, 2)}\n`,
   );
+  writeFakeElectron({ appRoot, version: '41.0.0' });
   writeFileSync(
     join(appRoot, 'renderer/index.html'),
     '<!doctype html><html><body><div id="app"></div></body></html>\n',
@@ -187,6 +190,7 @@ test('advanced non-web Renderer target is retained with a security diagnostic', 
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'risky-target', private: true }, null, 2)}\n`,
   );
+  writeFakeElectron({ appRoot, version: '41.0.0' });
   writeFileSync(
     join(appRoot, 'renderer/index.html'),
     '<!doctype html><html><body></body></html>\n',
@@ -220,6 +224,114 @@ test('advanced non-web Renderer target is retained with a security diagnostic', 
           code: 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK',
           role: 'renderer',
           message: expect.stringMatching(/nodeIntegration/i),
+        }),
+      ]),
+    );
+    expect(result.roles.renderer).toBeDefined();
+  } finally {
+    await result.close();
+  }
+});
+
+test('explicit electron*-renderer Rspack target emits the nodeIntegration risk diagnostic', async () => {
+  const appRoot = createRoot('risky-electron-renderer');
+  mkdirSync(join(appRoot, 'renderer'), { recursive: true });
+  writeFileSync(
+    join(appRoot, 'package.json'),
+    `${JSON.stringify({ name: 'risky-electron-renderer', private: true }, null, 2)}\n`,
+  );
+  writeFileSync(
+    join(appRoot, 'renderer/index.html'),
+    '<!doctype html><html><body></body></html>\n',
+  );
+  writeFileSync(
+    join(appRoot, 'renderer/index.ts'),
+    "console.log('renderer');\n",
+  );
+
+  const result = await build({
+    cwd: appRoot,
+    config: {
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/renderer') },
+          filenameHash: false,
+          target: 'web',
+        },
+        tools: {
+          rspack: {
+            target: 'electron43-renderer',
+          },
+        },
+      },
+    },
+  });
+
+  try {
+    expect(result.warnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK',
+          role: 'renderer',
+          message: expect.stringMatching(/electron43-renderer/i),
+        }),
+      ]),
+    );
+    expect(result.roles.renderer).toBeDefined();
+  } finally {
+    await result.close();
+  }
+});
+
+test('explicit electron-renderer Rspack target emits the nodeIntegration risk diagnostic', async () => {
+  const appRoot = createRoot('risky-electron-renderer-alias');
+  mkdirSync(join(appRoot, 'renderer'), { recursive: true });
+  writeFileSync(
+    join(appRoot, 'package.json'),
+    `${JSON.stringify({ name: 'risky-electron-renderer-alias', private: true }, null, 2)}\n`,
+  );
+  writeFileSync(
+    join(appRoot, 'renderer/index.html'),
+    '<!doctype html><html><body></body></html>\n',
+  );
+  writeFileSync(
+    join(appRoot, 'renderer/index.ts'),
+    "console.log('renderer');\n",
+  );
+
+  const result = await build({
+    cwd: appRoot,
+    config: {
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/renderer') },
+          filenameHash: false,
+          target: 'web',
+        },
+        tools: {
+          rspack: {
+            target: 'electron-renderer',
+          },
+        },
+      },
+    },
+  });
+
+  try {
+    expect(result.warnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK',
+          role: 'renderer',
+          message: expect.stringMatching(/electron-renderer/i),
         }),
       ]),
     );

@@ -21,7 +21,11 @@ import { applyNativeAssetHandling } from './native.ts';
 import { applyEsmRequireShim } from './shim.ts';
 import { applyWorkerHandling } from './worker.ts';
 import { resolveProjectElectron, type ProjectElectron } from './resolve.ts';
-import { ELECTRON_SUPPORT_SNAPSHOT, electronRspackTarget } from './snapshot.ts';
+import {
+  ELECTRON_SUPPORT_SNAPSHOT,
+  electronChromeBrowserslist,
+  electronRspackTarget,
+} from './snapshot.ts';
 
 export interface RuntimeNormalization {
   formats: Partial<Record<Role, RoleModuleFormat>>;
@@ -124,11 +128,12 @@ function isRiskyRendererTargetValue(value: string): boolean {
     target === 'async-node' ||
     target === 'node-addons' ||
     target === 'electron-main' ||
-    target === 'electron-preload'
+    target === 'electron-preload' ||
+    target === 'electron-renderer'
   ) {
     return true;
   }
-  return /^electron\d+-(main|preload)$/.test(target);
+  return /^electron\d+-(main|preload|renderer)$/.test(target);
 }
 
 function collectRendererTargetValues(config: RoleConfig): string[] {
@@ -186,13 +191,18 @@ function roleNeedsFormatDerivation(role: Role, config: RoleConfig): boolean {
   return !hasExplicitModule(config);
 }
 
-function roleNeedsTargetDerivation(config: RoleConfig): boolean {
-  // Rsbuild `output.target` (`node`/`web`) is an environment preset, not an
-  // Electron-derived Node/Chrome fact. Only missing compiler targets require
-  // package-backed derivation; explicit browserslist / rspack.target count.
-  return (
-    !hasExplicitCompilerTarget(config) && config.output?.target === undefined
-  );
+function roleNeedsTargetDerivation(role: Role, config: RoleConfig): boolean {
+  if (hasExplicitCompilerTarget(config)) {
+    return false;
+  }
+  // Renderer: Rsbuild `output.target` is only an env preset and never substitutes
+  // for Chromium browserslist derivation (ADR 0010).
+  if (role === 'renderer') {
+    return true;
+  }
+  // Main/Preload: an explicit env preset still skips package-backed electron*-
+  // target derivation when no compiler target is set (existing fixture contract).
+  return config.output?.target === undefined;
 }
 
 function needsElectronPackage(
@@ -201,7 +211,7 @@ function needsElectronPackage(
   return roles.some(
     ([role, config]) =>
       roleNeedsFormatDerivation(role, config) ||
-      roleNeedsTargetDerivation(config),
+      roleNeedsTargetDerivation(role, config),
   );
 }
 
@@ -304,7 +314,21 @@ function applyElectronTarget(
   role: Role,
   config: RoleConfig,
   major: number,
-): { config: RoleConfig; target: string } {
+): { config: RoleConfig; target: string[] } {
+  if (role === 'renderer') {
+    const query = electronChromeBrowserslist(major);
+    return {
+      target: [query],
+      config: {
+        ...config,
+        output: {
+          ...config.output,
+          overrideBrowserslist: [query],
+        },
+      },
+    };
+  }
+
   const target = electronRspackTarget(major, role);
   const existing = config.tools?.rspack;
   if (typeof existing === 'function' || Array.isArray(existing)) {
@@ -317,7 +341,7 @@ function applyElectronTarget(
   }
 
   return {
-    target,
+    target: [target],
     config: {
       ...config,
       tools: {
@@ -430,7 +454,7 @@ export function normalizeRuntime(options: {
         );
       }
       const applied = applyElectronTarget(role, next, electron.major);
-      targets[role] = [applied.target];
+      targets[role] = applied.target;
       next = applied.config;
     } else if (hasExplicitBrowserslist(next)) {
       targets[role] = next.output!.overrideBrowserslist;

@@ -31,7 +31,7 @@ Rselectron 规范化预期的 Main 输出，并与启动入口比较。不匹配
 
 ### 预设、目标与格式
 
-Main 与 Preload 预设默认使用项目本地 Electron 的 Node 目标，不 minify，并根据 Electron 能力、包类型与 Role 级 `electron.format` 推导 `cjs` 或 `esm`。Renderer 使用对应的 Chromium 目标与正常的 web 优化。
+Main 与 Preload 预设默认使用项目本地 Electron 的 Node 目标，不 minify，并根据 Electron 能力、包类型与 Role 级 `electron.format` 推导 `cjs` 或 `esm`。Renderer 使用对应的 Chromium browserslist 默认（来自支持快照的 `overrideBrowserslist: ['chrome >= ${M}']`）与正常的 web 优化；详见 [0010-renderer-chrome-compiler-target.md](./0010-renderer-chrome-compiler-target.md)。
 
 用户可覆盖 Role 预设，但 Rselectron 对 Role 身份进行硬验证：
 

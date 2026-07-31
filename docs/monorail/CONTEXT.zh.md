@@ -95,7 +95,10 @@ Main/Preload 依赖外置必须与角色模块格式一致的规则——ESM 使
 某一 Rselectron 发布版本的支持快照所包含的 Electron major。
 
 **Electron support snapshot（Electron 支持快照）**  
-某一 Rselectron 版本发布时官方支持的三个 Electron 稳定 major。该快照对该 Rselectron 版本保持固定。
+某一 Rselectron 版本发布时官方支持的三个 Electron 稳定 major。该快照对该 Rselectron 版本保持固定。每个 major 记录用于推导编译目标的 Node 与 Chromium 版本字符串。
+
+**Derived compiler target（推导的编译目标）**
+当 Role 未显式设置编译目标（`output.overrideBrowserslist` 或 `tools.rspack.target`）时填入的编译目标值。Main / Preload 得到 `tools.rspack.target: electron${N}-main` / `electron${N}-preload`。Renderer 得到 `output.overrideBrowserslist: ['chrome >= ${min(M, K)}']`，其中 `M` 为支持快照 Chromium major，`K` 为硬编码的 browserslist-rs 上限（今日为 **138**）——不是 `electron${N}-renderer`，也不是写在 `tools.rspack.target` 上的 Vite 式 `chrome${M}`。随后由 Rsbuild 组装 Rspack target（通常为 `['web', 'browserslist:…']`）。`M > K` 时静默 clamp；待 browserslist-rs 覆盖快照 Chromium 后移除 clamp。Rsbuild `output.target`（`web` / `node`）是环境预设，不抑制 Chromium browserslist 推导。
 
 **Host support（宿主支持）**  
 在 macOS、Linux 或 Windows 的 x64 或 arm64 宿主上运行 Rselectron。宿主支持并不意味着原生 addon 可交叉编译。

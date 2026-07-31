@@ -34,9 +34,9 @@ Omitting a process on purpose is allowed. If you expected it to build, add the m
 
 `--renderer-only` skips main and preload builds and reuses prior outputs. Run a full `rselectron dev` (or `build`) at least once first, and keep those outputs valid. Do not keep using this flag after changing main or preload sources. Flag details: [CLI](/api/cli).
 
-### Renderer looks like a Node target
+### Renderer looks like a Node / Electron Renderer target
 
-When the renderer output target looks like Node / Electron-main, Rselectron emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`. Unless you intentionally enable `nodeIntegration`, use a browser-oriented renderer target.
+When the renderer target looks like Node, `electron*-main|preload`, or an explicit `electron-renderer` / `electron*-renderer`, Rselectron emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`. The default sandboxed path derives `output.overrideBrowserslist: ['chrome >= ${min(M, 138)}']` from the Electron support snapshot (clamped to today's browserslist-rs ceiling; see [browserslist-rs#48](https://github.com/browserslist/browserslist-rs/issues/48)). Rsbuild then composes a web + browserslist Rspack target. You can still set `tools.rspack.target: 'web'` explicitly as an escape hatch. Unless you intentionally enable `nodeIntegration`, do not override with a hand-written `electron*-renderer`.
 
 ### Config change restarts everything
 

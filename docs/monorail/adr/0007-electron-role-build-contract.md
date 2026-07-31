@@ -31,7 +31,7 @@ Rselectron normalizes the expected Main output and compares it with the launch e
 
 ### Presets, targets, and formats
 
-Main and Preload presets default to the project-local Electron's Node target, do not minify, and derive `cjs` or `esm` from Electron capability, package type, and the role-level `electron.format`. Renderer uses the corresponding Chromium target and normal web optimization.
+Main and Preload presets default to the project-local Electron's Node target, do not minify, and derive `cjs` or `esm` from Electron capability, package type, and the role-level `electron.format`. Renderer uses the corresponding Chromium browserslist default (`overrideBrowserslist: ['chrome >= ${M}']` from the support snapshot) and normal web optimization; see [0010-renderer-chrome-compiler-target.md](./0010-renderer-chrome-compiler-target.md).
 
 Users may override role presets, but Rselectron hard-validates role identity:
 

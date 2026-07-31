@@ -7,6 +7,8 @@ import {
   ELECTRON_SUPPORT_SNAPSHOT,
   resolveProjectElectron,
 } from '../../packages/rselectron/src/index.ts';
+import { electronChromeBrowserslist } from '../../packages/core/src/electron/snapshot.ts';
+import { normalizeRuntime } from '../../packages/core/src/electron/runtime.ts';
 import { writeFakeElectron } from '../helpers/fake-electron.ts';
 
 const roots: string[] = [];
@@ -61,6 +63,11 @@ test('the frozen support snapshot matches the published optional peer window', (
     firstStable: '43.0.0',
     node: '24.17.0',
   });
+});
+
+test('electronChromeBrowserslist clamps snapshot Chromium majors to browserslist-rs ceiling K=138', () => {
+  expect(electronChromeBrowserslist(41)).toBe('chrome >= 138');
+  expect(electronChromeBrowserslist(43)).toBe('chrome >= 138');
 });
 
 test('resolveProjectElectron reads Electron from the Application root', () => {
@@ -118,13 +125,51 @@ test('build derives Node and Chromium targets from a supported project-local Ele
     version: '41.10.3',
   });
   expect(result.runtime?.targets.main).toEqual(['electron41-main']);
-  expect(result.runtime?.targets.renderer).toEqual(['electron41-renderer']);
+  expect(result.runtime?.targets.renderer).toEqual(['chrome >= 138']);
   expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[41]).toMatchObject({
     chrome: '146.0.7680.65',
     node: '24.14.0',
   });
   expect(result.runtime?.formats.main).toBe('cjs');
   await result.close();
+});
+
+test('normalizeRuntime writes clamped Renderer overrideBrowserslist and leaves rspack target unset', () => {
+  const appRoot = createAppRoot('normalize-renderer-browserslist');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeFakeElectron({ appRoot, version: '43.0.0' });
+
+  const runtime = normalizeRuntime({
+    appRoot,
+    config: {
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          target: 'web',
+        },
+      },
+    },
+  });
+
+  expect(runtime.targets.renderer).toEqual(['chrome >= 138']);
+  expect(runtime.roles.renderer?.output?.overrideBrowserslist).toEqual([
+    'chrome >= 138',
+  ]);
+  expect(runtime.roles.renderer?.output?.target).toBe('web');
+  const rspack = runtime.roles.renderer?.tools?.rspack;
+  expect(
+    typeof rspack === 'object' &&
+      rspack !== null &&
+      !Array.isArray(rspack) &&
+      'target' in rspack,
+  ).toBe(false);
+  expect(
+    runtime.warnings.some(
+      (warning) => warning.code === 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK',
+    ),
+  ).toBe(false);
 });
 
 test('build selects ESM automatically for module packages on supported Electron', async () => {
