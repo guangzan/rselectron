@@ -34,18 +34,16 @@ test('CI workflow documents cross-platform release evidence gates', () => {
   expect(workflow).toContain('node-version-file: .node-version');
   expect(workflow).toContain('pnpm/action-setup');
 
-  for (const runner of [
-    'ubuntu-latest',
-    'windows-latest',
-    'macos-latest',
-    'macos-13',
-    'ubuntu-24.04-arm',
-  ]) {
+  // Slim matrix (14da156): PR = ubuntu×43; main = ubuntu×43 + ubuntu×41 + windows×43 + macos-latest×43.
+  for (const runner of ['ubuntu-latest', 'windows-latest', 'macos-latest']) {
     expect(workflow).toContain(runner);
   }
+  expect(workflow).not.toContain('macos-13');
+  expect(workflow).not.toContain('ubuntu-24.04-arm');
 
-  expect(workflow).toMatch(/electron:\s*['"]41\./);
-  expect(workflow).toMatch(/electron:\s*['"]43\./);
+  // Versions live inside the fromJSON matrix blob: "electron":"41.0.0"
+  expect(workflow).toMatch(/"electron"\s*:\s*"41\./);
+  expect(workflow).toMatch(/"electron"\s*:\s*"43\./);
 
   expect(workflow).toContain('upload-artifact');
   expect(workflow).toContain('actions/upload-artifact');
@@ -75,10 +73,10 @@ test('CI Electron majors match the frozen support snapshot bounds', () => {
   expect(snapshot).toContain('majors: [41, 42, 43]');
 
   const workflow = readFileSync(workflowPath, 'utf8');
-  expect(workflow).toMatch(/electron:\s*['"]41\./);
-  expect(workflow).toMatch(/electron:\s*['"]43\./);
-  expect(workflow).not.toMatch(/electron:\s*['"]40\./);
-  expect(workflow).not.toMatch(/electron:\s*['"]44\./);
+  expect(workflow).toMatch(/"electron"\s*:\s*"41\./);
+  expect(workflow).toMatch(/"electron"\s*:\s*"43\./);
+  expect(workflow).not.toMatch(/"electron"\s*:\s*"40\./);
+  expect(workflow).not.toMatch(/"electron"\s*:\s*"44\./);
 });
 
 test('docs deploy workflow publishes website/doc_build to GitHub Pages', () => {
