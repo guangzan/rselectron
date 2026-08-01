@@ -41,6 +41,52 @@ interface ApplicationManifest {
   type?: string;
 }
 
+/**
+ * Conventional role outputs (ADR 0007): unset distPath → out/<role> under appRoot.
+ */
+export function applyConventionalDistPath(
+  appRoot: string,
+  role: Role,
+  config: RoleConfig,
+): RoleConfig {
+  const dist = config.output?.distPath;
+  if (typeof dist === 'string') {
+    if (dist.length > 0) {
+      return config;
+    }
+  } else if (
+    typeof dist === 'object' &&
+    dist !== null &&
+    !Array.isArray(dist) &&
+    typeof dist.root === 'string' &&
+    dist.root.length > 0
+  ) {
+    return config;
+  }
+
+  const root = resolve(appRoot, 'out', role);
+  if (typeof dist === 'object' && dist !== null && !Array.isArray(dist)) {
+    return {
+      ...config,
+      output: {
+        ...config.output,
+        distPath: {
+          ...dist,
+          root,
+        },
+      },
+    };
+  }
+
+  return {
+    ...config,
+    output: {
+      ...config.output,
+      distPath: { root },
+    },
+  };
+}
+
 function readManifest(
   appRoot: string,
   packageJson?: string,
@@ -438,7 +484,7 @@ export function normalizeRuntime(options: {
   const pendingWarnings: Diagnostic[] = [];
 
   for (const [role, config] of roles) {
-    let next = config;
+    let next = applyConventionalDistPath(options.appRoot, role, config);
 
     if (role === 'main' || role === 'preload') {
       const format = deriveFormat(next, manifest, electron);

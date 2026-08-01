@@ -8,6 +8,7 @@ import {
   resolveProjectElectron,
 } from '../../packages/rselectron/src/index.ts';
 import { electronChromeBrowserslist } from '../../packages/core/src/electron/snapshot.ts';
+import { plannedMainEntry } from '../../packages/core/src/electron/entry.ts';
 import { normalizeRuntime } from '../../packages/core/src/electron/runtime.ts';
 import { writeFakeElectron } from '../helpers/fake-electron.ts';
 
@@ -170,6 +171,79 @@ test('normalizeRuntime writes clamped Renderer overrideBrowserslist and leaves r
       (warning) => warning.code === 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK',
     ),
   ).toBe(false);
+});
+
+test('normalizeRuntime injects Conventional role outputs when distPath is unset', () => {
+  const appRoot = createAppRoot('conventional-dist');
+  writePackageJson(appRoot, { name: 'app', private: true, type: 'module' });
+  writeFakeElectron({ appRoot, version: '43.0.0' });
+
+  const runtime = normalizeRuntime({
+    appRoot,
+    config: {
+      main: {
+        root: join(appRoot, 'src/main'),
+        source: { entry: { index: './index.ts' } },
+      },
+      preload: {
+        root: join(appRoot, 'src/preload'),
+        source: { entry: { index: './index.ts' } },
+      },
+      renderer: {
+        root: join(appRoot, 'src/renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+      },
+    },
+  });
+
+  for (const role of ['main', 'preload', 'renderer'] as const) {
+    const dist = runtime.roles[role]?.output?.distPath;
+    expect(
+      typeof dist === 'object' && dist !== null && !Array.isArray(dist),
+    ).toBe(true);
+    expect((dist as { root: string }).root).toBe(join(appRoot, 'out', role));
+  }
+
+  const planned = plannedMainEntry(appRoot, runtime.roles.main!);
+  expect(planned).toBe(join(appRoot, 'out/main/index.mjs'));
+});
+
+test('normalizeRuntime preserves explicit distPath and fills missing object root', () => {
+  const appRoot = createAppRoot('explicit-dist');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeFakeElectron({ appRoot, version: '43.0.0' });
+
+  const runtime = normalizeRuntime({
+    appRoot,
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: { distPath: 'custom-main' },
+      },
+      preload: {
+        root: join(appRoot, 'preload'),
+        source: { entry: { index: './index.ts' } },
+        output: { distPath: { root: join(appRoot, 'pack/preload') } },
+      },
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: { distPath: { js: 'static/js' } },
+      },
+    },
+  });
+
+  expect(runtime.roles.main?.output?.distPath).toBe('custom-main');
+  expect(runtime.roles.preload?.output?.distPath).toEqual({
+    root: join(appRoot, 'pack/preload'),
+  });
+  expect(runtime.roles.renderer?.output?.distPath).toEqual({
+    js: 'static/js',
+    root: join(appRoot, 'out/renderer'),
+  });
 });
 
 test('build selects ESM automatically for module packages on supported Electron', async () => {

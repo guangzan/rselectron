@@ -1,6 +1,6 @@
 # 02 — Docs and examples for out/<role> default
 
-Status: open
+Status: claimed
 Blocked by: 01
 
 ## What to build
