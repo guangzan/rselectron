@@ -1,6 +1,6 @@
 # 01 — Reorder IMPORT_ONLY diagnostic toward Preferred ESM path
 
-Status: open
+Status: done
 Blocked by: None
 
 ## What to build
@@ -9,7 +9,11 @@ Rewrite the `RSELECTRON_IMPORT_ONLY_EXTERNAL` diagnostic message so Preferred ES
 
 ## Acceptance criteria
 
-- [ ] Message still uses code `RSELECTRON_IMPORT_ONLY_EXTERNAL` and names the request
-- [ ] Message (or unit-asserted phrases) puts ESM / `format: 'esm'` (or `auto` / remove `format: 'cjs'`) before `externalizeDeps.include` / `include`
-- [ ] Existing import-only trigger tests remain green (CJS warns; include suppresses; ESM does not warn)
-- [ ] Coverage extends `tests/unit/externalize.test.ts`; oxlint/format clean for touched files
+- [x] Message still uses code `RSELECTRON_IMPORT_ONLY_EXTERNAL` and names the request
+- [x] Message (or unit-asserted phrases) puts ESM / `format: 'esm'` (or `auto` / remove `format: 'cjs'`) before `externalizeDeps.include` / `include`
+- [x] Existing import-only trigger tests remain green (CJS warns; include suppresses; ESM does not warn)
+- [x] Coverage extends `tests/unit/externalize.test.ts`; oxlint/format clean for touched files
+
+## Comments
+
+- 2026-08-01: Message reordered Preferred ESM path first; unit order assert green.

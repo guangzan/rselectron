@@ -264,7 +264,7 @@ function importOnlyExternalWarning(role: Role, request: string): Diagnostic {
   return {
     code: 'RSELECTRON_IMPORT_ONLY_EXTERNAL',
     role,
-    message: `CJS ${role} CommonJS-externalized "${request}", but that request looks import-only (no usable require/default export). Bundle it with electron.externalizeDeps.include, or switch the role to format: 'esm'.`,
+    message: `CJS ${role} CommonJS-externalized "${request}", but that request looks import-only (no usable require/default export). Prefer format: 'esm' (or format: 'auto' under "type": "module") and remove a forced format: 'cjs' if it was only a workaround; if you intentionally stay on CJS, bundle with electron.externalizeDeps.include.`,
   };
 }
 

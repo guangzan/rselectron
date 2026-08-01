@@ -63,14 +63,14 @@ See [CLI](/api/cli).
 
 **Symptoms:** the Main or Preload build succeeds, but Electron fails at launch or first use with `ERR_REQUIRE_ESM`, `is not a function`, or a similar `require` of an ESM-only module. This happens when the role format is CJS and format-aware externalization emits a CommonJS external for an import-only package (or subpath). Rspack may rewrite static or dynamic `import` to `require`; the break shows up only at runtime.
 
-**Primary fixes:**
+**Primary fixes (Preferred ESM path first):**
 
-1. Bundle the package with `electron.externalizeDeps.include` (see [Electron options · externalizeDeps](/config/electron#externalizedeps)).
-2. Or switch that role to `electron.format: 'esm'`.
+1. Prefer `electron.format: 'esm'`, or leave `format: 'auto'` under `"type": "module"` so Main/Preload derive ESM. Remove a forced `format: 'cjs'` if it was only a workaround for ESM-only dependencies.
+2. If you **intentionally** stay on CJS, bundle the package with `electron.externalizeDeps.include` (see [Electron options · externalizeDeps](/config/electron#externalizedeps)).
 
-Coming from electron-vite: the same class of failure is documented as `ERR_REQUIRE_ESM` / ESM-only dependencies. electron-vite’s bundle escape is named `exclude`; in Rselectron the same intent is `include`.
+Coming from electron-vite: the same class of failure is documented as `ERR_REQUIRE_ESM` / ESM-only dependencies. electron-vite’s bundle escape is named `exclude`; in Rselectron the same intent is `include`—but only as the CJS-side escape, not the default recommendation.
 
-Rselectron does not auto-include import-only packages. Advanced apps may keep a native dynamic `import()` with a bundler ignore comment (for example `/* webpackIgnore: true */`); that path does not silence `RSELECTRON_IMPORT_ONLY_EXTERNAL`.
+Rselectron does not auto-include import-only packages. Bundler ignore comments (for example `/* webpackIgnore: true */`) are an advanced last resort and do not silence `RSELECTRON_IMPORT_ONLY_EXTERNAL`; drop them once you are on the Preferred ESM path.
 
 ## Preview
 

@@ -63,9 +63,11 @@ export default defineConfig({
 
 未显式设置时，Rselectron 还会参考应用清单的 `"type"`，并通过 Rsbuild `output.module` 生效。显式 `output.filename` 仍优先于默认入口文件名策略（`[name].mjs` / `[name].cjs` / `[name].js`）。
 
+对 `"type": "module"` 且 Electron 支持 ESM Main/Preload 的应用，优先保持 `format` 为 `auto`（Preferred ESM path）。不要仅为绕过 import-only / ESM-only 依赖而钉死 `format: 'cjs'`——见 [故障排除](/guide/troubleshooting#cjs-主进程--预加载下-import-only-包失败)。
+
 ```ts
 main: {
-  electron: { format: 'cjs' },
+  electron: { format: 'cjs' }, // 有意使用 CJS 时的显式覆盖
 },
 preload: {
   electron: { format: 'esm' },
@@ -115,7 +117,7 @@ main: {
 
 `electron` 与 Node 内置模块（含 `node:` 前缀）始终外置，不受 `include` 影响。
 
-在 CJS 主进程 / 预加载下，被 CommonJS 外置的 import-only 包（或 subpath）可能构建成功却在运行时失败（`ERR_REQUIRE_ESM`、`is not a function` 等）。此时 Rselectron 会发出 `RSELECTRON_IMPORT_ONLY_EXTERNAL`。把该包放进 `include`（同上例 `execa`），或将该角色改为 `format: 'esm'`。electron-vite 文档描述了同类失败；其「打进包」逃逸键叫 `exclude`——在 Rselectron 中对应意图是 `include`。框架不会自动 `include` import-only 包，bundler ignore 魔法注释也不会消除该警告。见 [故障排除 · CJS 主进程 / 预加载下 import-only 包失败](/guide/troubleshooting#cjs-主进程--预加载下-import-only-包失败)。
+在 CJS 主进程 / 预加载下，被 CommonJS 外置的 import-only 包（或 subpath）可能构建成功却在运行时失败（`ERR_REQUIRE_ESM`、`is not a function` 等）。此时 Rselectron 会发出 `RSELECTRON_IMPORT_ONLY_EXTERNAL`。优先将该角色改为 `format: 'esm'`（或在 `"type": "module"` 下用 `auto`），再考虑 `include`；有意留在 CJS 时再用 `include`（同上例 `execa`）。electron-vite 文档描述了同类失败；其「打进包」逃逸键叫 `exclude`——在 Rselectron 中对应意图是 `include`。框架不会自动 `include` import-only 包，bundler ignore 魔法注释也不会消除该警告。见 [故障排除 · CJS 主进程 / 预加载下 import-only 包失败](/guide/troubleshooting#cjs-主进程--预加载下-import-only-包失败)。
 
 ### `isolatedEntries`
 

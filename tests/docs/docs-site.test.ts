@@ -356,6 +356,16 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(troubleshooting).toContain('ERR_REQUIRE_ESM');
     expect(troubleshooting).toMatch(/externalizeDeps\.include|include/);
     expect(troubleshooting).toMatch(/format:\s*'esm'|format.*esm/);
+    expect(troubleshooting).toMatch(
+      /Preferred ESM path|优先 Preferred ESM path/,
+    );
+    const esmFix = troubleshooting.search(
+      /format:\s*'esm'|format:\s*"esm"|Preferred ESM path|优先 Preferred ESM path/,
+    );
+    const includeFix = troubleshooting.search(/externalizeDeps\.include/);
+    expect(esmFix).toBeGreaterThanOrEqual(0);
+    expect(includeFix).toBeGreaterThanOrEqual(0);
+    expect(esmFix).toBeLessThan(includeFix);
 
     expect(compatibility).toContain('ELECTRON_SUPPORT_SNAPSHOT');
     expect(compatibility).toMatch(/41|42|43/);
@@ -371,6 +381,9 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(migration).toMatch(/swc/i);
     expect(migration).toMatch(/\/config\//);
     expect(migration).toMatch(/\/api\//);
+    expect(migration).toMatch(/Preferred ESM path|优先 Preferred ESM path/);
+    expect(migration).toMatch(/format:\s*'cjs'|format: "cjs"/);
+    expect(migration).toMatch(/webpackIgnore|魔法注释/);
   }
 });
 
@@ -421,6 +434,17 @@ test('config pages cover contract topics in both languages', () => {
     expect(electron).toContain('RSELECTRON_IMPORT_ONLY_EXTERNAL');
     expect(electron).toMatch(/include/);
     expect(electron).toMatch(/electron-vite|exclude/);
+    expect(electron).toMatch(/Preferred ESM path/);
+    const importOnlyIdx = electron.indexOf('RSELECTRON_IMPORT_ONLY_EXTERNAL');
+    expect(importOnlyIdx).toBeGreaterThanOrEqual(0);
+    const afterCode = electron.slice(importOnlyIdx);
+    const esmInCure = afterCode.search(
+      /format:\s*'esm'|format:\s*"esm"|Prefer switching|优先将该角色/,
+    );
+    const includeInCure = afterCode.search(/include/);
+    expect(esmInCure).toBeGreaterThanOrEqual(0);
+    expect(includeInCure).toBeGreaterThanOrEqual(0);
+    expect(esmInCure).toBeLessThan(includeInCure);
 
     expect(environment).toContain('--mode');
     expect(environment).toContain('--env-mode');

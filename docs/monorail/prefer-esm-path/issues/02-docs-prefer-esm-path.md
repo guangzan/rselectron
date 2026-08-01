@@ -1,6 +1,6 @@
 # 02 — Docs: Preferred ESM path and drop CJS workarounds
 
-Status: open
+Status: claimed
 Blocked by: 01
 
 ## What to build
