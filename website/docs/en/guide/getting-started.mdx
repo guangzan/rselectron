@@ -81,17 +81,17 @@ Each of `main` / `preload` / `renderer` is a full Rsbuild config. Omit a key onl
 
 ## Electron entry
 
-Point Electron’s application entry at the **main-process build output**. With the minimal config above, the default output is `dist` under each process `root`, so `package.json` can look like:
+Point Electron’s application entry at the **main-process build output**. When `output.distPath` is unset, Rselectron presets Conventional role outputs under `out/<role>` at the application root (not under each process `root`). With the minimal config above and a classic (non-`type: module`) package, `package.json` can look like:
 
 ```json title="package.json"
 {
   "name": "electron-app",
   "version": "1.0.0",
-  "main": "./src/main/dist/index.js"
+  "main": "./out/main/index.js"
 }
 ```
 
-Keep `main` (or `electron.entry` in config) aligned with the actual main output path. You can also set `output.distPath` to gather outputs under a shared directory (for example `out/main`), as many apps and the learning examples do.
+Keep `main` (or `electron.entry` in config) aligned with the actual main output path. Entry extensions follow the Main format / `"type"` policy (for example `"type": "module"` with derived ESM uses `index.mjs`). Set an explicit `output.distPath` only when you need a custom layout—early beta builds that fell back to `<processRoot>/dist` without setting `distPath` should either point `main` at `out/...` or set `distPath` deliberately (for example `'dist'` relative to the process `root`).
 
 ## Start from an example
 

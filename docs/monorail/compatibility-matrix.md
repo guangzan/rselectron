@@ -162,7 +162,7 @@ Implementation evidence remains **Pending / 待实现** until automated tests or
 - Contract / 契约: preserve the same conventions and warn for omitted roles.
 - Classification / 分类: Target / 目标
 - Acceptance / 验收: zero-config Vanilla fixture resolves the documented entries and output directories.
-- Evidence / 证据: Partial — ADR `docs/monorail/adr/0007-electron-role-build-contract.md` documents `src/<role>` → `out/<role>` conventions; `tests/build.test.ts` and `examples/vanilla` prove explicit Role configs emit those outputs. Automatic zero-config discovery without `rselectron.config.*` is not implemented yet. / 部分完成——ADR `docs/monorail/adr/0007-electron-role-build-contract.md` 记录 `src/<role>` → `out/<role>` 约定；`tests/build.test.ts` 与 `examples/vanilla` 证明显式 Role 配置产出这些路径。尚无无 `rselectron.config.*` 的自动零配置发现。
+- Evidence / 证据: Partial — ADR `docs/monorail/adr/0007-electron-role-build-contract.md` documents `src/<role>` → `out/<role>` conventions; `normalizeRuntime` injects Conventional role outputs (`out/<role>` under the Application root) when `output.distPath` is unset (`tests/unit/electron-runtime.test.ts`); getting-started / examples document and point `package.json#main` at `out/main`. Automatic zero-config discovery without `rselectron.config.*` is not implemented yet. / 部分完成——ADR `docs/monorail/adr/0007-electron-role-build-contract.md` 记录 `src/<role>` → `out/<role>` 约定；未设置 `output.distPath` 时 `normalizeRuntime` 会注入约定角色产物（应用根下的 `out/<role>`，见 `tests/unit/electron-runtime.test.ts`）；getting-started / examples 将 `package.json#main` 指到 `out/main`。尚无无 `rselectron.config.*` 的自动零配置发现。
 
 ### BUILD-002 — Independent role compilation / 独立角色编译
 

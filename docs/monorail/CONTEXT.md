@@ -47,7 +47,10 @@ The role that serves or produces browser-facing renderer content. Multiple pages
 The complete Rsbuild configuration for one role, extended with Rselectron-owned Electron behavior for that role.
 
 **Role preset**  
-Rselectron's defaults and invariants for a role. A preset may be overridden where safe, while role identity constraints remain enforced.
+Rselectron's defaults and invariants for a role. A preset may be overridden where safe, while role identity constraints remain enforced. Unset `output.distPath` receives the Conventional role outputs layout; other preset values (targets, formats, Node entry naming) are owned by their respective contracts.
+
+**Conventional role outputs**  
+The default Role output roots when `output.distPath` is unset: `out/main`, `out/preload`, and `out/renderer`, resolved against the Application root (not against each Role `root`). Explicit `distPath` (string or object with `root`) always wins.
 
 **Role module format**  
 The module system used for a Main or Preload source-build output: `cjs` or `esm`. It is derived from Electron capability, the application manifest `"type"`, and the role-level `electron.format`, and is applied through Rsbuild `output.module`.

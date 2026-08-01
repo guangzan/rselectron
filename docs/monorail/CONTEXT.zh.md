@@ -49,7 +49,10 @@ Rselectron 有意排除的基线能力。Vite 插件、字节码编译，以及 
 某一角色的完整 Rsbuild 配置，并扩展该角色由 Rselectron 拥有的 Electron 行为。
 
 **Role preset（角色预设）**  
-Rselectron 对某一角色的默认值与不变量。在安全处可覆盖预设，但角色身份约束仍被强制执行。
+Rselectron 对某一角色的默认值与不变量。在安全处可覆盖预设，但角色身份约束仍被强制执行。未设置 `output.distPath` 时采用 Conventional role outputs 布局；其余预设（目标、格式、Node 入口命名）由各自契约拥有。
+
+**Conventional role outputs（约定角色产物目录）**  
+未设置 `output.distPath` 时的默认角色输出根：`out/main`、`out/preload`、`out/renderer`，相对 Application root 解析（不相对各 Role 的 `root`）。显式 `distPath`（字符串或带 `root` 的对象）始终优先。
 
 **Role module format（角色模块格式）**  
 Main 或 Preload 源码构建产物使用的模块系统：`cjs` 或 `esm`。由 Electron 能力、应用清单 `"type"` 与角色级 `electron.format` 推导，并通过 Rsbuild `output.module` 生效。
