@@ -63,9 +63,11 @@ Controls the output module format for main / preload.
 
 When unset, Rselectron also considers the application manifest `"type"` and applies the result through Rsbuild `output.module`. Explicit filenames still win over the default entry filename policy (`[name].mjs` / `[name].cjs` / `[name].js`).
 
+For `"type": "module"` apps on Electron that supports ESM Main/Preload, prefer leaving `format` at `auto` (Preferred ESM path). Do not pin `format: 'cjs'` solely to work around import-only / ESM-only dependencies—see [Troubleshooting](/guide/troubleshooting#import-only-package-fails-under-cjs-main--preload).
+
 ```ts
 main: {
-  electron: { format: 'cjs' },
+  electron: { format: 'cjs' }, // explicit override when you intentionally want CJS
 },
 preload: {
   electron: { format: 'esm' },
@@ -115,7 +117,7 @@ main: {
 
 `electron` and Node builtins (including the `node:` prefix) are always external and ignore `include`.
 
-Under CJS Main/Preload, a CommonJS-externalized import-only package (or subpath) can build cleanly and still fail at runtime (`ERR_REQUIRE_ESM`, `is not a function`, and similar). Rselectron emits `RSELECTRON_IMPORT_ONLY_EXTERNAL` for that case. Put the package in `include` (as with `execa` above) or switch the role to `format: 'esm'`. electron-vite documents the same failure class; its bundle escape is named `exclude`—in Rselectron the same intent is `include`. The framework does not auto-include import-only packages, and bundler-ignore magic comments do not silence the warning. See [Troubleshooting · Import-only package fails under CJS main / preload](/guide/troubleshooting#import-only-package-fails-under-cjs-main--preload).
+Under CJS Main/Preload, a CommonJS-externalized import-only package (or subpath) can build cleanly and still fail at runtime (`ERR_REQUIRE_ESM`, `is not a function`, and similar). Rselectron emits `RSELECTRON_IMPORT_ONLY_EXTERNAL` for that case. Prefer switching the role to `format: 'esm'` (or `auto` under `"type": "module"`) before reaching for `include`; use `include` (as with `execa` above) when you intentionally stay on CJS. electron-vite documents the same failure class; its bundle escape is named `exclude`—in Rselectron the same intent is `include`. The framework does not auto-include import-only packages, and bundler-ignore magic comments do not silence the warning. See [Troubleshooting · Import-only package fails under CJS main / preload](/guide/troubleshooting#import-only-package-fails-under-cjs-main--preload).
 
 ### `isolatedEntries`
 

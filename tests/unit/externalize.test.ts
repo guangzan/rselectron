@@ -428,6 +428,23 @@ test('CJS Main warns when CommonJS-externalizing an import-only package and subp
     ),
   ).toBe(true);
 
+  const ordered = result.warnings.find(
+    (warning) =>
+      warning.code === 'RSELECTRON_IMPORT_ONLY_EXTERNAL' &&
+      warning.message.includes('esm-only-lib') &&
+      !warning.message.includes('esm-only-lib/v2'),
+  );
+  expect(ordered).toBeDefined();
+  const esmHint = ordered!.message.search(
+    /format:\s*'esm'|format:\s*"esm"|Preferred ESM|type:\s*"module"/i,
+  );
+  const includeHint = ordered!.message.search(
+    /externalizeDeps\.include|\.include\b/i,
+  );
+  expect(esmHint).toBeGreaterThanOrEqual(0);
+  expect(includeHint).toBeGreaterThanOrEqual(0);
+  expect(esmHint).toBeLessThan(includeHint);
+
   const bundle = readFileSync(join(appRoot, 'out/main/index.cjs'), 'utf8');
   expect(bundle).toContain('require("esm-only-lib")');
   await result.close();
