@@ -91,7 +91,7 @@ export default defineConfig({
 }
 ```
 
-保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。入口扩展名跟随 Main 格式 / `"type"` 策略（例如 `"type": "module"` 且推导为 ESM 时使用 `index.mjs`）。只有需要自定义布局时才显式设置 `output.distPath`——早期 beta 在未设置 `distPath` 时会回落到 `<roleRoot>/dist`；请把 `main` 指到 `out/...`，或有意设置 `distPath`（例如相对 Role `root` 的 `'dist'`）。
+保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。入口扩展名跟随 Main 格式 / `"type"` 策略（例如 `"type": "module"` 且推导为 ESM 时使用 `index.mjs`）。只有需要自定义布局时才显式设置 `output.distPath`——早期 beta 在未设置 `distPath` 时会回落到 `<processRoot>/dist`；请把 `main` 指到 `out/...`，或有意设置 `distPath`（例如相对进程 `root` 的 `'dist'`）。
 
 ## 从示例起步
 
