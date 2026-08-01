@@ -55,8 +55,11 @@ The module system used for a Main or Preload source-build output: `cjs` or `esm`
 **Format-aware externalization**  
 The rule that Main/Preload dependency externalization must emit externals compatible with the role module format—ESM via `module-import` (and `node-commonjs` for `require`-originated externals), CJS via CommonJS—rather than always forcing CommonJS `require`.
 
+**Preferred ESM path**  
+The recommended Main/Preload posture for apps whose application manifest uses `"type": "module"` (on Electron that supports ESM): leave `electron.format` at `auto` (derived ESM), follow the Entry filename policy, and avoid pinning `format: 'cjs'` or relying on `externalizeDeps.include` / bundler-ignore `import()` solely to paper over import-only packages.
+
 **Import-only external risk**  
-Under a CJS Main/Preload role, a CommonJS-externalized request (including a package subpath) whose resolved package entry/`exports` offer no usable `require`/`default`/`main` CJS path—only `import` / `module` / `"type": "module"` style signals. The build can succeed while runtime `require` of that request fails. Mitigations: `externalizeDeps.include` (bundle), or switch the role to ESM; advanced apps may keep a native dynamic `import()` via bundler ignore comments.
+Under a CJS Main/Preload role, a CommonJS-externalized request (including a package subpath) whose resolved package entry/`exports` offer no usable `require`/`default`/`main` CJS path—only `import` / `module` / `"type": "module"` style signals. The build can succeed while runtime `require` of that request fails. Mitigations, in order: prefer the Preferred ESM path; if CJS is intentional, `externalizeDeps.include` (bundle); bundler-ignore native `import()` is an advanced footnote only.
 
 **Entry filename policy**  
 The default unhashed entry filename pattern for Main/Preload when `output.filename` is unset: `[name].mjs` for ESM, `[name].cjs` for CJS under `"type": "module"`, otherwise `[name].js`. Explicit filenames win; dangerous overrides warn.
