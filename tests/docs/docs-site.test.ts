@@ -384,14 +384,11 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(migration).toMatch(/swc/i);
     expect(migration).toMatch(/\/config\//);
     expect(migration).toMatch(/\/api\//);
-<<<<<<< HEAD
     expect(migration).toMatch(/out\/main/);
     expect(migration).toMatch(/distPath/);
-=======
     expect(migration).toMatch(/Preferred ESM path|优先 Preferred ESM path/);
     expect(migration).toMatch(/format:\s*'cjs'|format: "cjs"/);
     expect(migration).toMatch(/webpackIgnore|魔法注释/);
->>>>>>> origin/cursor/prefer-esm-path-ff9a
   }
 });
 
