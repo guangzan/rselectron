@@ -163,11 +163,21 @@ test('watched Main rebuild restarts Electron once after debounce', async () => {
       originalMainSource.replace('url,', 'url,\n        watched: true,'),
     );
 
+    // Wait until marker and live process agree. Rapid double-compiles used to
+    // clear electronRef between stop-for-promote and debounced respawn.
     await waitFor(() => {
       if (!existsSync(markerPath)) {
         return false;
       }
-      return readMarker().pid !== first.pid;
+      const marker = readMarker();
+      if (marker.pid === first.pid) {
+        return false;
+      }
+      try {
+        return server.electronProcess.pid === marker.pid;
+      } catch {
+        return false;
+      }
     });
 
     const second = readMarker();
