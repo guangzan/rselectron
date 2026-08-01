@@ -33,3 +33,4 @@ When Main/Preload use CJS and a dependency is CommonJS-externalized, import-only
 - ADR: `docs/monorail/adr/0009-esm-native-main-preload-output.md` (known tension: CJS still uses CommonJS externals)
 - Related prior effort: `docs/monorail/role-esm-native/` (opposite failure direction)
 - Behavioural doc reference: electron-vite troubleshooting `ERR_REQUIRE_ESM` + dependency-handling `exclude` (bundle)
+- **Messaging priority:** primary-fix order (`include` before ESM) is superseded by `docs/monorail/prefer-esm-path/align.md` (Preferred ESM path first; `include` only when CJS is intentional)
