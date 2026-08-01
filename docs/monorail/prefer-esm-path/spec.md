@@ -23,9 +23,9 @@ Reorder adoption narrative without changing runtime externals or format derivati
 
 - **Contract authority:** Glossary Preferred ESM path; Import-only external risk (ordered mitigations); ADR 0009 (unchanged). Prior efforts: `role-esm-native` (capability), `cjs-import-only-diag` (detection; messaging priority superseded here).
 - **Diagnostic (`packages/core/src/electron/externalize.ts`):** same code; new message must name the request and state ESM / remove forced `format: 'cjs'` before `externalizeDeps.include`. Do not change when the warning fires.
-- **Docs surfaces:**  
-  - Troubleshooting import-only section (en + zh): primary fixes ordered ESM first, `include` second; footnote that `webpackIgnore` is not recommended and should be removed on the Preferred ESM path.  
-  - Config `externalizeDeps` (and `format` if it restates the cure): same order; `format: 'cjs'` examples may remain as valid overrides but must not be framed as the fix for ESM-only deps.  
+- **Docs surfaces:**
+  - Troubleshooting import-only section (en + zh): primary fixes ordered ESM first, `include` second; footnote that `webpackIgnore` is not recommended and should be removed on the Preferred ESM path.
+  - Config `externalizeDeps` (and `format` if it restates the cure): same order; `format: 'cjs'` examples may remain as valid overrides but must not be framed as the fix for ESM-only deps.
   - Migration (en + zh): checklist item to drop forced `format: 'cjs'`, import-only-only `include` lists, and default `webpackIgnore` interop after upgrading.
 - **Non-goals in code:** no auto-`include`; no new warning for “`format: 'cjs'` under `type:module`”; no format-derivation changes; no externals-shape changes.
 

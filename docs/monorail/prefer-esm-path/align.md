@@ -9,9 +9,9 @@ Runtime for ESM-native Main/Preload (`role-esm-native`) and CJS import-only diag
 - **Gap class: guidance + message priority** — no new format derivation, no auto-`include`, no reversing ADR 0009’s CJS → CommonJS externals. Ship docs + diagnostic copy (and glossary mitigation order) that match the already-landed ESM-native contract.
 - **Preferred ESM path (primary):** for apps with `"type": "module"` (and Electron that supports ESM Main/Preload), keep `electron.format: 'auto'` (or omit it) so roles derive **ESM**; align `package.json#main` / preload paths with the entry filename policy (typically `.mjs`). Do **not** recommend pinning `format: 'cjs'` to paper over import-only / dual-package pain.
 - **Drop beta workarounds:** migration / troubleshooting should explicitly tell early adopters to remove, after upgrading past ESM-native + import-only diag: (1) forced `format: 'cjs'` used only to dodge ESM load failures, (2) `externalizeDeps.include` whitelists added solely for import-only packages that ESM would externalize cleanly, (3) `webpackIgnore` / magic-comment native `import()` escapes used as the app’s default interop strategy.
-- **Import-only mitigation order (supersedes `cjs-import-only-diag` messaging priority):**  
-  1. Prefer switching the role to ESM (`format: 'esm'` or `auto` under `"type": "module"`) — Preferred ESM path.  
-  2. If the app **intentionally** stays on CJS, then `externalizeDeps.include` (bundle).  
+- **Import-only mitigation order (supersedes `cjs-import-only-diag` messaging priority):**
+  1. Prefer switching the role to ESM (`format: 'esm'` or `auto` under `"type": "module"`) — Preferred ESM path.
+  2. If the app **intentionally** stays on CJS, then `externalizeDeps.include` (bundle).
   3. Bundler-ignore native `import()` remains an advanced app-side footnote only; never a recommended primary fix; docs should say to remove it once on the Preferred ESM path.
 - **Diagnostic string:** rewrite `RSELECTRON_IMPORT_ONLY_EXTERNAL` message to put ESM / remove `format: 'cjs'` first, `include` second. Keep the same diagnostic code.
 - **Docs surfaces (en + zh):** troubleshooting import-only section; `externalizeDeps` / `format` config notes; migration checklist item for dropping CJS workarounds. `format: 'cjs'` may remain as a valid explicit override example, but must not be framed as the cure for ESM-only dependencies.
