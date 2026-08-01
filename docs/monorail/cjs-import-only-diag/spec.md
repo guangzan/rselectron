@@ -21,7 +21,7 @@ Ship **Import-only external risk** coverage without changing default externaliza
 
 ## Implementation Decisions
 
-- **Contract authority:** Glossary *Import-only external risk*; ADR 0009 (CJS CommonJS externals retained; this effort diagnoses the known tension). Related: Format-aware externalization, Role module format.
+- **Contract authority:** Glossary _Import-only external risk_; ADR 0009 (CJS CommonJS externals retained; this effort diagnoses the known tension). Related: Format-aware externalization, Role module format.
 - **When:** Main and Preload only; role format CJS; request is actually CommonJS-externalized (same predicate as today’s externals path). Skip always-external `electron` / Node builtins.
 - **How collected:** During the CJS externals path, evaluate each externalized request (including subpaths); dedupe per role/build; merge into existing `BuildResult.warnings` / runtime warning aggregation (same `Diagnostic` shape). Do not block build for any mode.
 - **Heuristic:** Resolve the request’s package entry/`exports` under the app root; treat as import-only when there is no usable CJS condition (`require` / `default` / classic `main`) and import-oriented signals dominate (`import` exports, `module`, `"type": "module"`). Prefer false positives with clear `include` guidance over silent misses. Exact helper may live beside externalization; keep it testable.

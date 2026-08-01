@@ -11,7 +11,7 @@ When Main/Preload use CJS and a dependency is CommonJS-externalized, import-only
 - **Severity:** structured **warning**, never blocks `dev` / `preview` / `build`.
 - **Messaging:** prefer `externalizeDeps.include` (bundle) or `format: 'esm'`; document `webpackIgnore` / magic-comment native `import()` only as an advanced app-side footnote—do not promise the framework silences the warning for that path.
 - **Docs:** dual-write troubleshooting + `externalizeDeps` config pages; **narrative aligned with electron-vite** (`ERR_REQUIRE_ESM` / ESM-only framing and the two primary escapes), with **key-name mapping** to Rselectron (`include` = bundle; electron-vite’s `exclude` = same intent).
-- **Domain:** no new ADR; add glossary term *Import-only external risk*; optional one-line pointer in ADR 0009 Consequences.
+- **Domain:** no new ADR; add glossary term _Import-only external risk_; optional one-line pointer in ADR 0009 Consequences.
 
 ## Deferred
 

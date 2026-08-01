@@ -18,10 +18,10 @@ A further constraint: current `@rspack/binding` browserslist-rs cannot resolve C
 
 When auto-deriving the compiler target:
 
-| Role | Derived value |
-| ---- | ------------- |
-| Main | `tools.rspack.target: 'electron${N}-main'` |
-| Preload | `tools.rspack.target: 'electron${N}-preload'` |
+| Role     | Derived value                                                                                                                                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Main     | `tools.rspack.target: 'electron${N}-main'`                                                                                                                                                                                                             |
+| Preload  | `tools.rspack.target: 'electron${N}-preload'`                                                                                                                                                                                                          |
 | Renderer | `output.overrideBrowserslist: ['chrome >= ${min(M, K)}']` where `M` is the Chromium major from the support snapshot for Electron major `N`, and **`K = 138`** (hard-coded browserslist-rs ceiling). Do **not** set `tools.rspack.target` on this path. |
 
 When `M > K`, clamp **silently** (no diagnostic). Do not write Vite-style `chrome${M}` into `tools.rspack.target`.

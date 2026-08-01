@@ -18,10 +18,10 @@ electron-vite 将 Renderer 的 `build.target` 预设为 `chrome${N}`。该 Vite/
 
 当自动推导编译目标时：
 
-| Role | 推导值 |
-| ---- | ------ |
-| Main | `tools.rspack.target: 'electron${N}-main'` |
-| Preload | `tools.rspack.target: 'electron${N}-preload'` |
+| Role     | 推导值                                                                                                                                                                                                           |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Main     | `tools.rspack.target: 'electron${N}-main'`                                                                                                                                                                       |
+| Preload  | `tools.rspack.target: 'electron${N}-preload'`                                                                                                                                                                    |
 | Renderer | `output.overrideBrowserslist: ['chrome >= ${min(M, K)}']`，`M` 为支持快照中 Electron major `N` 对应的 Chromium major，**`K = 138`**（硬编码的 browserslist-rs 上限）。此路径 **不** 设置 `tools.rspack.target`。 |
 
 当 `M > K` 时 **静默** clamp（不发诊断）。不要把 Vite 式 `chrome${M}` 写入 `tools.rspack.target`。
