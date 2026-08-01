@@ -48,6 +48,7 @@ Rselectron 追求**能力对等**，而不是 Vite 配置的一比一重命名�
 1. 把 Vite 插件换成 Rsbuild 插件。
 2. 去掉 bytecode / SWC-helper 用法；剩余需求在 Rselectron 外处理。
 3. 把各进程 `root` 与入口映射到 [配置](/config/) 下的 Rsbuild 配置。
-4. 在受支持 peer 范围内安装项目本地 Electron（[兼容性](./compatibility)）。
-5. 用 `rselectron inspect` 校验，再跑 `dev` / `build` / `preview`。
-6. 优先从 [`examples/`](https://github.com/guangzan/rselectron/tree/main/examples) 复制，不要从 `tests/fixtures/` 学。
+4. 把 `package.json#main` 指到约定角色产物下的计划 Main 输出（未设置 `distPath` 时为 `out/main/...`）。早期 beta 未设置时会落到 `<roleRoot>/dist`——若仍要该布局，请显式设置 `distPath`。
+5. 在受支持 peer 范围内安装项目本地 Electron（[兼容性](./compatibility)）。
+6. 用 `rselectron inspect` 校验，再跑 `dev` / `build` / `preview`。
+7. 优先从 [`examples/`](https://github.com/guangzan/rselectron/tree/main/examples) 复制，不要从 `tests/fixtures/` 学。

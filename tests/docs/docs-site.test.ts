@@ -346,6 +346,9 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(gettingStarted).toContain('examples/');
     expect(gettingStarted).not.toMatch(/tests\/fixtures|fixtures\//);
     expect(gettingStarted).toMatch(/\/guide\/concepts|concepts/);
+    expect(gettingStarted).toMatch(/out\/main|out\/<role>/);
+    expect(gettingStarted).toContain('./out/main/index.js');
+    expect(gettingStarted).not.toContain('./src/main/dist/index.js');
 
     expect(troubleshooting).toContain('RSELECTRON_ELECTRON_NOT_FOUND');
     expect(troubleshooting).toContain('RSELECTRON_ROLE_MISSING');
@@ -371,6 +374,8 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(migration).toMatch(/swc/i);
     expect(migration).toMatch(/\/config\//);
     expect(migration).toMatch(/\/api\//);
+    expect(migration).toMatch(/out\/main/);
+    expect(migration).toMatch(/distPath/);
   }
 });
 

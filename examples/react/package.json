@@ -2,6 +2,7 @@
   "name": "rselectron-example-react",
   "private": true,
   "type": "module",
+  "main": "./out/main/index.mjs",
   "scripts": {
     "dev": "rselectron dev",
     "build": "rselectron build",

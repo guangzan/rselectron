@@ -1,6 +1,6 @@
 # 02 — Docs and examples for out/<role> default
 
-Status: claimed
+Status: done
 Blocked by: 01
 
 ## What to build
@@ -9,8 +9,12 @@ Update getting-started (en + zh) so the Electron entry section teaches `out/<rol
 
 ## Acceptance criteria
 
-- [ ] Getting-started en + zh describe `out/main` (or `out/<role>`) as the default unset layout and no longer present `src/main/dist` as that default
-- [ ] Migration (en + zh) or getting-started mentions the beta default change / how to keep an explicit `distPath: 'dist'` layout
-- [ ] `examples/vanilla` and `examples/react` declare `package.json#main` aligned with planned Main output under `out/main`
-- [ ] `tests/docs/docs-site.test.ts` asserts the getting-started default-layout copy anchors
-- [ ] BUILD-001 evidence updated to credit preset injection while leaving zero-config-without-config as deferred/Partial if still accurate
+- [x] Getting-started en + zh describe `out/main` (or `out/<role>`) as the default unset layout and no longer present `src/main/dist` as that default
+- [x] Migration (en + zh) or getting-started mentions the beta default change / how to keep an explicit `distPath: 'dist'` layout
+- [x] `examples/vanilla` and `examples/react` declare `package.json#main` aligned with planned Main output under `out/main`
+- [x] `tests/docs/docs-site.test.ts` asserts the getting-started default-layout copy anchors
+- [x] BUILD-001 evidence updated to credit preset injection while leaving zero-config-without-config as deferred/Partial if still accurate
+
+## Comments
+
+- 2026-08-01: Docs, examples, matrix evidence, and docs-site asserts landed.

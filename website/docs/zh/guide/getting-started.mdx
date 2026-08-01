@@ -81,17 +81,17 @@ export default defineConfig({
 
 ## Electron 入口
 
-把 Electron 的应用入口指到**主进程构建产物**。在上面的最小配置下，默认输出在各进程 `root` 下的 `dist`，因此 `package.json` 可以是：
+把 Electron 的应用入口指到**主进程构建产物**。未设置 `output.distPath` 时，Rselectron 会按约定角色产物目录，在应用根下使用 `out/<role>`（不会落在各进程 `root` 里）。上面的最小配置配合经典（非 `"type": "module"`）包时，`package.json` 可以是：
 
 ```json title="package.json"
 {
   "name": "electron-app",
   "version": "1.0.0",
-  "main": "./src/main/dist/index.js"
+  "main": "./out/main/index.js"
 }
 ```
 
-保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。也可以设置 `output.distPath`，把产物收到共享目录（例如 `out/main`），许多应用与学习示例都这么做。
+保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。入口扩展名跟随 Main 格式 / `"type"` 策略（例如 `"type": "module"` 且推导为 ESM 时使用 `index.mjs`）。只有需要自定义布局时才显式设置 `output.distPath`——早期 beta 在未设置 `distPath` 时会回落到 `<roleRoot>/dist`；请把 `main` 指到 `out/...`，或有意设置 `distPath`（例如相对 Role `root` 的 `'dist'`）。
 
 ## 从示例起步
 
