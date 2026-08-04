@@ -554,6 +554,24 @@ export function normalizeRuntime(options: {
       if (risk !== undefined) {
         warnings.push(risk);
       }
+      // rspack LazyCompilation has a design flaw that causes infinite rebuild
+      // loops when combined with HMR: the `activeModules` Set is cleared by
+      // the native plugin's `currentActiveModules()` callback at the start of
+      // each rebuild, and the client-side `compiling` Set is cleared when HMR
+      // applies hot-updates. After rebuild completes, neither side retains
+      // "already activated" state, so the next `import()` of a proxy chunk is
+      // treated as a new activation → invalidate → rebuild → HMR → loop.
+      // This is an upstream rspack issue; default-disable for renderer until
+      // it is fixed. Users may opt in via dev.lazyCompilation explicitly.
+      if (next.dev?.lazyCompilation === undefined) {
+        next = {
+          ...next,
+          dev: {
+            ...next.dev,
+            lazyCompilation: false,
+          },
+        };
+      }
     }
 
     const externalized = applyExternalization(

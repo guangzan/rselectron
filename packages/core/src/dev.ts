@@ -311,7 +311,7 @@ async function startDevGeneration(
 
       const instance = await createRsbuild({
         callerName: 'rselectron',
-        config: toRsbuildConfig(role, configForInstance),
+        config: { ...toRsbuildConfig(role, configForInstance), mode: context.mode },
         cwd,
         loadEnv: {
           mode: context.envMode,
@@ -532,6 +532,16 @@ export async function createServer(
     envMode: options.envMode ?? mode,
     mode,
   };
+
+  // Rsbuild's build() (used for main/preload) sets NODE_ENV='production' via
+  // `process.env.NODE_ENV || setNodeEnv('production')`. If NODE_ENV is unset
+  // when build() runs, it becomes 'production', which then prevents
+  // ReactRefreshRspackPlugin from injecting its preamble for the renderer
+  // dev server (created later via createDevServer). Force NODE_ENV to match
+  // the dev mode before any Rsbuild instance is created.
+  if (mode === 'development') {
+    process.env.NODE_ENV = 'development';
+  }
 
   if (options.config !== undefined) {
     const config = await resolveConfigExport(options.config, context);
