@@ -2,7 +2,6 @@ import { afterAll, expect, test } from '@rstest/core';
 import { EventEmitter } from 'node:events';
 import type { ChildProcess } from 'node:child_process';
 import {
-  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -131,8 +130,7 @@ test('preview exposes warnings from its own normalization without printing', asy
     join(appRoot, 'main/index.ts'),
     "console.log('preview-main');\n",
   );
-  const execPath = writeFakeElectron({ appRoot, version: '41.0.0' });
-  chmodSync(execPath, 0o755);
+  writeFakeElectron({ appRoot, version: '41.0.0' });
   writeFileSync(
     join(appRoot, 'package.json'),
     `${JSON.stringify(
@@ -152,6 +150,13 @@ test('preview exposes warnings from its own normalization without printing', asy
     cwd: appRoot,
     skipBuild: true,
     config: {
+      electron: {
+        // The fake Electron package exports a shebang script, which Windows
+        // cannot spawn (EFTYPE). Launch the built entry with the host Node
+        // instead — the assertions only cover the warnings channel and the
+        // resulting process handle, not Electron internals.
+        execPath: process.execPath,
+      },
       main: {
         root: join(appRoot, 'main'),
         source: { entry: { index: './index.ts' } },
