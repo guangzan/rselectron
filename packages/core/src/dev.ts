@@ -313,7 +313,10 @@ async function startDevGeneration(
 
       const instance = await createRsbuild({
         callerName: 'rselectron',
-        config: { ...toRsbuildConfig(role, configForInstance), mode: context.mode },
+        config: {
+          ...toRsbuildConfig(role, configForInstance),
+          mode: context.mode,
+        },
         cwd,
         loadEnv: {
           mode: context.envMode,

@@ -11,7 +11,10 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { runDevSession, runPreviewSession } from '../../packages/cli/src/index.ts';
+import {
+  runDevSession,
+  runPreviewSession,
+} from '../../packages/cli/src/index.ts';
 import { normalizeRuntime } from '../../packages/core/src/electron/runtime.ts';
 import { createRsbuildWindowWarning } from '../../packages/core/src/rsbuild/window.ts';
 import type { Diagnostic } from '../../packages/core/src/types.ts';
@@ -124,7 +127,10 @@ test('preview CLI session prints an untested-window warning to stderr in [CODE] 
 test('preview exposes warnings from its own normalization without printing', async () => {
   const appRoot = createAppRoot('preview-warnings');
   mkdirSync(join(appRoot, 'main'), { recursive: true });
-  writeFileSync(join(appRoot, 'main/index.ts'), "console.log('preview-main');\n");
+  writeFileSync(
+    join(appRoot, 'main/index.ts'),
+    "console.log('preview-main');\n",
+  );
   const execPath = writeFakeElectron({ appRoot, version: '41.0.0' });
   chmodSync(execPath, 0o755);
   writeFileSync(
