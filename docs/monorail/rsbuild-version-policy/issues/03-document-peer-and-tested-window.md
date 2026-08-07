@@ -1,6 +1,6 @@
 # 03 — Document the @rsbuild/core dependency and tested-window semantics
 
-- Status: open
+- Status: claimed
 - Blocked by: 02
 
 ## What to build
