@@ -123,7 +123,7 @@ test('default Renderer web target exposes no Node process globals', async () => 
     join(appRoot, 'package.json'),
     `${JSON.stringify({ name: 'no-node', private: true }, null, 2)}\n`,
   );
-  writeFakeElectron({ appRoot, version: '41.0.0' });
+  writeFakeElectron({ appRoot, version: '28.0.0' });
   writeFileSync(
     join(appRoot, 'renderer/index.html'),
     '<!doctype html><html><body><div id="app"></div></body></html>\n',
@@ -160,6 +160,7 @@ test('default Renderer web target exposes no Node process globals', async () => 
 
   try {
     expect(result.roles.renderer).toBeDefined();
+    expect(result.runtime?.targets.renderer).toEqual(['chrome >= 120']);
     expect(
       result.warnings.some(
         (warning) =>

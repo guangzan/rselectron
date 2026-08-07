@@ -145,6 +145,55 @@ test('build derives Node and Chromium targets from a supported project-local Ele
   await result.close();
 });
 
+test('build derives targets for the widened window floor from a project-local Electron 28', async () => {
+  const appRoot = createAppRoot('derive-28');
+  writePackageJson(appRoot, { name: 'app', private: true });
+  writeRoleSources(appRoot);
+  writeFakeElectron({ appRoot, version: '28.3.3' });
+
+  const result = await build({
+    config: {
+      main: {
+        root: join(appRoot, 'main'),
+        source: { entry: { index: './index.ts' } },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/main') },
+          filename: { js: '[name].cjs' },
+          filenameHash: false,
+          target: 'node',
+        },
+        electron: { format: 'auto' },
+      },
+      renderer: {
+        root: join(appRoot, 'renderer'),
+        source: { entry: { index: './index.ts' } },
+        html: { template: './index.html' },
+        output: {
+          cleanDistPath: true,
+          distPath: { root: join(appRoot, 'out/renderer') },
+          filenameHash: false,
+          target: 'web',
+        },
+      },
+    },
+    cwd: appRoot,
+  });
+
+  expect(result.runtime?.electron).toMatchObject({
+    major: 28,
+    version: '28.3.3',
+  });
+  expect(result.runtime?.targets.main).toEqual(['electron28-main']);
+  expect(result.runtime?.targets.renderer).toEqual(['chrome >= 120']);
+  expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[28]).toMatchObject({
+    chrome: '120.0.6099.56',
+    node: '18.18.2',
+  });
+  expect(result.runtime?.formats.main).toBe('cjs');
+  await result.close();
+});
+
 test('normalizeRuntime writes clamped Renderer overrideBrowserslist and leaves rspack target unset', () => {
   const appRoot = createAppRoot('normalize-renderer-browserslist');
   writePackageJson(appRoot, { name: 'app', private: true });
@@ -286,29 +335,31 @@ test('build selects ESM automatically for module packages on supported Electron'
 });
 
 test('unsupported Electron majors fail with a structured error', async () => {
-  const appRoot = createAppRoot('unsupported');
-  writePackageJson(appRoot, { name: 'app', private: true });
-  writeRoleSources(appRoot);
-  writeFakeElectron({ appRoot, version: '27.0.0' });
+  for (const version of ['27.0.0', '44.0.0']) {
+    const appRoot = createAppRoot('unsupported');
+    writePackageJson(appRoot, { name: 'app', private: true });
+    writeRoleSources(appRoot);
+    writeFakeElectron({ appRoot, version });
 
-  await expect(
-    build({
-      config: {
-        main: {
-          root: join(appRoot, 'main'),
-          source: { entry: { index: './index.ts' } },
-          output: {
-            target: 'node',
+    await expect(
+      build({
+        config: {
+          main: {
+            root: join(appRoot, 'main'),
+            source: { entry: { index: './index.ts' } },
+            output: {
+              target: 'node',
+            },
+            electron: { format: 'auto' },
           },
-          electron: { format: 'auto' },
         },
-      },
-      cwd: appRoot,
-    }),
-  ).rejects.toMatchObject({
-    code: 'RSELECTRON_ELECTRON_UNSUPPORTED',
-    role: 'electron',
-  });
+        cwd: appRoot,
+      }),
+    ).rejects.toMatchObject({
+      code: 'RSELECTRON_ELECTRON_UNSUPPORTED',
+      role: 'electron',
+    });
+  }
 });
 
 test('missing project-local Electron fails when runtime facts must be derived', async () => {
