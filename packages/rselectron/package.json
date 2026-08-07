@@ -1,6 +1,6 @@
 {
   "name": "@rselectron/core",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "description": "An Rsbuild-first Electron development and build tool.",
   "license": "MIT",
   "type": "module",
