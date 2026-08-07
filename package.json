@@ -16,6 +16,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "rslint .",
+    "prepare": "simple-git-hooks",
     "release": "tsx scripts/release.ts",
     "publish-ci": "tsx scripts/publish-ci.ts",
     "test": "rstest",
@@ -41,8 +42,12 @@
     "prettier": "3.9.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "simple-git-hooks": "^2.13.1",
     "tsx": "^4.23.1",
     "typescript": "^7.0.2",
     "zx": "^8.8.5"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "node scripts/pre-commit.mjs"
   }
 }

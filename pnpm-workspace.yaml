@@ -9,8 +9,10 @@ overrides:
   style-to-js: 1.1.21
 
 # tsx (release scripts) depends on esbuild; Electron matrix pins need their
-# install script so the binary is downloaded. pnpm 11 blocks builds unless
-# approved.
+# install script so the binary is downloaded; simple-git-hooks needs its
+# install script so `pnpm install` (via the prepare script) activates the
+# pre-commit hook. pnpm 11 blocks builds unless approved.
 allowBuilds:
   electron: true
   esbuild: true
+  simple-git-hooks: true
