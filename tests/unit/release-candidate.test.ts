@@ -3,6 +3,7 @@ import { existsSync, readFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { RSBUILD_TESTED_WINDOW } from '../../packages/rselectron/src/index.ts';
 import { packPublicFacade } from '../helpers/pack-facade.ts';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
@@ -60,6 +61,15 @@ test('public facade is a 1.0 beta with MIT surface', () => {
   expect(
     existsSync(join(repositoryRoot, 'packages/rselectron/CHANGELOG.md')),
   ).toBe(false);
+});
+
+test('rsbuild tested window stays synced with the workspace devDependency', () => {
+  const rootPackageJson = JSON.parse(
+    readFileSync(join(repositoryRoot, 'package.json'), 'utf8'),
+  ) as { devDependencies: Record<string, string> };
+  const tested = RSBUILD_TESTED_WINDOW.tested;
+  expect(tested).toMatch(/^\d+\.\d+\.\d+$/);
+  expect(tested).toBe(rootPackageJson.devDependencies['@rsbuild/core']);
 });
 
 test('tag publish workflow gates OIDC npm publication', () => {

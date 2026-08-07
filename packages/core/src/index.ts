@@ -10,6 +10,7 @@ export {
 } from './env.ts';
 export { resolveProjectElectron } from './electron/resolve.ts';
 export { ELECTRON_SUPPORT_SNAPSHOT } from './electron/snapshot.ts';
+export { RSBUILD_TESTED_WINDOW } from './rsbuild/window.ts';
 export { RselectronError } from './errors.ts';
 export { inspect, redactSensitive } from './inspect.ts';
 export { preview } from './preview.ts';

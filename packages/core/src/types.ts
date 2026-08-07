@@ -68,9 +68,11 @@ export interface Diagnostic {
     | 'RSELECTRON_IMPORT_ONLY_EXTERNAL'
     | 'RSELECTRON_PRELOAD_ISOLATION_EXTERNALIZE_CONFLICT'
     | 'RSELECTRON_RENDERER_NODE_INTEGRATION_RISK'
-    | 'RSELECTRON_ROLE_MISSING';
+    | 'RSELECTRON_ROLE_MISSING'
+    | 'RSELECTRON_RSBUILD_UNTESTED';
   message: string;
-  role: Role;
+  /** Role-scoped diagnostics set this; project-level warnings omit it. */
+  role?: Role;
 }
 
 export interface RoleBuildResult {
