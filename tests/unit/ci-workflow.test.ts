@@ -70,7 +70,11 @@ test('Rslint and Prettier stay exact lockfile pins in package.json', () => {
 
 test('CI Electron majors match the frozen support snapshot bounds', () => {
   const snapshot = readFileSync(snapshotPath, 'utf8');
-  expect(snapshot).toContain('majors: [41, 42, 43]');
+  const majorsText = snapshot.match(/majors:\s*\[([\s\S]*?)\]/)?.[1] ?? '';
+  const majors = majorsText.match(/\d+/g)?.map(Number) ?? [];
+  expect(majors).toEqual([
+    28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+  ]);
 
   const workflow = readFileSync(workflowPath, 'utf8');
   expect(workflow).toMatch(/"electron"\s*:\s*"41\./);
