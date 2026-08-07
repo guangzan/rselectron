@@ -20,6 +20,7 @@ import { applyExternalization } from './externalize.ts';
 import { applyNativeAssetHandling } from './native.ts';
 import { applyEsmRequireShim } from './shim.ts';
 import { applyWorkerHandling } from './worker.ts';
+import { checkRsbuildWindow } from '../rsbuild/window.ts';
 import { resolveProjectElectron, type ProjectElectron } from './resolve.ts';
 import {
   ELECTRON_SUPPORT_SNAPSHOT,
@@ -587,6 +588,15 @@ export function normalizeRuntime(options: {
     warnings.push(...externalized.warnings);
 
     normalizedRoles[role] = next;
+  }
+
+  // Rsbuild tested window (ADR 0012): warn-only, once per normalization.
+  // build / inspect / dev / preview all flow `warnings` from this array, so
+  // the single push below fires the RSELECTRON_RSBUILD_UNTESTED diagnostic in
+  // every command. In-window resolutions return undefined and change nothing.
+  const rsbuildWindowWarning = checkRsbuildWindow();
+  if (rsbuildWindowWarning !== undefined) {
+    warnings.push(rsbuildWindowWarning);
   }
 
   return {
