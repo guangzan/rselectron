@@ -31,8 +31,10 @@ Rselectron is an Rsbuild-first Electron development and build tool. Develop and 
 ### Install
 
 ```sh
-npm i @rselectron/core -D
+npm i @rselectron/core @rsbuild/core -D
 ```
+
+`@rsbuild/core` is a required project peer (npm 7+ / pnpm 8+ install it automatically). Rselectron warns — never blocks — when the installed Rsbuild minor is outside the release's tested window.
 
 ### Development & Build
 
