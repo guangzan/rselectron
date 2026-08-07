@@ -1,6 +1,6 @@
 # 02 — Surface the tested-window warning in dev, build, inspect, preview
 
-- Status: open
+- Status: done
 - Blocked by: 01
 
 ## What to build
