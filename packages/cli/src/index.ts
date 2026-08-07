@@ -7,8 +7,11 @@ import {
   RselectronError,
   type BuildOptions,
   type CreateServerOptions,
+  type CreateServerResult,
+  type Diagnostic,
   type InspectOptions,
   type PreviewOptions,
+  type PreviewResult,
   type WatchSelection,
 } from '../../core/src/index.ts';
 import { parseWatchSelection } from '../../core/src/watch.ts';
@@ -202,6 +205,52 @@ function formatError(error: unknown): string {
   return `${error instanceof Error ? error.message : String(error)}\n`;
 }
 
+function printWarnings(io: CliIO, warnings: Diagnostic[]): void {
+  for (const warning of warnings) {
+    io.stderr(`[${warning.code}] ${warning.message}\n`);
+  }
+}
+
+/**
+ * Development session command body. Exported so the CLI warning channel can
+ * be verified through the CliIO seam with an injected result; runCli wires
+ * the real createServer() result.
+ */
+export async function runDevSession(
+  io: CliIO,
+  server: CreateServerResult,
+): Promise<number> {
+  printWarnings(io, server.warnings);
+  io.stdout(`Development session listening on ${server.urls.join(', ')}\n`);
+  await new Promise<void>((resolvePromise) => {
+    server.electronProcess.once('exit', () => {
+      resolvePromise();
+    });
+  });
+  await server.close();
+  return 0;
+}
+
+/**
+ * Preview command body. Exported so the CLI warning channel can be verified
+ * through the CliIO seam with an injected result; runCli wires the real
+ * preview() result.
+ */
+export async function runPreviewSession(
+  io: CliIO,
+  result: PreviewResult,
+): Promise<number> {
+  printWarnings(io, result.warnings);
+  io.stdout('Preview session started.\n');
+  await new Promise<void>((resolvePromise) => {
+    result.electronProcess.once('exit', () => {
+      resolvePromise();
+    });
+  });
+  await result.close();
+  return 0;
+}
+
 export async function runCli(
   args: string[],
   io: CliIO = processIO,
@@ -227,9 +276,7 @@ export async function runCli(
     try {
       const result = await build(parseBuildOptions(commandArgs));
       try {
-        for (const warning of result.warnings) {
-          io.stderr(`[${warning.code}] ${warning.message}\n`);
-        }
+        printWarnings(io, result.warnings);
         for (const [role, roleResult] of Object.entries(result.roles)) {
           io.stdout(`Built ${role} (${roleResult.paths.length} outputs)\n`);
         }
@@ -245,15 +292,10 @@ export async function runCli(
 
   if (command === 'dev') {
     try {
-      const server = await createServer(parseDevOptions(commandArgs));
-      io.stdout(`Development session listening on ${server.urls.join(', ')}\n`);
-      await new Promise<void>((resolvePromise) => {
-        server.electronProcess.once('exit', () => {
-          resolvePromise();
-        });
-      });
-      await server.close();
-      return 0;
+      return await runDevSession(
+        io,
+        await createServer(parseDevOptions(commandArgs)),
+      );
     } catch (error) {
       io.stderr(formatError(error));
       return 1;
@@ -264,9 +306,7 @@ export async function runCli(
     try {
       const { format, options } = parseInspectOptions(commandArgs);
       const result = await inspect(options);
-      for (const warning of result.warnings) {
-        io.stderr(`[${warning.code}] ${warning.message}\n`);
-      }
+      printWarnings(io, result.warnings);
       io.stdout(result.format(format));
       return 0;
     } catch (error) {
@@ -278,15 +318,7 @@ export async function runCli(
   if (command === 'preview') {
     try {
       const { options } = parseSharedOptions(commandArgs);
-      const result = await preview(options);
-      io.stdout('Preview session started.\n');
-      await new Promise<void>((resolvePromise) => {
-        result.electronProcess.once('exit', () => {
-          resolvePromise();
-        });
-      });
-      await result.close();
-      return 0;
+      return await runPreviewSession(io, await preview(options));
     } catch (error) {
       io.stderr(formatError(error));
       return 1;

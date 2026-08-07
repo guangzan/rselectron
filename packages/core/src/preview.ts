@@ -18,6 +18,7 @@ import type {
   BuildResult,
   ConfigContext,
   ConfigLoader,
+  Diagnostic,
   RselectronConfigExport,
 } from './types.ts';
 
@@ -36,6 +37,7 @@ export interface PreviewResult {
   buildResult?: BuildResult;
   close: () => Promise<void>;
   electronProcess: ChildProcess;
+  warnings: Diagnostic[];
 }
 
 export async function preview(
@@ -147,5 +149,6 @@ export async function preview(
     buildResult,
     close,
     electronProcess,
+    warnings: runtime.warnings,
   };
 }
