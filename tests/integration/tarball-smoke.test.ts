@@ -103,7 +103,7 @@ test('a consumer can install and use the packed public facade', () => {
   expect(installedPackageJson.dependencies).toBeUndefined();
   expect(installedPackageJson.peerDependencies).toEqual({
     '@rsbuild/core': '^2.0.0',
-    electron: '>=41 <44',
+    electron: '>=28 <44',
   });
 
   const publicDeclaration = readFileSync(

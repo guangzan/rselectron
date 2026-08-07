@@ -34,7 +34,7 @@
   },
   "peerDependencies": {
     "@rsbuild/core": "^2.0.0",
-    "electron": ">=41 <44"
+    "electron": ">=28 <44"
   },
   "peerDependenciesMeta": {
     "electron": {

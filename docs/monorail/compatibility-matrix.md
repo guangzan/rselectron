@@ -339,10 +339,10 @@ Implementation evidence remains **Pending / 待实现** until automated tests or
 ### ELECTRON-002 — Support snapshot / 支持快照
 
 - Baseline / 基线: hard-coded Electron major mappings with permissive unknown-version fallback.
-- Contract / 契约: freeze the three stable majors supported at each Rselectron release; reject versions outside the snapshot.
+- Contract / 契约: freeze an Electron support window per release — a fixed floor at Electron 28 and a rolling top at the three stable majors current at release time; reject versions outside the window.
 - Classification / 分类: Replacement / 替代
 - Acceptance / 验收: release metadata, optional peer range, documentation, and CI use the same immutable snapshot.
-- Evidence / 证据: `ELECTRON_SUPPORT_SNAPSHOT` and the public peer range freeze majors 41–43; `.github/workflows/ci.yml` runs the suite against majors 41 and 43 on every supported OS/arch combination where runners are available. / `ELECTRON_SUPPORT_SNAPSHOT` 与公开 peer range 冻结 major 41–43；`.github/workflows/ci.yml` 在可用 runner 的每个受支持 OS/arch 组合上对 major 41 与 43 跑套件。
+- Evidence / 证据: `ELECTRON_SUPPORT_SNAPSHOT` and the public peer range freeze majors 28–43; `.github/workflows/ci.yml` runs the suite against majors 28 and 43 on every supported OS/arch combination where runners are available. / `ELECTRON_SUPPORT_SNAPSHOT` 与公开 peer range 冻结 major 28–43；`.github/workflows/ci.yml` 在可用 runner 的每个受支持 OS/arch 组合上对 major 28 与 43 跑套件。
 
 ### ELECTRON-003 — Launch entry / 启动入口
 
