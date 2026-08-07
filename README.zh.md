@@ -31,8 +31,10 @@ Rselectron 是面向 Electron 的 Rsbuild 优先开发与构建工具。用 Rsbu
 ### 安装
 
 ```sh
-npm i @rselectron/core -D
+npm i @rselectron/core @rsbuild/core -D
 ```
+
+`@rsbuild/core` 是必需的 peer 依赖（npm 7+ / pnpm 8+ 会自动安装）。当安装的 Rsbuild minor 超出该发布版本的已测窗口时，Rselectron 只会警告——绝不会阻塞。
 
 ### 开发与构建
 

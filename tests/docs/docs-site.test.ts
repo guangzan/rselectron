@@ -377,6 +377,8 @@ test('guide pages cover concepts, parity, and learning sources in both languages
     expect(compatibility).toMatch(/bytecode/i);
     expect(compatibility).toMatch(/swc/i);
     expect(compatibility).toMatch(/compatibility-matrix|兼容性矩阵/);
+    expect(compatibility).toContain('RSELECTRON_RSBUILD_UNTESTED');
+    expect(compatibility).toMatch(/tested window|已测窗口/);
 
     expect(migration).toMatch(/drop-in|一比一|直接替换/);
     expect(migration).toMatch(/vite/i);

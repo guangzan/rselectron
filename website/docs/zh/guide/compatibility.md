@@ -17,6 +17,12 @@ Rselectron 在每次发布时冻结一个 Electron 支持窗口：下限固定�
 import { ELECTRON_SUPPORT_SNAPSHOT } from '@rselectron/core';
 ```
 
+## Rsbuild 版本
+
+`@rsbuild/core` 是应用声明的**必需项目 peer**（安装契约 `^2.0.0`）。npm 7+ 与 pnpm 8+ 会自动安装必需 peer，因此只有在其他包管理器（例如 yarn classic 或 bun，以及任何禁用自动安装的布局）下才需要手动声明。
+
+每次 Rselectron 发布还会冻结一个 **Rsbuild 已测窗口**：即该发布版本所测试的 `@rsbuild/core` 版本的 minor 线（测试 `2.1.7` → 窗口 `>=2.1.0 <2.2.0`）。已测 minor 线内的 patch 更新视为安全，不产生任何输出。项目本地的 `@rsbuild/core` 越窗时，`dev`、`build`、`inspect` 与 `preview` 都会产生仅警告的 `RSELECTRON_RSBUILD_UNTESTED` 诊断——绝不会是硬错误，因为应用拥有自己的构建工具。这与上方 [Electron 版本](#electron-版本) 窗口的语义相反：那里越窗版本会被硬拒绝，因为 Rselectron 要从逐 major 的 Electron 运行时元数据推导编译目标。
+
 ## 宿主与打包
 
 宿主覆盖有 CI 硬件的 macOS、Linux 与 Windows（x64 / arm64）。宿主支持**不**意味着原生 addon 可交叉编译。

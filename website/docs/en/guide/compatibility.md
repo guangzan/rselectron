@@ -17,6 +17,12 @@ You can also read it from the package:
 import { ELECTRON_SUPPORT_SNAPSHOT } from '@rselectron/core';
 ```
 
+## Rsbuild versions
+
+`@rsbuild/core` is a **required project peer** (`^2.0.0` install contract) that the application declares. npm 7+ and pnpm 8+ auto-install required peers, so a manual declaration is only needed for other package managers (for example yarn classic or bun, or any layout where auto-install is disabled).
+
+Each Rselectron release also freezes an **Rsbuild tested window**: the minor line of the `@rsbuild/core` version that release was tested against (tested `2.1.7` → window `>=2.1.0 <2.2.0`). Patch updates within the tested minor line are presumed safe and produce no output. A project-local `@rsbuild/core` outside the window produces a warn-only `RSELECTRON_RSBUILD_UNTESTED` diagnostic across `dev`, `build`, `inspect`, and `preview` — never a hard error, because the application owns its build tool. This contrasts with the [Electron versions](#electron-versions) window above, where out-of-window versions are hard-rejected because Rselectron derives compiler targets from per-major Electron metadata.
+
 ## Hosts and packaging
 
 Hosts cover macOS, Linux, and Windows (x64 / arm64) where CI hardware exists. Host support does **not** mean native addons can be cross-compiled.
