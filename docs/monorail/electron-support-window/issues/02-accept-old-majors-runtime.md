@@ -1,6 +1,6 @@
 # 02 — Accept old majors end-to-end in runtime derivation; refresh fixtures
 
-Status: open
+Status: claimed
 Blocked by: 01
 
 ## What to build

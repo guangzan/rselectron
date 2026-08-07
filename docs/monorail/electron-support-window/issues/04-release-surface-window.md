@@ -1,6 +1,6 @@
 # 04 — Release surface: peer range, website docs, matrix record
 
-Status: open
+Status: claimed
 Blocked by: 01
 
 ## What to build

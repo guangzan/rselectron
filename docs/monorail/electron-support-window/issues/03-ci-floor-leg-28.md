@@ -1,6 +1,6 @@
 # 03 — CI matrix: exercise Electron 28.3.3 as the floor leg
 
-Status: open
+Status: claimed
 Blocked by: 01
 
 ## What to build
