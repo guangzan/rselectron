@@ -34,15 +34,15 @@ test('CI workflow documents cross-platform release evidence gates', () => {
   expect(workflow).toContain('node-version-file: .node-version');
   expect(workflow).toContain('pnpm/action-setup');
 
-  // Slim matrix (14da156): PR = ubuntu×43; main = ubuntu×43 + ubuntu×41 + windows×43 + macos-latest×43.
+  // Slim matrix (14da156): PR = ubuntu×43; main = ubuntu×43 + ubuntu×28 + windows×43 + macos-latest×43.
   for (const runner of ['ubuntu-latest', 'windows-latest', 'macos-latest']) {
     expect(workflow).toContain(runner);
   }
   expect(workflow).not.toContain('macos-13');
   expect(workflow).not.toContain('ubuntu-24.04-arm');
 
-  // Versions live inside the fromJSON matrix blob: "electron":"41.0.0"
-  expect(workflow).toMatch(/"electron"\s*:\s*"41\./);
+  // Versions live inside the fromJSON matrix blob: "electron":"28.3.3"
+  expect(workflow).toMatch(/"electron"\s*:\s*"28\./);
   expect(workflow).toMatch(/"electron"\s*:\s*"43\./);
 
   expect(workflow).toContain('upload-artifact');
@@ -70,10 +70,14 @@ test('Rslint and Prettier stay exact lockfile pins in package.json', () => {
 
 test('CI Electron majors match the frozen support snapshot bounds', () => {
   const snapshot = readFileSync(snapshotPath, 'utf8');
-  expect(snapshot).toContain('majors: [41, 42, 43]');
+  const majorsText = snapshot.match(/majors:\s*\[([\s\S]*?)\]/)?.[1] ?? '';
+  const majors = majorsText.match(/\d+/g)?.map(Number) ?? [];
+  expect(majors).toEqual([
+    28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+  ]);
 
   const workflow = readFileSync(workflowPath, 'utf8');
-  expect(workflow).toMatch(/"electron"\s*:\s*"41\./);
+  expect(workflow).toMatch(/"electron"\s*:\s*"28\./);
   expect(workflow).toMatch(/"electron"\s*:\s*"43\./);
   expect(workflow).not.toMatch(/"electron"\s*:\s*"40\./);
   expect(workflow).not.toMatch(/"electron"\s*:\s*"44\./);

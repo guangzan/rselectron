@@ -223,7 +223,7 @@ import {
 
 console.log(version);
 console.log(ELECTRON_SUPPORT_SNAPSHOT);
-// { majors: [41, 42, 43], peerRange: '>=41 <44', ... }
+// { majors: [28, …, 43], peerRange: '>=28 <44', ... }
 
 const electron = resolveProjectElectron(process.cwd());
 console.log(electron.version, electron.execPath, electron.major);

@@ -9,7 +9,7 @@ Rselectron targets **capability parity** with a frozen electron-vite baseline, s
 
 ## Electron versions
 
-Supported Electron majors are **41–43**. The optional peer range is `>=41 <44`. Release metadata, docs, and CI use the same range.
+Rselectron freezes an Electron support window per release: a fixed floor at Electron **28** (the first ESM-capable major) and a rolling top at the three stable majors current at release time (today: **43**). The window is **28–43**, and the optional peer range is `>=28 <44`. Release metadata, docs, and CI use the same frozen window; it does not drift after publication.
 
 You can also read it from the package:
 

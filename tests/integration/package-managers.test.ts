@@ -228,7 +228,7 @@ test('packed public facade ships documented package surface without private refs
   });
   expect(packageJson.peerDependencies).toEqual({
     '@rsbuild/core': '^2.0.0',
-    electron: '>=41 <44',
+    electron: '>=28 <44',
   });
 
   const js = readFileSync(join(extractRoot, 'package/dist/index.js'), 'utf8');

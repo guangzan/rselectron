@@ -3,6 +3,7 @@ import { existsSync, readFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { RSBUILD_TESTED_WINDOW } from '../../packages/rselectron/src/index.ts';
 import { packPublicFacade } from '../helpers/pack-facade.ts';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
@@ -46,7 +47,7 @@ test('public facade is a 1.0 beta with MIT surface', () => {
   expect(packageJson.engines.node).toBe('>=20.19.0');
   expect(packageJson.peerDependencies).toEqual({
     '@rsbuild/core': '^2.0.0',
-    electron: '>=41 <44',
+    electron: '>=28 <44',
   });
   expect(packageJson.peerDependenciesMeta?.electron?.optional).toBe(true);
   expect(packageJson.exports).toHaveProperty('.');
@@ -60,6 +61,15 @@ test('public facade is a 1.0 beta with MIT surface', () => {
   expect(
     existsSync(join(repositoryRoot, 'packages/rselectron/CHANGELOG.md')),
   ).toBe(false);
+});
+
+test('rsbuild tested window stays synced with the workspace devDependency', () => {
+  const rootPackageJson = JSON.parse(
+    readFileSync(join(repositoryRoot, 'package.json'), 'utf8'),
+  ) as { devDependencies: Record<string, string> };
+  const tested = RSBUILD_TESTED_WINDOW.tested;
+  expect(tested).toMatch(/^\d+\.\d+\.\d+$/);
+  expect(tested).toBe(rootPackageJson.devDependencies['@rsbuild/core']);
 });
 
 test('tag publish workflow gates OIDC npm publication', () => {
@@ -150,8 +160,8 @@ test('English and Simplified Chinese docs stay consistent for the beta', () => {
     join(repositoryRoot, 'website/docs/zh/guide/compatibility.md'),
     'utf8',
   );
-  expect(enCompatibility).toContain('41–43');
-  expect(zhCompatibility).toContain('41–43');
+  expect(enCompatibility).toContain('28–43');
+  expect(zhCompatibility).toContain('28–43');
   expect(existsSync(join(repositoryRoot, 'docs/monorail/CONTEXT.md'))).toBe(
     true,
   );

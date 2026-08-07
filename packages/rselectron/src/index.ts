@@ -15,6 +15,7 @@ export {
   preview,
   resolveProjectElectron,
   RSELECTRON_ENV_PREFIXES,
+  RSBUILD_TESTED_WINDOW,
   RselectronError,
 } from '../../core/src/index.ts';
 export type {

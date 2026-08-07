@@ -54,8 +54,8 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      # PR: single ubuntu + lockfile Electron. main: 3 OS × 43 + ubuntu × 41.
-      matrix: ${{ fromJSON(github.event_name == 'pull_request' && '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false}]}' || '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"ubuntu-latest","electron":"41.0.0","arch":"x64","pin":true},{"os":"windows-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"macos-latest","electron":"43.2.0","arch":"arm64","pin":false}]}') }}
+      # PR: single ubuntu + lockfile Electron. main: 3 OS × 43 + ubuntu × 28.
+      matrix: ${{ fromJSON(github.event_name == 'pull_request' && '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false}]}' || '{"include":[{"os":"ubuntu-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"ubuntu-latest","electron":"28.3.3","arch":"x64","pin":true},{"os":"windows-latest","electron":"43.2.0","arch":"x64","pin":false},{"os":"macos-latest","electron":"43.2.0","arch":"arm64","pin":false}]}') }}
     steps:
       - uses: actions/checkout@v6
       - name: Install pnpm
