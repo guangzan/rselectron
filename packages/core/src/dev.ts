@@ -36,6 +36,7 @@ import type {
   BuildMode,
   ConfigContext,
   ConfigLoader,
+  Diagnostic,
   Role,
   RselectronConfig,
   RselectronConfigExport,
@@ -67,6 +68,7 @@ export interface CreateServerResult {
   close: () => Promise<void>;
   electronProcess: ChildProcess;
   urls: string[];
+  warnings: Diagnostic[];
 }
 
 function statsHasErrors(
@@ -515,6 +517,7 @@ async function startDevGeneration(
         return process;
       },
       urls,
+      warnings: runtime.warnings,
     };
   } catch (error) {
     await close();
@@ -667,6 +670,9 @@ export async function createServer(
     },
     get urls() {
       return generation?.urls ?? [];
+    },
+    get warnings() {
+      return generation?.warnings ?? [];
     },
   };
 }
