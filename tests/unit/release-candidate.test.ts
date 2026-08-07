@@ -162,6 +162,18 @@ test('English and Simplified Chinese docs stay consistent for the beta', () => {
   );
   expect(enCompatibility).toContain('28–43');
   expect(zhCompatibility).toContain('28–43');
+
+  // The Rsbuild tested window is derived from the frozen tested version, so
+  // derive the expected window text the same way the docs describe it.
+  const [testedMajor, testedMinor] = RSBUILD_TESTED_WINDOW.tested.split('.');
+  const testedWindowRange = `>=${testedMajor}.${testedMinor}.0 <${testedMajor}.${Number(testedMinor) + 1}.0`;
+  for (const page of [enCompatibility, zhCompatibility]) {
+    expect(page).toContain('RSELECTRON_RSBUILD_UNTESTED');
+    expect(page).toContain(RSBUILD_TESTED_WINDOW.tested);
+    expect(page).toContain(testedWindowRange);
+    expect(page).toMatch(/never a hard error|绝不会是硬错误/);
+  }
+
   expect(existsSync(join(repositoryRoot, 'docs/monorail/CONTEXT.md'))).toBe(
     true,
   );
