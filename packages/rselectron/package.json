@@ -1,6 +1,6 @@
 {
   "name": "@rselectron/core",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "description": "An Rspack-first Electron development and build tool.",
   "keywords": [
     "electron",
