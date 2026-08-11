@@ -1,5 +1,5 @@
 ---
 pageType: home
-title: Rselectron
-description: 用 Rsbuild 做 Electron 开发与源码构建。
+title: Rselectron — 用 Rspack 构建 Electron 应用
+description: 用 Rspack 做 Electron 开发与源码构建。
 ---

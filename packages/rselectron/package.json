@@ -1,7 +1,15 @@
 {
   "name": "@rselectron/core",
   "version": "1.0.0-beta.11",
-  "description": "An Rsbuild-first Electron development and build tool.",
+  "description": "An Rspack-first Electron development and build tool.",
+  "keywords": [
+    "electron",
+    "rsbuild",
+    "rspack",
+    "build-tool",
+    "dev-tool"
+  ],
+  "homepage": "https://guangzan.github.io/rselectron/",
   "license": "MIT",
   "type": "module",
   "repository": {

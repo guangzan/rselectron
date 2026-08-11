@@ -13,7 +13,7 @@
 
 English | [简体中文](./README.zh.md)
 
-Rselectron is an Rsbuild-first Electron development and build tool. Develop and source-build Electron apps with Rsbuild and Rspack.
+Rselectron is an Rspack-first Electron development and build tool. Develop and source-build Electron apps with Rsbuild and Rspack.
 
 ## Features
 

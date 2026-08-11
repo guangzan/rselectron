@@ -544,8 +544,8 @@ test('documentation site publishes under the GitHub Pages project root', () => {
     'utf8',
   );
 
-  expect(configSource).toContain("base: '/rselectron/'");
-  expect(configSource).toContain("siteOrigin: 'https://guangzan.github.io'");
+  expect(configSource).toContain("BASE = '/rselectron/'");
+  expect(configSource).toContain("SITE_ORIGIN = 'https://guangzan.github.io'");
   expect(configSource).toMatch(/\bllms:\s*true\b/);
   expect(configSource).toContain(
     'https://github.com/guangzan/rselectron/tree/main/website/docs',
@@ -553,6 +553,15 @@ test('documentation site publishes under the GitHub Pages project root', () => {
   expect(configSource).toContain('https://guangzan.github.io/rselectron');
   expect(configSource).toMatch(/pluginSitemap/);
   expect(configSource).toMatch(/pluginOpenGraph/);
+  // SEO contract: clean directory-style URLs, per-page canonical, homepage
+  // structured data, and social cards must stay configured.
+  expect(configSource).toMatch(/cleanUrls:\s*true/);
+  expect(configSource).toContain("rel: 'canonical'");
+  expect(configSource).toContain('application/ld+json');
+  expect(configSource).toContain('SoftwareApplication');
+  expect(configSource).toContain('rselectron-banner.png');
+  expect(configSource).toContain('summary_large_image');
+  expect(configSource).toContain('Rspack-first Electron');
   expect(configSource).toContain("icon: 'github'");
   expect(configSource).toContain('https://github.com/guangzan/rselectron');
   expect(configSource).toContain("light: '/navbar-logo-light.png'");
@@ -741,6 +750,35 @@ test('Rspress documentation site builds', () => {
   expect(zhHome).toMatch(/>API</);
   expect(zhHome).toContain('基于 MIT 许可证');
   expect(zhHome).toContain('© guangzan 与 Rselectron 贡献者。');
+
+  // SEO artifacts: robots.txt, canonical, structured data, social cards, and
+  // clean directory-style hreflang/canonical URLs.
+  const robotsPath = join(websiteRoot, 'doc_build', 'robots.txt');
+  expect(existsSync(robotsPath)).toBe(true);
+  expect(readFileSync(robotsPath, 'utf8')).toContain(
+    'Sitemap: https://guangzan.github.io/rselectron/sitemap.xml',
+  );
+
+  expect(enHome).toContain(
+    'rel="canonical" href="https://guangzan.github.io/rselectron/"',
+  );
+  expect(enHome).toContain(
+    '<meta property="og:image" content="https://guangzan.github.io/rselectron/rselectron-banner.png"',
+  );
+  expect(enHome).toContain('<meta property="twitter:card"');
+  expect(enHome).toContain('application/ld+json');
+  expect(enHome).toContain('SoftwareApplication');
+  expect(enHome).toContain('Rspack-first');
+
+  expect(enGettingStarted).toContain(
+    'hreflang="en" href="https://guangzan.github.io/rselectron/guide/getting-started"',
+  );
+  expect(enGettingStarted).toContain(
+    'rel="canonical" href="https://guangzan.github.io/rselectron/guide/getting-started"',
+  );
+
+  const llms = readFileSync(join(websiteRoot, 'doc_build', 'llms.txt'), 'utf8');
+  expect(llms).toContain('Rspack-first Electron');
   // Why: only compatibility maps to a local doc; others must not invent rspack paths.
   const whySource = readFileSync(
     join(websiteRoot, 'theme/components/Landingpage/WhyRspack/index.tsx'),

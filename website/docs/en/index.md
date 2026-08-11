@@ -1,5 +1,5 @@
 ---
 pageType: home
-title: Rselectron
-description: Rsbuild-first Electron development and source-build tooling.
+title: Rselectron — Rspack-first Electron build tool
+description: Rspack-first Electron development and source-build tooling.
 ---

@@ -6,16 +6,49 @@ import { pluginSitemap } from '@rspress/plugin-sitemap';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 
 const PUBLISH_URL = 'https://guangzan.github.io/rselectron';
+const SITE_ORIGIN = 'https://guangzan.github.io';
+const BASE = '/rselectron/';
 const description =
-  'Rsbuild-first Electron development and source-build tooling.';
+  'Rspack-first Electron development and source-build tooling.';
 
 export default defineConfig({
   root: path.join(__dirname, 'docs'),
   title: 'Rselectron',
   description,
   lang: 'en',
-  siteOrigin: 'https://guangzan.github.io',
-  base: '/rselectron/',
+  siteOrigin: SITE_ORIGIN,
+  base: BASE,
+  route: {
+    cleanUrls: true,
+  },
+  head: [
+    // Per-page canonical, aligned with the sitemap's directory-style URLs.
+    (route) => [
+      'link',
+      {
+        rel: 'canonical',
+        href: `${SITE_ORIGIN}${BASE.replace(/\/$/, '')}${route.routePath}`,
+      },
+    ],
+    // Homepage structured data only (SoftwareApplication).
+    (route) => {
+      if (route.routePath !== '/') {
+        return undefined;
+      }
+      return `<script type="application/ld+json">${JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Rselectron',
+        description,
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'macOS, Windows, Linux',
+        url: `${PUBLISH_URL}/`,
+        softwareVersion: '1.0.0-beta.11',
+        license: 'https://github.com/guangzan/rselectron/blob/main/LICENSE',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      })}</script>`;
+    },
+  ],
   llms: true,
   logo: {
     light: '/navbar-logo-light.png',
@@ -33,7 +66,7 @@ export default defineConfig({
       lang: 'zh',
       label: '简体中文',
       title: 'Rselectron',
-      description: '用 Rsbuild 做 Electron 开发与源码构建。',
+      description: '用 Rspack 做 Electron 开发与源码构建。',
     },
   ],
   plugins: [
@@ -63,6 +96,10 @@ export default defineConfig({
         type: 'website',
         url: `${PUBLISH_URL}/`,
         description,
+        image: `${PUBLISH_URL}/rselectron-banner.png`,
+        twitter: {
+          card: 'summary_large_image',
+        },
       }),
     ],
     source: {
