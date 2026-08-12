@@ -5,9 +5,7 @@ description: 常见失败如何诊断与恢复。
 
 # 故障排除
 
-也可参阅 [Rsbuild 故障排除](https://rsbuild.rs/guide/troubleshooting/index) 与 [Rspack FAQ](https://rspack.rs/misc/faq)。
-
-若仍不够，请在 [GitHub](https://github.com/guangzan/rselectron/issues) 搜索或开 issue。
+也可参阅 [Rsbuild 故障排除](https://rsbuild.rs/guide/troubleshooting/index) 与 [Rspack FAQ](https://rspack.rs/misc/faq)。若仍不够，请在 [GitHub](https://github.com/guangzan/rselectron/issues) 搜索或开 issue。
 
 ## 提示
 

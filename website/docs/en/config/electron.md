@@ -163,9 +163,3 @@ export default defineConfig({
 ```
 
 More often you point `package.json#main` at the main-process output instead of setting `electron.entry` every time. See [Getting started · Electron entry](/guide/getting-started#electron-entry).
-
-## Related pages
-
-- [Main, preload, and renderer](./processes)
-- [Environment](./environment)
-- [Command Line Interface](/api/cli)

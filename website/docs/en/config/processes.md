@@ -54,9 +54,3 @@ Multiple pages belong to a single `renderer` config — windows and pages are no
 ## Plugins
 
 Rselectron accepts **Rsbuild plugins only**. Vite plugins are not translated; migrate to Rsbuild / Rspack equivalents. See [Migration](/guide/migration).
-
-## Related
-
-- Electron-owned fields: [Electron options](./electron)
-- Mode / env-mode: [Environment](./environment)
-- Compose without `shared`: `mergeRselectronConfig` / `mergeRsbuildConfig` on the [Configuration](./) overview

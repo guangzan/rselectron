@@ -5,7 +5,7 @@ description: Domain vocabulary for Roles, sessions, and builds.
 
 # Concepts
 
-Short definitions used across the docs. For a first run, start with [Getting started](./getting-started). Config details live under [Configuration](/config/).
+Short definitions used across the docs.
 
 ## Product
 
@@ -45,13 +45,6 @@ Multiple pages belong to a single **Renderer** Role. Windows and pages are not s
 
 ## Examples vs fixtures
 
-| Kind                | Location                                                                                                                                                                     | Use                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Learning examples   | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla), [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | Copy and learn from                          |
-| Regression fixtures | `tests/fixtures/`                                                                                                                                                            | Automated tests only — not learning material |
-
-## Related
-
-- [Getting started](./getting-started)
-- [Configuration](/config/)
-- [API](/api/)
+| Kind              | Location                                                                                                                                                                     | Use                 |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Learning examples | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla), [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | Copy and learn from |

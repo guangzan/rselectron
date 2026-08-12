@@ -50,9 +50,3 @@ const mainOnly = loadEnv({
 `envPrefixesForRole('main' | 'preload' | 'renderer')` returns the shared `RSELECTRON_` prefix plus the process-scoped one.
 
 See [JavaScript API](/api/javascript-api) for the full `loadEnv` surface.
-
-## Related
-
-- [Configuration](./) — config function context
-- [Electron options](./electron)
-- [CLI](/api/cli) — `--mode`, `--env-mode`

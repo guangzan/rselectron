@@ -68,8 +68,3 @@ description: rselectron 命令与选项。
 | 选项                     | 描述                    |
 | ------------------------ | ----------------------- |
 | `--format <json\|human>` | 输出格式（默认 `json`） |
-
-## 相关
-
-- 程序化等价面：[JavaScript API](./javascript-api)
-- 配置字段：[配置](/config/)

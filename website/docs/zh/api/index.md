@@ -24,5 +24,3 @@ Rselectron 提供两个稳定面，共享同一套规范化与编排管线。CLI
 **没有**隐式默认命令。不带子命令运行 `rselectron` 时，会向 stderr 打印帮助并以 `1` 退出。
 
 运行失败以带稳定 `code` 的 `RselectronError` 呈现；CLI 的退出码与文案是该错误的投影。
-
-配置形态见 [配置](/config/)。环境旗标见 [环境](/config/environment)。

@@ -5,11 +5,11 @@ description: defineConfig overview, reading map, and how Rselectron extends Rsbu
 
 # Configuration
 
-Rselectron configuration is declared with `defineConfig` from `@rselectron/core`. The outer shape has three process keys — `main`, `preload`, and `renderer` — plus an optional top-level `electron` block for application launch and discovery.
+Rselectron automatically discovers a config file named `rselectron.config.{ts,js,mts,mjs,cts,cjs}` at the project root. Pass an explicit config path to use another filename. Loading delegates to Rsbuild’s config loader (`auto` by default; see [CLI](/api/cli) for `--config-loader`).
 
-Each process key is a full [Rsbuild configuration](https://rsbuild.rs/config/), extended with Rselectron-owned `electron` options for that process. Rselectron does not invent a parallel option encyclopedia; look up shared Rsbuild fields in the Rsbuild docs and use the pages below for Rselectron increments.
+Rselectron configuration is declared with `defineConfig`. The outer shape has three process keys — `main`, `preload`, and `renderer` — plus an optional top-level `electron` block for application launch and discovery.
 
-By default the loader discovers `rselectron.config.{ts,js,mts,mjs,cts,cjs}` only. Pass an explicit config path to use another filename. Loading delegates to Rsbuild’s config loader (`auto` by default; see [CLI](/api/cli) for `--config-loader`).
+Each process key is a full [Rsbuild configuration](https://rsbuild.rs/config/), extended with Rselectron-owned `electron` options for that process. Look up shared Rsbuild fields in the Rsbuild docs and use the pages below for Rselectron increments.
 
 ## Minimal example
 
@@ -106,13 +106,3 @@ export default defineConfig(
   ),
 );
 ```
-
-## Reading map
-
-| Page                                       | Contents                                                   |
-| ------------------------------------------ | ---------------------------------------------------------- |
-| [Main, preload, and renderer](./processes) | Process shape, omitted keys, independent Rsbuild instances |
-| [Electron options](./electron)             | Process-level and app-level `electron` fields              |
-| [Environment](./environment)               | `--mode`, `--env-mode`, prefixes, and `loadEnv`            |
-
-CLI flags for mode / env-mode: [CLI](/api/cli). Programmatic entry points: [JavaScript API](/api/javascript-api). First run: [Getting started](/guide/getting-started).

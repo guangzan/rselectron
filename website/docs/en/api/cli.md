@@ -68,8 +68,3 @@ When a watched configuration dependency changes, Rselectron reloads the config a
 | Option                   | Description                    |
 | ------------------------ | ------------------------------ |
 | `--format <json\|human>` | Output format (default `json`) |
-
-## Related
-
-- Programmatic equivalents: [JavaScript API](./javascript-api)
-- Config fields: [Configuration](/config/)

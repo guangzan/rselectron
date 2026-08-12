@@ -9,7 +9,7 @@ import { PackageManagerTabs } from '@theme';
 
 :::tip Note
 
-This guide assumes you are familiar with Electron and Rsbuild. Read the [Electron guide](https://www.electronjs.org/docs/latest/) and the [Rsbuild guide](https://rsbuild.rs/guide/start/) first if needed. Domain vocabulary (Roles, sessions, modes) is summarized in [Concepts](./concepts).
+This guide assumes you are familiar with Electron and Rsbuild. We recommend reading the [Electron guide](https://www.electronjs.org/docs/latest/) and the [Rsbuild guide](https://rsbuild.rs/guide/start/). Domain vocabulary (Roles, sessions, modes) is summarized in [Concepts](./concepts).
 
 :::
 
@@ -20,7 +20,7 @@ Rselectron is an Electron build tool based on Rsbuild. It aims for a faster, sim
 - Explicit `dev` / `build` / `preview` / `inspect` commands for Electron’s dual environments (Node.js main process and browser renderer).
 - A single config entry for main, preload, and renderer, with Electron-oriented defaults.
 - HMR for the renderer, and hot reload for main and preload when enabled.
-- Rsbuild / Rspack under the hood. It does **not** produce installers and is **not** a project scaffolder.
+- Rsbuild / Rspack under the hood.
 
 ## Install
 
@@ -81,7 +81,7 @@ Each of `main` / `preload` / `renderer` is a full Rsbuild config. Omit a key onl
 
 ## Electron entry
 
-Point Electron’s application entry at the **main-process build output**. When `output.distPath` is unset, Rselectron presets Conventional role outputs under `out/<role>` at the application root (not under each process `root`). With the minimal config above and a classic (non-`type: module`) package, `package.json` can look like:
+Point Electron’s application entry at the **main-process build output**. When `output.distPath` is unset, Rselectron presets Conventional role outputs under `out/<role>` at the application root. With the minimal config above and a classic (non-`type: module`) package, `package.json` can look like:
 
 ```json title="package.json"
 {
@@ -91,7 +91,7 @@ Point Electron’s application entry at the **main-process build output**. When 
 }
 ```
 
-Keep `main` (or `electron.entry` in config) aligned with the actual main output path. Entry extensions follow the Main format / `"type"` policy (for example `"type": "module"` with derived ESM uses `index.mjs`). Set an explicit `output.distPath` only when you need a custom layout—early beta builds that fell back to `<processRoot>/dist` without setting `distPath` should either point `main` at `out/...` or set `distPath` deliberately (for example `'dist'` relative to the process `root`).
+Keep `main` (or `electron.entry` in config) aligned with the actual main output path. Entry extensions follow the Main format / `"type"` policy (for example `"type": "module"` with derived ESM uses `index.mjs`). Set an explicit `output.distPath` only when you need a custom layout.
 
 ## Start from an example
 
@@ -100,8 +100,8 @@ Learning examples (vanilla and React) live in the repository:
 - [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)
 - [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react)
 
-Copy an example, install dependencies, then run `rselectron dev`. For how learning examples differ from automated test trees, see [Concepts](./concepts).
+Copy an example, install dependencies, then run `npm run dev`.
 
 ## Getting help
 
-If you hit a problem, check [Troubleshooting](./troubleshooting) first, then search the [GitHub issue tracker](https://github.com/guangzan/rselectron/issues). If nothing matches, open a new issue.
+If you hit a problem, check [Troubleshooting](./troubleshooting) first, then search the [GitHub issue](https://github.com/guangzan/rselectron/issues). If nothing matches, open a new issue.

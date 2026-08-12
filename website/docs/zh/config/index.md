@@ -5,11 +5,11 @@ description: defineConfig 总览、阅读地图，以及 Rselectron 如何扩展
 
 # 配置
 
-用 `@rselectron/core` 的 `defineConfig` 声明配置。外层是三个进程键 — `main`、`preload`、`renderer` — 以及可选的顶层 `electron`，用于应用启动与发现。
+Rselectron 会自动解析 项目根目录 下名为 `rselectron.config.{ts,js,mts,mjs,cts,cjs}` 的配置文件。显式传入配置路径可使用其他文件名。加载委托给 Rsbuild 的配置加载器（默认 `auto`；见 [CLI](/api/cli) 的 `--config-loader`）。
 
-每个进程键都是一份完整的 [Rsbuild 配置](https://rsbuild.rs/config/)，再叠上该进程的 Rselectron `electron` 选项。Rselectron 不会再写一份并行的选项百科；通用 Rsbuild 字段请查 Rsbuild 文档，Rselectron 增量见下面各页。
+用 `defineConfig` 声明配置。外层是三个进程键 — `main`、`preload`、`renderer` — 以及可选的顶层 `electron`，用于应用启动与发现。
 
-默认只发现 `rselectron.config.{ts,js,mts,mjs,cts,cjs}`。显式传入配置路径可使用其他文件名。加载委托给 Rsbuild 的配置加载器（默认 `auto`；见 [CLI](/api/cli) 的 `--config-loader`）。
+每个进程键都是一份完整的 [Rsbuild 配置](https://rsbuild.rs/config/)，再叠上该进程的 Rselectron `electron` 选项。通用 Rsbuild 字段请查 Rsbuild 文档，Rselectron 增量见下面各页。
 
 ## 最小示例
 
@@ -105,13 +105,3 @@ export default defineConfig(
   ),
 );
 ```
-
-## 阅读地图
-
-| 页面                                    | 内容                                     |
-| --------------------------------------- | ---------------------------------------- |
-| [主进程、预加载与渲染进程](./processes) | 进程配置形态、省略项、独立 Rsbuild 实例  |
-| [Electron 选项](./electron)             | 进程级 / 应用级 `electron` 字段          |
-| [环境](./environment)                   | `--mode`、`--env-mode`、前缀与 `loadEnv` |
-
-mode / env-mode 的 CLI 旗标见 [CLI](/api/cli)；程序化入口见 [JavaScript API](/api/javascript-api)。上手见 [快速开始](/guide/getting-started)。

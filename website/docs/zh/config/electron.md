@@ -163,9 +163,3 @@ export default defineConfig({
 ```
 
 更常见的做法是把 `package.json#main` 指到主进程产物，而不是每次写 `electron.entry`。见 [快速开始 · Electron 入口](/guide/getting-started#electron-入口)。
-
-## 相关页面
-
-- [主进程、预加载与渲染进程](./processes)
-- [环境](./environment)
-- [命令行界面](/api/cli)

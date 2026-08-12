@@ -24,5 +24,3 @@ Rselectron exposes two stable surfaces that share one normalization and orchestr
 There is **no** implicit default command. Running `rselectron` with no subcommand prints help to stderr and exits `1`.
 
 Operational failures surface as `RselectronError` with a stable `code`. CLI exit codes and messages are projections of that error.
-
-Configuration shape: [Configuration](/config/). Environment flags: [Environment](/config/environment).

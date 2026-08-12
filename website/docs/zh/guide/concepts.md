@@ -5,7 +5,7 @@ description: Role、会话与构建相关的领域词汇。
 
 # 概念
 
-文档中反复出现的短定义。第一次上手请从 [快速开始](./getting-started) 入手。配置细节见 [配置](/config/)。
+文档中反复出现的短定义。
 
 ## 产品
 
@@ -45,13 +45,6 @@ description: Role、会话与构建相关的领域词汇。
 
 ## 示例与 fixtures
 
-| 类型          | 位置                                                                                                                                                                         | 用途                          |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| 学习示例      | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)、[`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | 复制与学习                    |
-| 回归 fixtures | `tests/fixtures/`                                                                                                                                                            | 仅供自动化测试 — 不是学习材料 |
-
-## 相关
-
-- [快速开始](./getting-started)
-- [配置](/config/)
-- [API](/api/)
+| 类型     | 位置                                                                                                                                                                         | 用途       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 学习示例 | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)、[`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | 复制与学习 |

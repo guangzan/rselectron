@@ -9,7 +9,7 @@ import { PackageManagerTabs } from '@theme';
 
 :::tip Note
 
-本指南假定你已熟悉 Electron 与 Rsbuild。如需补课，先阅读 [Electron 指南](https://www.electronjs.org/docs/latest/) 与 [Rsbuild 指南](https://rsbuild.rs/guide/start/)。领域词汇（角色、会话、模式）见 [概念](./concepts)。
+本指南假定你已了解 Electron 与 Rsbuild。推荐阅读 [Electron 指南](https://www.electronjs.org/docs/latest/) 与 [Rsbuild 指南](https://rsbuild.rs/guide/start/)。领域词汇（角色、会话、模式）见 [概念](./concepts)。
 
 :::
 
@@ -20,7 +20,7 @@ Rselectron 是基于 Rsbuild 的 Electron 构建工具，目标是更快、更�
 - 显式的 `dev` / `build` / `preview` / `inspect` 命令，覆盖 Electron 的双环境（Node.js 主进程与浏览器渲染进程）。
 - 单一配置入口声明 main、preload、renderer，并带有面向 Electron 的默认值。
 - 渲染进程 HMR；在启用时支持主进程与预加载热重载。
-- 底层是 Rsbuild / Rspack。它**不**产出安装包，也**不是**项目脚手架。
+- 底层是 Rsbuild / Rspack。
 
 ## 安装
 
@@ -81,7 +81,7 @@ export default defineConfig({
 
 ## Electron 入口
 
-把 Electron 的应用入口指到**主进程构建产物**。未设置 `output.distPath` 时，Rselectron 会按约定角色产物目录，在应用根下使用 `out/<role>`（不会落在各进程 `root` 里）。上面的最小配置配合经典（非 `"type": "module"`）包时，`package.json` 可以是：
+把 Electron 的应用入口指到**主进程构建产物**。未设置 `output.distPath` 时，Rselectron 会按约定角色产物目录，在应用根下使用 `out/<role>`。上面的最小配置配合经典（非 `"type": "module"`）包时，`package.json` 可以是：
 
 ```json title="package.json"
 {
@@ -91,7 +91,7 @@ export default defineConfig({
 }
 ```
 
-保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。入口扩展名跟随 Main 格式 / `"type"` 策略（例如 `"type": "module"` 且推导为 ESM 时使用 `index.mjs`）。只有需要自定义布局时才显式设置 `output.distPath`——早期 beta 在未设置 `distPath` 时会回落到 `<processRoot>/dist`；请把 `main` 指到 `out/...`，或有意设置 `distPath`（例如相对进程 `root` 的 `'dist'`）。
+保持 `main`（或配置里的 `electron.entry`）与真实主进程产物路径一致。入口扩展名跟随 Main 格式 / `"type"` 策略（例如 `"type": "module"` 且推导为 ESM 时使用 `index.mjs`），只有需要自定义布局时才显式设置 `output.distPath`。
 
 ## 从示例起步
 
@@ -100,8 +100,8 @@ export default defineConfig({
 - [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)
 - [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react)
 
-复制示例、安装依赖，然后运行 `rselectron dev`。学习示例与自动化测试树的区别见 [概念](./concepts)。
+复制示例、安装依赖，然后运行 `npm run dev`。
 
 ## 获取帮助
 
-遇到问题先查 [故障排除](./troubleshooting)，再搜索 [GitHub issue 追踪器](https://github.com/guangzan/rselectron/issues)。没有合适条目就开新 issue。
+遇到问题先查 [故障排除](./troubleshooting)，再搜索 [GitHub issue](https://github.com/guangzan/rselectron/issues)。没有合适条目就开新 issue。

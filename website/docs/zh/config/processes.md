@@ -54,9 +54,3 @@ export default defineConfig({
 ## 插件
 
 Rselectron **只接受 Rsbuild 插件**。Vite 插件不会被翻译；请改用 Rsbuild / Rspack 等价物。见 [迁移](/guide/migration)。
-
-## 相关
-
-- Electron 相关字段：[Electron 选项](./electron)
-- Mode / env-mode：[环境](./environment)
-- 不用 `shared` 的组合方式：见 [配置](./) 概览中的 `mergeRselectronConfig` / `mergeRsbuildConfig`

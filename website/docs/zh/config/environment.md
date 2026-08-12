@@ -50,9 +50,3 @@ const mainOnly = loadEnv({
 `envPrefixesForRole('main' | 'preload' | 'renderer')` 返回共享的 `RSELECTRON_` 加上该进程作用域前缀。
 
 完整 `loadEnv` 面见 [JavaScript API](/api/javascript-api)。
-
-## 相关
-
-- [配置](./) — 配置函数上下文
-- [Electron 选项](./electron)
-- [CLI](/api/cli) — `--mode`、`--env-mode`
