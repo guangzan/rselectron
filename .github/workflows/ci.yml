@@ -52,6 +52,18 @@ jobs:
     needs: quality
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    # Docs-only commits (site, monorail docs, READMEs, LICENSE) are validated
+    # by the dedicated `docs` job below; skip the expensive Electron matrix
+    # for them. `.github/**` is intentionally NOT ignored, so editing CI
+    # itself always re-runs the full suite.
+    paths-ignore:
+      - 'docs/**'
+      - 'website/**'
+      - '**/*.md'
+      - '**/*.mdx'
+      - 'README.md'
+      - 'README.zh.md'
+      - 'LICENSE'
     strategy:
       fail-fast: false
       # PR: single ubuntu + lockfile Electron. main: 3 OS × 43 + ubuntu × 28.
@@ -118,3 +130,34 @@ jobs:
             tests/fixtures/**/out/
           if-no-files-found: ignore
           retention-days: 14
+
+  docs:
+    name: Docs build & content tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Complement of `test`'s paths-ignore: docs-only commits validate the
+    # site here (cheap, no Electron) instead of the full matrix. Runs in
+    # parallel with `quality` since it needs none of its artifacts.
+    paths:
+      - 'docs/**'
+      - 'website/**'
+      - '**/*.md'
+      - '**/*.mdx'
+      - 'README.md'
+      - 'README.zh.md'
+      - 'LICENSE'
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      # docs-site.test.ts builds the site itself and asserts content, nav,
+      # SEO artifacts, link integrity, and zh/en parity — no separate
+      # docs:build step is needed here.
+      - name: Run documentation content tests
+        run: pnpm run test:docs
