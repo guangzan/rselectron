@@ -9,7 +9,7 @@ Rselectron 会自动解析 项目根目录 下名为 `rselectron.config.{ts,js,m
 
 用 `defineConfig` 声明配置。外层是三个进程键 — `main`、`preload`、`renderer` — 以及可选的顶层 `electron`，用于应用启动与发现。
 
-每个进程键都是一份完整的 [Rsbuild 配置](https://rsbuild.rs/config/)，再叠上该进程的 Rselectron `electron` 选项。通用 Rsbuild 字段请查 Rsbuild 文档，Rselectron 增量见下面各页。
+每个进程键都是一份完整的 [Rsbuild 配置](https://rsbuild.rs/config/)，再叠上该进程的 Rselectron `electron` 选项。通用 Rsbuild 字段请查 Rsbuild 文档，Rselectron 增量见 [进程（Processes）](./processes)、[Electron](./electron)、[环境（Environment）](./environment)。
 
 ## 最小示例
 

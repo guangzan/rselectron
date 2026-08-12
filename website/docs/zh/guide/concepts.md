@@ -48,3 +48,8 @@ description: Role、会话与构建相关的领域词汇。
 | 类型     | 位置                                                                                                                                                                         | 用途       |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | 学习示例 | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla)、[`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | 复制与学习 |
+
+## 下一步
+
+- [快速开始（Getting Started）](/guide/getting-started) — 端到端跑通你的第一个项目
+- [配置（Configuration）](/config/) — Role 配置与应用级 Electron 选项的完整契约

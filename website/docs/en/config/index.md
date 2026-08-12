@@ -9,7 +9,7 @@ Rselectron automatically discovers a config file named `rselectron.config.{ts,js
 
 Rselectron configuration is declared with `defineConfig`. The outer shape has three process keys — `main`, `preload`, and `renderer` — plus an optional top-level `electron` block for application launch and discovery.
 
-Each process key is a full [Rsbuild configuration](https://rsbuild.rs/config/), extended with Rselectron-owned `electron` options for that process. Look up shared Rsbuild fields in the Rsbuild docs and use the pages below for Rselectron increments.
+Each process key is a full [Rsbuild configuration](https://rsbuild.rs/config/), extended with Rselectron-owned `electron` options for that process. Look up shared Rsbuild fields in the Rsbuild docs and use [Processes](./processes), [Electron](./electron), and [Environment](./environment) for Rselectron increments.
 
 ## Minimal example
 

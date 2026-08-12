@@ -9,7 +9,7 @@ Describes Rselectron compatibility-related content.
 
 ## Electron versions
 
-Rselectron freezes an Electron support window per release: a fixed floor at Electron **28** (the first ESM-capable major) and a rolling top at the three stable majors current at release time (today: **43**). The window is **28–43**, and the optional peer range is `>=28 <44`. Release metadata, docs, and CI use the same frozen window; it does not drift after publication.
+Rselectron freezes an Electron support window per release: a fixed floor at Electron **28** (the first ESM-capable major) and a rolling top at the three stable majors current at release time (today: **43**). The window is **28–43**, and the optional peer range is `>=28 <44`. Release metadata, docs, and CI use the same frozen window; it does not drift after publication. The frozen window is maintained as a [compatibility matrix](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md) with CI-gated evidence.
 
 You can also read it from the package:
 
@@ -25,7 +25,7 @@ Each Rselectron release also freezes an **Rsbuild tested window**: the minor lin
 
 ## electron-Vite
 
-Rselectron does not align its API; it targets best-effort **capability parity** against the electron-vite 6 baseline to ease migration for electron-vite users.
+Rselectron does not align its API; it is **not a drop-in replacement** for electron-vite. It targets best-effort **capability parity** against the electron-vite 6 baseline to ease migration for electron-vite users.
 
 Compared with electron-vite, these capabilities are intentionally out of scope:
 

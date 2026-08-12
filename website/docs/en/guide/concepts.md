@@ -48,3 +48,8 @@ Multiple pages belong to a single **Renderer** Role. Windows and pages are not s
 | Kind              | Location                                                                                                                                                                     | Use                 |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
 | Learning examples | [`examples/vanilla`](https://github.com/guangzan/rselectron/tree/main/examples/vanilla), [`examples/react`](https://github.com/guangzan/rselectron/tree/main/examples/react) | Copy and learn from |
+
+## Where to go next
+
+- [Getting Started](/guide/getting-started) — run your first project end to end
+- [Configuration](/config/) — full contract for Role configs and application Electron options

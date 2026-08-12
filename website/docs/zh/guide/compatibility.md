@@ -9,7 +9,7 @@ description: Electron 版本、宿主、框架与有意排除项。
 
 ## Electron 版本
 
-Rselectron 在每次发布时冻结一个 Electron 支持窗口：下限固定为 Electron **28**（首个支持 ESM 的 major），上限为发布时当前的三个稳定 major（今天为 **43**），随每次发布向上滚动。当前窗口为 **28–43**，可选 peer 范围为 `>=28 <44`。发布元数据、文档与 CI 使用同一冻结窗口；发布后不再漂移。
+Rselectron 在每次发布时冻结一个 Electron 支持窗口：下限固定为 Electron **28**（首个支持 ESM 的 major），上限为发布时当前的三个稳定 major（今天为 **43**），随每次发布向上滚动。当前窗口为 **28–43**，可选 peer 范围为 `>=28 <44`。发布元数据、文档与 CI 使用同一冻结窗口；发布后不再漂移。该冻结窗口以[兼容性矩阵](https://github.com/guangzan/rselectron/blob/main/docs/monorail/compatibility-matrix.md)的形式维护，并附 CI 门禁证据。
 
 也可从包中读取：
 
@@ -25,7 +25,7 @@ import { ELECTRON_SUPPORT_SNAPSHOT } from '@rselectron/core';
 
 ## electron-Vite
 
-Rselectron 不对齐其 API，以 electron-vite 6 基线为目标尽可能做**能力对等**，便于 electron-vite 用户迁移。
+Rselectron 不对齐其 API，**不是 electron-vite 的一比一替换**，以 electron-vite 6 基线为目标尽可能做**能力对等**，便于 electron-vite 用户迁移。
 
 相对 electron-vite，以下能力有意不在范围内：
 
