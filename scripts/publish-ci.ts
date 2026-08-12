@@ -28,24 +28,22 @@ if (pkg.version !== version) {
   );
 }
 
-const releaseTag = version.includes('beta')
-  ? 'beta'
-  : version.includes('alpha')
-    ? 'alpha'
-    : undefined;
-
-console.log('Publishing version', version, 'with tag', releaseTag || 'latest');
+console.log('Publishing version', version, 'with tag latest');
 
 // Workflow already runs `pnpm run build`. Skip lifecycle scripts so publish
 // does not re-run `prepack`. Prefer `npm publish` for GitHub OIDC trusted
 // publishing; npm auto-attaches provenance for public repos.
-// Prereleases must use --tag (npm rejects publishing them onto latest).
+// Every release — prereleases included — publishes to `latest`, so `npm i`
+// always installs the newest available version. npm only blocks prereleases
+// from an *implicit* latest tag, so `--tag latest` is passed explicitly;
+// this avoids dist-tag promotion, which OIDC short-lived tokens cannot do.
 const publishArgs = [
   'publish',
   '--access',
   'public',
   '--ignore-scripts',
-  ...(releaseTag === undefined ? [] : ['--tag', releaseTag]),
+  '--tag',
+  'latest',
 ];
 
 $.verbose = true;
