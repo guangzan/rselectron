@@ -178,7 +178,7 @@ Implementation evidence remains **Pending / 待实现** until automated tests or
 - Contract / 契约: derive targets from the frozen Electron support snapshot and official release metadata; never fall back for unknown majors.
 - Classification / 分类: Replacement / 替代
 - Acceptance / 验收: oldest/newest supported majors resolve expected targets and unsupported majors fail structurally.
-- Evidence / 证据: `tests/unit/electron-runtime.test.ts` derives Main/Preload `electron{N}-*` Rspack targets and Renderer `overrideBrowserslist: ['chrome >= ${min(M, 138)}']` (clamped browserslist-rs ceiling) from project-local majors 41/43 and rejects unsupported major 40. / `tests/unit/electron-runtime.test.ts` 从项目本地 major 41/43 推导 Main/Preload 的 `electron{N}-*` Rspack 目标与 Renderer 的 `overrideBrowserslist: ['chrome >= ${min(M, 138)}']`（browserslist-rs 上限 clamp），并拒绝不受支持的 major 40。
+- Evidence / 证据: `tests/unit/electron-runtime.test.ts` derives Main/Preload `electron{N}-*` Rspack targets and Renderer `overrideBrowserslist: ['chrome >= ${M}']` (exact snapshot Chromium major) from project-local majors 41/43 and rejects unsupported major 40. / `tests/unit/electron-runtime.test.ts` 从项目本地 major 41/43 推导 Main/Preload 的 `electron{N}-*` Rspack 目标与 Renderer 的 `overrideBrowserslist: ['chrome >= ${M}']`（精确快照 Chromium major），并拒绝不受支持的 major 40。
 
 ### BUILD-004 — Main and Preload module formats / Main 与 Preload 模块格式
 
@@ -194,7 +194,7 @@ Implementation evidence remains **Pending / 待实现** until automated tests or
 - Contract / 契约: officially support the equivalent web/Chromium default; allow advanced Rsbuild/Rspack target overrides with a security and compatibility diagnostic.
 - Classification / 分类: Target / 目标
 - Acceptance / 验收: default fixture has no Node globals; an advanced override is retained and emits the documented diagnostic.
-- Evidence / 证据: `tests/unit/renderer-advanced.test.ts` keeps the default Chromium browserslist path free of `process.versions.node` and emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK` when `output.target: "node"` or an explicit `electron-renderer` / `electron{N}-renderer` `tools.rspack.target` is retained. `tests/unit/electron-runtime.test.ts` asserts default Renderer `overrideBrowserslist: ['chrome >= 138']` under today's snapshot clamp. / `tests/unit/renderer-advanced.test.ts` 验证默认 Chromium browserslist 路径不含 `process.versions.node`，并在保留 `output.target: "node"` 或显式 `electron-renderer` / `electron{N}-renderer` `tools.rspack.target` 时发出 `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`。`tests/unit/electron-runtime.test.ts` 断言今日快照 clamp 下默认 Renderer `overrideBrowserslist: ['chrome >= 138']`。
+- Evidence / 证据: `tests/unit/renderer-advanced.test.ts` keeps the default Chromium browserslist path free of `process.versions.node` and emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK` when `output.target: "node"` or an explicit `electron-renderer` / `electron{N}-renderer` `tools.rspack.target` is retained. `tests/unit/electron-runtime.test.ts` asserts the default Renderer `overrideBrowserslist: ['chrome >= ${M}']` (e.g. `['chrome >= 150']` for Electron 43). / `tests/unit/renderer-advanced.test.ts` 验证默认 Chromium browserslist 路径不含 `process.versions.node`，并在保留 `output.target: "node"` 或显式 `electron-renderer` / `electron{N}-renderer` `tools.rspack.target` 时发出 `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`。`tests/unit/electron-runtime.test.ts` 断言默认 Renderer `overrideBrowserslist: ['chrome >= ${M}']`（例如 Electron 43 时为 `['chrome >= 150']`）。
 
 ### BUILD-006 — External dependencies / 外置依赖
 

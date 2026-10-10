@@ -10,7 +10,7 @@ ADR 0007 与 BUILD-005 已要求 Renderer 默认使用兼容 Electron 的 web/Ch
 
 electron-vite 将 Renderer 的 `build.target` 预设为 `chrome${N}`。该 Vite/esbuild 字符串 **不是** 合法的 Rspack `AllowTarget`。Rsbuild 的原生路径是 `output.overrideBrowserslist` → `pluginTarget` → `['web', 'browserslist:…']`。
 
-进一步约束：当前 `@rspack/binding` 的 browserslist-rs 无法解析其 DB 上限（约 **138**）之上的 Chromium major。`chrome >= 140` 一类查询会解析为空列表并导致构建失败，而 Rselectron 支持快照记录的 Electron Chromium 为 **146+**。上游跟踪：[browserslist-rs#48](https://github.com/browserslist/browserslist-rs/issues/48)。
+当时还有一项约束：彼时固定的 `@rspack/binding` 的 browserslist-rs 无法解析其 DB 上限（约 **138**）之上的 Chromium major，`chrome >= 140` 一类查询会解析为空列表并导致构建失败，而支持快照记录的 Electron Chromium 为 **146+**。上游跟踪：[browserslist-rs#48](https://github.com/browserslist/browserslist-rs/issues/48)；数据随后在更新的 binding 中发布，临时 clamp 已移除（见「已移除的 clamp」）。
 
 ## Decision
 
@@ -18,13 +18,13 @@ electron-vite 将 Renderer 的 `build.target` 预设为 `chrome${N}`。该 Vite/
 
 当自动推导编译目标时：
 
-| Role     | 推导值                                                                                                                                                                                                           |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Main     | `tools.rspack.target: 'electron${N}-main'`                                                                                                                                                                       |
-| Preload  | `tools.rspack.target: 'electron${N}-preload'`                                                                                                                                                                    |
-| Renderer | `output.overrideBrowserslist: ['chrome >= ${min(M, K)}']`，`M` 为支持快照中 Electron major `N` 对应的 Chromium major，**`K = 138`**（硬编码的 browserslist-rs 上限）。此路径 **不** 设置 `tools.rspack.target`。 |
+| Role     | 推导值                                                                                                                                                   |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Main     | `tools.rspack.target: 'electron${N}-main'`                                                                                                               |
+| Preload  | `tools.rspack.target: 'electron${N}-preload'`                                                                                                            |
+| Renderer | `output.overrideBrowserslist: ['chrome >= ${M}']`，`M` 为支持快照中 Electron major `N` 对应的 Chromium major。此路径 **不** 设置 `tools.rspack.target`。 |
 
-当 `M > K` 时 **静默** clamp（不发诊断）。不要把 Vite 式 `chrome${M}` 写入 `tools.rspack.target`。
+不要把 Vite 式 `chrome${M}` 写入 `tools.rspack.target`。
 
 `output.target` 仍是 Rsbuild 环境预设（Renderer 未设置时为 `web`）。它 **不** 抑制 Chromium browserslist 推导。
 
@@ -40,9 +40,9 @@ electron-vite 将 Renderer 的 `build.target` 预设为 `chrome${N}`。该 Vite/
 
 显式危险目标（含 `electron-renderer` 与 `electron${N}-renderer`）必须发出 `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`。默认 browserslist 路径不得发出该诊断。
 
-### 临时 clamp 与移除
+### 已移除的 clamp
 
-`K = 138` 是绑定今日 browserslist-rs 数据的临时产品常量。[#48](https://github.com/browserslist/browserslist-rs/issues/48)（或等价的 Rspack binding 升级）覆盖快照 Chromium major 后，去掉 clamp，改用 `chrome >= ${M}`。在此之前交付带 clamp 的默认值，使沙箱应用可构建可运行。
+`K = 138` 曾是绑定当时 `@rspack/binding` 的 browserslist-rs 数据的临时产品常量。上游 [#48](https://github.com/browserslist/browserslist-rs/issues/48) 已于 2026-08-01 关闭，数据随后在更新的 binding 中发布（`2.1.9`+ 可解析全部快照 Chromium 范围）。clamp 已移除：工作区 `@rsbuild/core` 开发依赖从 `2.1.7` 升到 `2.1.13`（同一 2.1.x minor 线），推导目标现为精确的快照 major `chrome >= ${M}`。仍停留在较旧 `@rsbuild/core`（binding < `2.1.9`）的应用若在 Electron 38+（Chromium 140+）下构建 Renderer，须在已测 minor 线内升级。
 
 ### 变更定性
 
@@ -51,6 +51,6 @@ electron-vite 将 Renderer 的 `build.target` 预设为 `chrome${N}`。该 Vite/
 ## Consequences
 
 - 沙箱开箱 Renderer 经 Rsbuild 的 `web` + browserslist 组合使用浏览器 chunk 运行时。
-- BUILD-003 / BUILD-005 证据期望 Renderer `overrideBrowserslist: ['chrome >= ${min(M, 138)}']`（今日对支持 major 多为 `chrome >= 138`）；Main/Preload 仍为 `electron{N}-*`。
+- BUILD-003 / BUILD-005 证据期望 Renderer `overrideBrowserslist: ['chrome >= ${M}']`（精确的快照 Chromium major）；Main/Preload 仍为 `electron{N}-*`。
 - 真正需要 Node 的 Renderer 必须显式 opt-in 并接受 risk 诊断。
-- 后续在 browserslist-rs 跟上后移除 clamp。
+- browserslist-rs 跟上后已移除 clamp（见「已移除的 clamp」）。

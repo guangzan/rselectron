@@ -17,7 +17,7 @@ test('benchmark report contract accepts a complete sample', () => {
         platform: 'darwin',
         toolchain: {
           rselectron: '0.0.0',
-          '@rsbuild/core': '2.1.7',
+          '@rsbuild/core': '2.1.13',
         },
       },
       samples: {

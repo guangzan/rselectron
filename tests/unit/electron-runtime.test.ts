@@ -75,10 +75,11 @@ test('the frozen support snapshot matches the published optional peer window', (
   }
 });
 
-test('electronChromeBrowserslist is exact below the browserslist-rs ceiling and clamps at K=138', () => {
+test('electronChromeBrowserslist returns the exact snapshot Chromium major', () => {
   expect(electronChromeBrowserslist(28)).toBe('chrome >= 120');
   expect(electronChromeBrowserslist(37)).toBe('chrome >= 138');
-  expect(electronChromeBrowserslist(43)).toBe('chrome >= 138');
+  expect(electronChromeBrowserslist(41)).toBe('chrome >= 146');
+  expect(electronChromeBrowserslist(43)).toBe('chrome >= 150');
 });
 
 test('resolveProjectElectron reads Electron from the Application root', () => {
@@ -136,7 +137,7 @@ test('build derives Node and Chromium targets from a supported project-local Ele
     version: '41.10.3',
   });
   expect(result.runtime?.targets.main).toEqual(['electron41-main']);
-  expect(result.runtime?.targets.renderer).toEqual(['chrome >= 138']);
+  expect(result.runtime?.targets.renderer).toEqual(['chrome >= 146']);
   expect(ELECTRON_SUPPORT_SNAPSHOT.byMajor[41]).toMatchObject({
     chrome: '146.0.7680.65',
     node: '24.14.0',
@@ -194,7 +195,7 @@ test('build derives targets for the widened window floor from a project-local El
   await result.close();
 });
 
-test('normalizeRuntime writes clamped Renderer overrideBrowserslist and leaves rspack target unset', () => {
+test('normalizeRuntime writes the exact Renderer overrideBrowserslist and leaves rspack target unset', () => {
   const appRoot = createAppRoot('normalize-renderer-browserslist');
   writePackageJson(appRoot, { name: 'app', private: true });
   writeFakeElectron({ appRoot, version: '43.0.0' });
@@ -213,9 +214,9 @@ test('normalizeRuntime writes clamped Renderer overrideBrowserslist and leaves r
     },
   });
 
-  expect(runtime.targets.renderer).toEqual(['chrome >= 138']);
+  expect(runtime.targets.renderer).toEqual(['chrome >= 150']);
   expect(runtime.roles.renderer?.output?.overrideBrowserslist).toEqual([
-    'chrome >= 138',
+    'chrome >= 150',
   ]);
   expect(runtime.roles.renderer?.output?.target).toBe('web');
   const rspack = runtime.roles.renderer?.tools?.rspack;

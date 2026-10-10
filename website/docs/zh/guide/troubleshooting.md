@@ -34,7 +34,7 @@ description: 常见失败如何诊断与恢复。
 
 ### 渲染进程看起来像 Node / Electron Renderer 目标
 
-当渲染进程目标像 Node、`electron*-main|preload`，或显式 `electron-renderer` / `electron*-renderer` 时，Rselectron 会发出 `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`。默认沙箱路径会推导 `output.overrideBrowserslist: ['chrome >= ${min(M, 138)}']`（来自 Electron 支持快照，并按今日 browserslist-rs 上限 clamp；见 [browserslist-rs#48](https://github.com/browserslist/browserslist-rs/issues/48)）。随后由 Rsbuild 组装 web + browserslist 的 Rspack target。仍可显式设置 `tools.rspack.target: 'web'` 作为逃逸口。除非你有意开启 `nodeIntegration`，不要用手写 `electron*-renderer` 覆盖。
+当渲染进程目标像 Node、`electron*-main|preload`，或显式 `electron-renderer` / `electron*-renderer` 时，Rselectron 会发出 `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`。默认沙箱路径会从 Electron 支持快照推导 `output.overrideBrowserslist: ['chrome >= ${M}']`（`M` 为该 major 的 Chromium major）。随后由 Rsbuild 组装 web + browserslist 的 Rspack target。仍可显式设置 `tools.rspack.target: 'web'` 作为逃逸口。除非你有意开启 `nodeIntegration`，不要用手写 `electron*-renderer` 覆盖。
 
 ### 配置变更会整会话重启
 

@@ -29,7 +29,7 @@
   "devDependencies": {
     "@microsoft/api-extractor": "7.58.12",
     "@playwright/test": "^1.61.1",
-    "@rsbuild/core": "2.1.7",
+    "@rsbuild/core": "2.1.13",
     "@rsbuild/plugin-react": "^2.1.0",
     "@rslib/core": "^0.23.2",
     "@rslint/core": "0.7.0",

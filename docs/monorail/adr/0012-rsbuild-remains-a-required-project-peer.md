@@ -19,7 +19,7 @@ The required-peer model is the only shape that guarantees one shared Rsbuild ins
 
 Keep `@rsbuild/core` as a **required peer dependency** of the public facade, and add a **warn-only tested-window diagnostic** to address version drift:
 
-- Each Rselectron release freezes an **Rsbuild tested window**: the minor line of the `@rsbuild/core` version pinned in that release's development dependency set (tested against `2.1.7` → window `>=2.1.0 <2.2.0`). Patch-level updates within the tested minor line are presumed safe and produce no diagnostic.
+- Each Rselectron release freezes an **Rsbuild tested window**: the minor line of the `@rsbuild/core` version pinned in that release's development dependency set (tested against `2.1.13` → window `>=2.1.0 <2.2.0`). Patch-level updates within the tested minor line are presumed safe and produce no diagnostic.
 - `dev`, `build`, `inspect`, and `preview` resolve the project-local `@rsbuild/core` (which, under the peer model, is the same copy Rselectron imports) and read its version. Outside the tested window, Rselectron emits a structured warn-level diagnostic; it never blocks the run.
 - The peer range stays `^2.0.0` — the install contract is deliberately wider than the tested window. Rselectron does not reject or prevent applications from using newer Rsbuild versions; it only reports that a version was not tested by this Rselectron release.
 - The window is frozen per release in release metadata alongside `ELECTRON_SUPPORT_SNAPSHOT`, so a published Rselectron version has reproducible diagnostics.
