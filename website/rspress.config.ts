@@ -43,7 +43,7 @@ export default defineConfig({
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'macOS, Windows, Linux',
         url: `${PUBLISH_URL}/`,
-        softwareVersion: '1.0.0-beta.12',
+        softwareVersion: '1.0.0-beta.13',
         license: 'https://github.com/guangzan/rselectron/blob/main/LICENSE',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       })}</script>`;
