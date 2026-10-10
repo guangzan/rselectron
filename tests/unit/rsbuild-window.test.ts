@@ -6,7 +6,7 @@ import {
   RSBUILD_TESTED_WINDOW,
 } from '../../packages/core/src/rsbuild/window.ts';
 
-const TESTED = '2.1.7';
+const TESTED = '2.1.13';
 
 test('isWithinTestedWindow accepts versions on the tested minor line', () => {
   expect(isWithinTestedWindow('2.1.7', TESTED)).toBe(true);
@@ -41,9 +41,9 @@ test('createRsbuildWindowWarning yields a project-level structured warning', () 
 });
 
 test('checkRsbuildWindow returns no warning for the workspace rsbuild version', () => {
-  // The workspace pins @rsbuild/core 2.1.7 as a devDependency; the frozen
+  // The workspace pins @rsbuild/core 2.1.13 as a devDependency; the frozen
   // tested window must match it, so resolving the repo's own copy yields no
   // false positive.
-  expect(RSBUILD_TESTED_WINDOW.tested).toBe('2.1.7');
+  expect(RSBUILD_TESTED_WINDOW.tested).toBe('2.1.13');
   expect(checkRsbuildWindow()).toBeUndefined();
 });

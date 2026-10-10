@@ -51,7 +51,7 @@ test('inspect resolves three config layers per Role without building', async () 
   expect(result.roles.main?.normalized.electron?.format).toBe('cjs');
   expect(
     result.roles.renderer?.normalized.output?.overrideBrowserslist,
-  ).toEqual(['chrome >= 138']);
+  ).toEqual(['chrome >= 146']);
   expect(result.roles.main?.rsbuild).toBeTypeOf('object');
   expect(result.roles.main?.rspack.length).toBeGreaterThan(0);
   expect(result.roles.renderer?.rspack.length).toBeGreaterThan(0);

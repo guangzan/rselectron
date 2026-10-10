@@ -12,7 +12,7 @@ import type { Diagnostic } from '../types.ts';
  * asserts the sync.
  */
 export const RSBUILD_TESTED_WINDOW: { tested: string } = {
-  tested: '2.1.7',
+  tested: '2.1.13',
 };
 
 interface MinorLine {
