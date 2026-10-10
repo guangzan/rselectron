@@ -52,18 +52,6 @@ jobs:
     needs: quality
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
-    # Docs-only commits (site, monorail docs, READMEs, LICENSE) are validated
-    # by the dedicated `docs` job below; skip the expensive Electron matrix
-    # for them. `.github/**` is intentionally NOT ignored, so editing CI
-    # itself always re-runs the full suite.
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/*.md'
-      - '**/*.mdx'
-      - 'README.md'
-      - 'README.zh.md'
-      - 'LICENSE'
     strategy:
       fail-fast: false
       # PR: single ubuntu + lockfile Electron. main: 3 OS × 43 + ubuntu × 28.
@@ -135,17 +123,6 @@ jobs:
     name: Docs build & content tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Complement of `test`'s paths-ignore: docs-only commits validate the
-    # site here (cheap, no Electron) instead of the full matrix. Runs in
-    # parallel with `quality` since it needs none of its artifacts.
-    paths:
-      - 'docs/**'
-      - 'website/**'
-      - '**/*.md'
-      - '**/*.mdx'
-      - 'README.md'
-      - 'README.zh.md'
-      - 'LICENSE'
     steps:
       - uses: actions/checkout@v6
       - name: Install pnpm
