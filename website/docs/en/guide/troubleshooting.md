@@ -34,7 +34,7 @@ Omitting a process on purpose is allowed. If you expected it to build, add the m
 
 ### Renderer looks like a Node / Electron Renderer target
 
-When the renderer target looks like Node, `electron*-main|preload`, or an explicit `electron-renderer` / `electron*-renderer`, Rselectron emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`. The default sandboxed path derives `output.overrideBrowserslist: ['chrome >= ${min(M, 138)}']` from the Electron support snapshot (clamped to today's browserslist-rs ceiling; see [browserslist-rs#48](https://github.com/browserslist/browserslist-rs/issues/48)). Rsbuild then composes a web + browserslist Rspack target. You can still set `tools.rspack.target: 'web'` explicitly as an escape hatch. Unless you intentionally enable `nodeIntegration`, do not override with a hand-written `electron*-renderer`.
+When the renderer target looks like Node, `electron*-main|preload`, or an explicit `electron-renderer` / `electron*-renderer`, Rselectron emits `RSELECTRON_RENDERER_NODE_INTEGRATION_RISK`. The default sandboxed path derives `output.overrideBrowserslist: ['chrome >= ${M}']` from the Electron support snapshot (`M` is that major's Chromium major). Rsbuild then composes a web + browserslist Rspack target. You can still set `tools.rspack.target: 'web'` explicitly as an escape hatch. Unless you intentionally enable `nodeIntegration`, do not override with a hand-written `electron*-renderer`.
 
 ### Config change restarts everything
 

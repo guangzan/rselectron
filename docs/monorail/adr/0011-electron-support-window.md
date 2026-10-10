@@ -10,7 +10,7 @@ ADR 0005 froze each Rselectron release to the **three stable Electron majors** s
 
 The electron-vite baseline (6.0.0-beta.1) is far more permissive: it declares no Electron peer, rejects no version, keeps per-major Node/Chromium tables for majors 22–41, and silently falls back to the oldest table values (`node16.17` / `chrome108`) for majors outside the table. Its capability checks are thresholds (`ESM >= 28`, `import.meta` paths `>= 30`). Projects pinned to older Electron majors therefore work with electron-vite but are hard-rejected by Rselectron.
 
-Users want Rselectron usable for applications pinned to older but still ESM-capable Electron majors. Widening **downward** is safe: every major in the ESM era (28+) already supports ESM Main/Preload output, their Chromium majors are all at or below the browserslist-rs ceiling (138), and the historical release metadata is stable and one-time to record. Widening **upward** needs no design change — the snapshot top already rolls at each release.
+Users want Rselectron usable for applications pinned to older but still ESM-capable Electron majors. Widening **downward** is safe: every major in the ESM era (28+) already supports ESM Main/Preload output, their Chromium majors are all at or below the browserslist-rs ceiling of the day (138), and the historical release metadata is stable and one-time to record. Widening **upward** needs no design change — the snapshot top already rolls at each release.
 
 The old "three stable majors" formulation conflated two different things: the **window floor** (which can be a fixed, documented constant) and the **window top** (which must roll with Electron's release cadence). Splitting them makes the floor a product decision rather than an accident of release timing.
 
@@ -23,7 +23,7 @@ Each Rselectron release freezes an **Electron support window** instead of "the t
 - The window is frozen per release: release metadata, the optional peer range (`>=28 <44` today), documentation, and CI all use the same immutable window; it does not drift after publication.
 - Every major in the window carries per-major metadata in `ELECTRON_SUPPORT_SNAPSHOT` (Node and Chromium from that major's first stable release, `esm` capability, first stable version string). No silent fallback and no threshold guessing: a project-local Electron outside the window still fails with a structured unsupported-version error.
 - CI exercises the latest maintained release of the **floor major** (28.x) and the **top major** on every supported OS/arch combination where runners are available. Today that means the main-branch matrix runs Electron 28.x (replacing 41.0.0) and 43.2.0.
-- Renderer Chromium derivation is unchanged: `chrome >= min(M, 138)` with the browserslist-rs clamp. For majors below the clamp (28–36) this yields the exact snapshot Chromium major — a behavior improvement for old majors, not a new mechanism.
+- Renderer Chromium derivation is unchanged in shape: the exact snapshot Chromium major `chrome >= ${M}`. (At the time of this ADR the then-pinned browserslist-rs clamp rendered this `chrome >= min(M, 138)`, exact for majors 28–36; that clamp has since been removed — see [0010](./0010-renderer-chrome-compiler-target.md).)
 
 This amends ADR 0005's snapshot paragraph: the "three stable majors" convention and its "Accept every Electron major above a minimum" rejection are re-interpreted. Rselectron still rejects majors without frozen per-major metadata and CI endpoint verification; the floor-28 window is not an unverified best-effort range. "Resolve the support window dynamically" remains rejected.
 
@@ -33,7 +33,7 @@ This amends ADR 0005's snapshot paragraph: the "three stable majors" convention 
 - `ELECTRON_SUPPORT_SNAPSHOT` grows from 3 to 16 entries (28–40 added); historical metadata is one-time, stable data.
 - The public optional peer range becomes `>=28 <44`.
 - Main-branch CI runs the e2e suite on Electron 28.x, which exercises the old runtime for real; old Electron on current CI runners carries some compatibility risk (accepted).
-- Derived Renderer browserslist becomes exact (`chrome >= M`) for majors 28–36 instead of always `chrome >= 138`.
+- Derived Renderer browserslist is exact (`chrome >= M`) for every supported major (majors 28–36 were already exact; the clamp removal extended this to all majors).
 - `electron${N}-main` / `electron${N}-preload` targets are emitted for old majors; Rspack's acceptance of such target strings for majors below ~37 is to be verified in implementation (expected to follow webpack's target grammar).
 - Docs, compatibility matrix (ELECTRON-002), release-candidate tests, and CI-workflow tests are updated to the new window.
 

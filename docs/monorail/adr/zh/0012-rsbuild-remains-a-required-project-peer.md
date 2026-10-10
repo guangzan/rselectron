@@ -19,7 +19,7 @@
 
 `@rsbuild/core` 继续作为公共 facade 的**必需 peer 依赖**，并新增一个 **warn-only 已测窗口诊断**来治理版本漂移：
 
-- 每个 Rselectron 发布版本冻结一个 **Rsbuild 已测窗口**：该发布版开发依赖集所固定 `@rsbuild/core` 版本的 minor 线（测试 `2.1.7` → 窗口 `>=2.1.0 <2.2.0`）。已测 minor 线内的 patch 级更新视为安全、不产生诊断。
+- 每个 Rselectron 发布版本冻结一个 **Rsbuild 已测窗口**：该发布版开发依赖集所固定 `@rsbuild/core` 版本的 minor 线（测试 `2.1.13` → 窗口 `>=2.1.0 <2.2.0`）。已测 minor 线内的 patch 级更新视为安全、不产生诊断。
 - `dev`、`build`、`inspect`、`preview` 解析项目本地的 `@rsbuild/core`（peer 模型下即 Rselectron 自己 import 的那份）并读取其版本。越窗时输出结构化 warn 级诊断；绝不阻断运行。
 - peer 范围保持 `^2.0.0`——安装契约刻意宽于已测窗口。Rselectron 不拒绝、不阻止应用使用更新的 Rsbuild；只报告该版本未经本次 Rselectron 发布版测试。
 - 窗口随发布冻结在发布元数据中（与 `ELECTRON_SUPPORT_SNAPSHOT` 并列），保证已发布的 Rselectron 版本有可复现的诊断。
